@@ -160,8 +160,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           borderRadius: BorderRadius.circular(5),
                           boxShadow: [
                             BoxShadow(
-                              color:
-                                  Colors.grey.withOpacity(0.5), // Warna bayangan
+                              color: Colors.grey
+                                  .withOpacity(0.5), // Warna bayangan
                               spreadRadius: 1, // Radius penyebaran bayangan
                               blurRadius: 2, // Radius blur bayangan
                               offset: const Offset(0,
@@ -193,8 +193,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           borderRadius: BorderRadius.circular(5),
                           boxShadow: [
                             BoxShadow(
-                              color:
-                                  Colors.grey.withOpacity(0.5), // Warna bayangan
+                              color: Colors.grey
+                                  .withOpacity(0.5), // Warna bayangan
                               spreadRadius: 1, // Radius penyebaran bayangan
                               blurRadius: 2, // Radius blur bayangan
                               offset: const Offset(0,
@@ -226,8 +226,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           borderRadius: BorderRadius.circular(5),
                           boxShadow: [
                             BoxShadow(
-                              color:
-                                  Colors.grey.withOpacity(0.5), // Warna bayangan
+                              color: Colors.grey
+                                  .withOpacity(0.5), // Warna bayangan
                               spreadRadius: 1, // Radius penyebaran bayangan
                               blurRadius: 2, // Radius blur bayangan
                               offset: const Offset(0,
@@ -259,8 +259,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           borderRadius: BorderRadius.circular(5),
                           boxShadow: [
                             BoxShadow(
-                              color:
-                                  Colors.grey.withOpacity(0.5), // Warna bayangan
+                              color: Colors.grey
+                                  .withOpacity(0.5), // Warna bayangan
                               spreadRadius: 1, // Radius penyebaran bayangan
                               blurRadius: 2, // Radius blur bayangan
                               offset: const Offset(0,
@@ -444,7 +444,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
