@@ -189,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Container(
                         height: 32.0,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF0F0F0),
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(5),
                           boxShadow: [
                             BoxShadow(
@@ -222,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Container(
                         height: 32.0,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF0F0F0),
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(5),
                           boxShadow: [
                             BoxShadow(
@@ -255,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Container(
                         height: 32.0,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF0F0F0),
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(5),
                           boxShadow: [
                             BoxShadow(
@@ -277,14 +277,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontSize: 14.0,
                               ),
                             ),
-                            //       GoogleFonts.montserrat(
-                            //   textStyle: const TextStyle(
-                            //     color: Colors.black,
-                            //     fontSize: 18.0,
-                            //     fontWeight: FontWeight.w500,
-                            //     letterSpacing: -0.6,
-                            //   ),
-                            // ),
                           ),
                         ),
                       ),
