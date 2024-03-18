@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_project/features/auth/widgets/nearfrom_btn.dart';
+import 'package:flutter_project/features/auth/widgets/top_home_btn.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -36,16 +38,17 @@ class _HomeScreenState extends State<HomeScreen> {
               child: TextField(
                 textAlignVertical: TextAlignVertical.top,
                 controller: _searchController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   prefixIcon:
-                      isTextFieldFocused || _searchController.text.isNotEmpty
-                          ? null
-                          : const Icon(
-                              Icons.search,
-                              color: Colors.grey,
-                            ),
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  contentPadding: const EdgeInsets.all(4.0),
+                      // isTextFieldFocused || _searchController.text.isNotEmpty
+                      //     ? null
+                      //     : const
+                      Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
+                  hintStyle: TextStyle(color: Colors.grey),
+                  contentPadding: EdgeInsets.all(4.0),
                   hintText: 'Search..',
                   border: InputBorder.none,
                   alignLabelWithHint: true,
@@ -97,19 +100,19 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFFD2E9FF), // Warna gradient awal
-                Color(0xFFFFFFFF), // Warna gradient akhir
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFFD2E9FF), // Warna gradient awal
+              Color(0xFFFFFFFF), // Warna gradient akhir
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
+        ),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
           child: Column(
             children: [
               Padding(
@@ -147,143 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 6.0),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 32.0,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF225B7B),
-                          borderRadius: BorderRadius.circular(5),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey
-                                  .withOpacity(0.5), // Warna bayangan
-                              spreadRadius: 1, // Radius penyebaran bayangan
-                              blurRadius: 2, // Radius blur bayangan
-                              offset: const Offset(0,
-                                  3), // Posisi bayangan relatif terhadap konten
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Text(
-                            'House',
-                            style: GoogleFonts.raleway(
-                              textStyle: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 14.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 12.0, // Memberikan jarak horizontal sebesar 8.0
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 32.0,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey
-                                  .withOpacity(0.5), // Warna bayangan
-                              spreadRadius: 1, // Radius penyebaran bayangan
-                              blurRadius: 2, // Radius blur bayangan
-                              offset: const Offset(0,
-                                  3), // Posisi bayangan relatif terhadap konten
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Apartment',
-                            style: GoogleFonts.raleway(
-                              textStyle: const TextStyle(
-                                color: Color(0xFF858585),
-                                fontSize: 14.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 12.0, // Memberikan jarak horizontal sebesar 8.0
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 32.0,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey
-                                  .withOpacity(0.5), // Warna bayangan
-                              spreadRadius: 1, // Radius penyebaran bayangan
-                              blurRadius: 2, // Radius blur bayangan
-                              offset: const Offset(0,
-                                  3), // Posisi bayangan relatif terhadap konten
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Hotel',
-                            style: GoogleFonts.raleway(
-                              textStyle: const TextStyle(
-                                color: Color(0xFF858585),
-                                fontSize: 14.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 12.0, // Memberikan jarak horizontal sebesar 8.0
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 32.0,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey
-                                  .withOpacity(0.5), // Warna bayangan
-                              spreadRadius: 1, // Radius penyebaran bayangan
-                              blurRadius: 2, // Radius blur bayangan
-                              offset: const Offset(0,
-                                  3), // Posisi bayangan relatif terhadap konten
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Villa',
-                            style: GoogleFonts.raleway(
-                              textStyle: const TextStyle(
-                                color: Color(0xFF858585),
-                                fontSize: 14.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              const TopHomeBtn(),
               Container(
                 margin: const EdgeInsets.fromLTRB(10.0, 16.0, 10.0, 0),
                 child: Row(
@@ -317,27 +184,20 @@ class _HomeScreenState extends State<HomeScreen> {
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Container(
-                  margin: const EdgeInsets.fromLTRB(0.0, 6.0, 0.0, 0.0),
-                  child: Row(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                  child: const Row(
                     children: [
-                      Image.asset(
-                        'assets/images/contoh.png',
-                        height: 280.0,
-                      ),
-                      Image.asset(
-                        'assets/images/contoh.png',
-                        height: 280.0,
-                      ),
-                      Image.asset(
-                        'assets/images/contoh.png',
-                        height: 280.0,
-                      ),
+                      NearFromBtn(),
+                      NearFromBtn(),
+                      NearFromBtn(),
+                      NearFromBtn(),
                     ],
                   ),
                 ),
               ),
               Container(
-                margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                margin: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -367,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.fromLTRB(16, 10, 10, 0),
+                margin: const EdgeInsets.fromLTRB(16, 10, 10, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -438,10 +298,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ],
-                          )
+                          ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
