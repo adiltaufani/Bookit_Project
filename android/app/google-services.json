@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "286340514293",
+    "project_id": "loginsignupta-prototype",
+    "storage_bucket": "loginsignupta-prototype.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:286340514293:android:232e3d670d5880ff86e0bc",
+        "android_client_info": {
+          "package_name": "com.example.flutter_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZllPP5leFgznOCXo3iIxYmO9-Q8upDj0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

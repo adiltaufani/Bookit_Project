@@ -4,6 +4,7 @@ import 'package:flutter_project/features/auth/widgets/top_home_btn.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SearchPage extends StatefulWidget {
+  static const String routeName = '/search-page';
   const SearchPage({super.key});
 
   @override

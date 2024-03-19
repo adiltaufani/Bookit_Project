@@ -1,11 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_project/features/auth/screens/search_page.dart';
+import 'package:flutter_project/features/auth/services/google_auth_service.dart';
 import 'package:flutter_project/features/auth/widgets/nearfrom_btn.dart';
 import 'package:flutter_project/features/auth/widgets/top_home_btn.dart';
+import 'package:flutter_project/features/home/screens/near_from_you.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatefulWidget {
+  static const String routeName = '/home-screen';
   const HomeScreen({Key? key});
 
   @override
@@ -13,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GoogleAuthService authService = GoogleAuthService();
   bool isTextFieldFocused = false;
   TextEditingController _searchController = TextEditingController();
 
@@ -82,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             IconButton(
               onPressed: () {
-                debugPrint('action');
+                authService.signOut(context);
               },
               icon: Image.asset(
                 'assets/images/profile.png',
@@ -91,7 +97,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
           leading: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, SearchPage.routeName);
+            },
             icon: const Icon(
               Icons.menu,
               color: Colors.white,
@@ -167,14 +175,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                    Text(
-                      'See more',
-                      style: GoogleFonts.openSans(
-                        textStyle: const TextStyle(
-                          color: Color(0xFF858585),
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: -0.6,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, NearFromYou.routeName);
+                      },
+                      child: Text(
+                        'See more',
+                        style: GoogleFonts.openSans(
+                          textStyle: const TextStyle(
+                            color: Color(0xFF858585),
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: -0.6,
+                          ),
                         ),
                       ),
                     ),
