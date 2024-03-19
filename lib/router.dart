@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/features/auth/screens/auth_screen.dart';
+import 'package:flutter_project/features/auth/screens/home_screen.dart';
+import 'package:flutter_project/features/auth/screens/login_screen.dart';
+import 'package:flutter_project/features/home/screens/near_from_you.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
@@ -7,6 +10,21 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const AuthScreen(),
+      );
+    case HomeScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const HomeScreen(),
+      );
+    case NearFromYou.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const NearFromYou(),
+      );
+    case LoginScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const LoginScreen(),
       );
     default:
       return MaterialPageRoute(
