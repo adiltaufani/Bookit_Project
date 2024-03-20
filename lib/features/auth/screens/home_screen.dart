@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_project/features/auth/screens/notification_page.dart';
 import 'package:flutter_project/features/auth/screens/search_page.dart';
 import 'package:flutter_project/features/auth/services/google_auth_service.dart';
 import 'package:flutter_project/features/auth/widgets/nearfrom_btn.dart';
@@ -81,7 +82,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, NotificationPage.routeName);
+              },
               icon: Image.asset(
                 'assets/images/notification.png',
                 height: 34.0,
