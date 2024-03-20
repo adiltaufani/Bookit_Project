@@ -73,6 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onSubmitted: (value) {
                   setState(() {
                     isTextFieldFocused = false;
+                    Navigator.pushNamed(context, SearchPage.routeName);
                   });
                 },
               ),
@@ -97,9 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
           leading: IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, SearchPage.routeName);
-            },
+            onPressed: () {},
             icon: const Icon(
               Icons.menu,
               color: Colors.white,

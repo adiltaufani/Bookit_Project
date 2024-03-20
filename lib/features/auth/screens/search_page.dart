@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/widgets/top_home_btn.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -26,6 +27,7 @@ class _SearchPageState extends State<SearchPage> {
               color: Colors.blue,
             ),
           ),
+          automaticallyImplyLeading: false,
           title: Container(
             width: double.infinity,
             height: 40.0,
@@ -69,7 +71,9 @@ class _SearchPageState extends State<SearchPage> {
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, HomeScreen.routeName);
+              },
               padding: const EdgeInsets.only(right: 12),
               icon: const Icon(
                 Icons.close,
