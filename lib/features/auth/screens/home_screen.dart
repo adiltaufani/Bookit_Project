@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_project/features/auth/screens/notification_page.dart';
 import 'package:flutter_project/features/auth/screens/search_page.dart';
+import 'package:flutter_project/features/auth/screens/setting_page.dart';
 import 'package:flutter_project/features/auth/services/google_auth_service.dart';
 import 'package:flutter_project/features/auth/widgets/nearfrom_btn.dart';
 import 'package:flutter_project/features/auth/widgets/top_home_btn.dart';
@@ -92,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             IconButton(
               onPressed: () {
-                authService.signOut(context);
+                Navigator.pushNamed(context, SettingPage.routeName);
               },
               icon: Image.asset(
                 'assets/images/profile.png',
