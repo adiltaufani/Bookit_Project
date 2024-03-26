@@ -2,11 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_project/features/auth/screens/profile_setting.dart';
+import 'package:flutter_project/features/auth/services/google_auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SettingPage extends StatelessWidget {
+class SettingPage extends StatefulWidget {
   static const String routeName = '/setting-page';
   const SettingPage({super.key});
+
+  @override
+  State<SettingPage> createState() => _SettingPageState();
+}
+
+class _SettingPageState extends State<SettingPage> {
+  final GoogleAuthService authService = GoogleAuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -488,7 +496,7 @@ class SettingPage extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 8.0, bottom: 12),
                         child: InkWell(
                           onTap: () {
-                            //
+                            authService.signOut(context);
                           },
                           child: Row(
                             children: [

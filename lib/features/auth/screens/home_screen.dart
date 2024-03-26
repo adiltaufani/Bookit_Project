@@ -1,15 +1,24 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_project/features/auth/screens/home_apartement.dart';
 import 'package:flutter_project/features/auth/screens/notification_page.dart';
 import 'package:flutter_project/features/auth/screens/search_page.dart';
 import 'package:flutter_project/features/auth/screens/setting_page.dart';
 import 'package:flutter_project/features/auth/services/google_auth_service.dart';
+import 'package:flutter_project/features/auth/widgets/custom_search_text.dart';
 import 'package:flutter_project/features/auth/widgets/nearfrom_btn.dart';
 import 'package:flutter_project/features/auth/widgets/top_home_btn.dart';
 import 'package:flutter_project/features/home/screens/near_from_you.dart';
+import 'package:flutter_project/features/home/widgets/home_hotel.dart';
+import 'package:flutter_project/features/home/widgets/home_house.dart';
+import 'package:flutter_project/features/home/widgets/home_resort.dart';
+import 'package:flutter_project/features/home/widgets/home_villa.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/home-screen';
@@ -19,13 +28,38 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  List _Listdata = [];
+  bool _isSearchPageVisible = false;
+  Future _getdata() async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://192.168.1.6/ta_projek/crudtaprojek/read.php'),
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          _Listdata = data;
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    _getdata();
+    super.initState();
+  }
+
   final GoogleAuthService authService = GoogleAuthService();
-  bool isTextFieldFocused = false;
+  bool isTextFieldFocused = true;
   TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    TabController _tabController = TabController(length: 5, vsync: this);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
@@ -43,42 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
               borderRadius: BorderRadius.circular(4),
             ),
             child: Center(
-              child: TextField(
-                textAlignVertical: TextAlignVertical.top,
-                controller: _searchController,
-                decoration: const InputDecoration(
-                  prefixIcon:
-                      // isTextFieldFocused || _searchController.text.isNotEmpty
-                      //     ? null
-                      //     : const
-                      Icon(
-                    Icons.search,
-                    color: Colors.grey,
-                  ),
-                  hintStyle: TextStyle(color: Colors.grey),
-                  contentPadding: EdgeInsets.all(4.0),
-                  hintText: 'Search..',
-                  border: InputBorder.none,
-                  alignLabelWithHint: true,
-                  hintMaxLines: 1,
-                ),
-                onTap: () {
-                  setState(() {
-                    isTextFieldFocused = true;
-                  });
-                },
-                onChanged: (value) {
-                  setState(() {
-                    isTextFieldFocused = value.isNotEmpty;
-                  });
-                },
-                onSubmitted: (value) {
-                  setState(() {
-                    isTextFieldFocused = false;
-                    Navigator.pushNamed(context, SearchPage.routeName);
-                  });
-                },
-              ),
+              child: const CustomSearchText(),
             ),
           ),
           actions: [
@@ -111,19 +110,18 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFFD2E9FF), // Warna gradient awal
-              Color(0xFFFFFFFF), // Warna gradient akhir
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+      body: SingleChildScrollView(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFFD2E9FF), // Warna gradient awal
+                Color(0xFFFFFFFF), // Warna gradient akhir
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
           ),
-        ),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
           child: Column(
             children: [
               Padding(
@@ -161,163 +159,78 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 6.0),
-              const TopHomeBtn(),
               Container(
-                margin: const EdgeInsets.fromLTRB(10.0, 16.0, 10.0, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Near from you',
-                      style: GoogleFonts.montserrat(
-                        textStyle: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -0.6,
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, NearFromYou.routeName);
-                      },
-                      child: Text(
-                        'See more',
-                        style: GoogleFonts.openSans(
-                          textStyle: const TextStyle(
-                            color: Color(0xFF858585),
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w400,
-                            letterSpacing: -0.6,
+                child: Align(
+                  child: TabBar(
+                    labelPadding: const EdgeInsets.only(left: 0, right: 40),
+                    controller: _tabController,
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Colors.grey,
+                    isScrollable: true,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    indicator:
+                        CircleTabIndicator(color: Colors.blue, radius: 4),
+                    tabs: [
+                      Tab(
+                        child: Text(
+                          'House',
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w700),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                  child: const Row(
-                    children: [
-                      NearFromBtn(),
-                      NearFromBtn(),
-                      NearFromBtn(),
-                      NearFromBtn(),
+                      Tab(
+                        child: Text(
+                          'Apartement',
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          'Hotel',
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          'Villa',
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          'Resort',
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
               Container(
-                margin: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                height: MediaQuery.of(context).size.height,
+                width: double.maxFinite,
+                child: TabBarView(
+                  controller: _tabController,
                   children: [
-                    Text(
-                      'Best for you',
-                      style: GoogleFonts.montserrat(
-                        textStyle: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -0.6,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      'See more',
-                      style: GoogleFonts.montserrat(
-                        textStyle: const TextStyle(
-                          color: Color(0xFF858585),
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: -0.6,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(16, 10, 10, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      'assets/images/contoh2.png',
-                      height: 68.0,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Orchad House',
-                            style: GoogleFonts.montserrat(
-                              textStyle: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: -0.6,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            'Rp.1.500.000.000/Year',
-                            style: GoogleFonts.montserrat(
-                              textStyle: const TextStyle(
-                                color: Color(0xFF182C74),
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w400,
-                                letterSpacing: -0.6,
-                              ),
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Image.asset(
-                                'assets/images/bedroom.png',
-                                height: 24.0,
-                              ),
-                              Text(
-                                '6 Bedroom',
-                                style: GoogleFonts.montserrat(
-                                  textStyle: const TextStyle(
-                                    color: Color(0xFF858585),
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w400,
-                                    letterSpacing: -0.6,
-                                  ),
-                                ),
-                              ),
-                              Image.asset(
-                                'assets/images/bathroom.png',
-                                height: 24.0,
-                              ),
-                              Text(
-                                '4 Bathroom',
-                                style: GoogleFonts.montserrat(
-                                  textStyle: const TextStyle(
-                                    color: Color(0xFF858585),
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w400,
-                                    letterSpacing: -0.6,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                    const HomeHouse(),
+                    const HomeApartement(),
+                    const HomeHotel(),
+                    const HomeVilla(),
+                    const HomeResort(),
                   ],
                 ),
               ),
@@ -326,5 +239,51 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  String formatInteger(String numberString) {
+    // Mengonversi string ke integer
+    int number = int.parse(numberString);
+
+    // Membuat objek NumberFormat untuk memformat angka
+    NumberFormat formatter = NumberFormat("#,##0", "en_US");
+    return formatter.format(number);
+  }
+}
+
+class CircleTabIndicator extends Decoration {
+  final Color color;
+  double radius;
+  CircleTabIndicator({
+    required this.color,
+    required this.radius,
+  });
+  @override
+  BoxPainter createBoxPainter([VoidCallback? onChanged]) {
+    // TODO: implement createBoxPainter
+    return _CirclePainter(color: color, radius: radius);
+  }
+}
+
+class _CirclePainter extends BoxPainter {
+  final Color color;
+  double radius;
+  _CirclePainter({
+    required this.color,
+    required this.radius,
+  });
+  @override
+  void paint(
+    Canvas canvas,
+    Offset offset,
+    ImageConfiguration configuration,
+  ) {
+    Paint _paint = Paint();
+    _paint.color = color;
+    _paint.isAntiAlias = true;
+    final Offset circleOffset = Offset(
+        configuration.size!.width / 2, configuration.size!.height - radius);
+
+    canvas.drawCircle(offset + circleOffset, radius, _paint);
   }
 }
