@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future _getdata() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.1.6/ta_projek/crudtaprojek/read.php'),
+        Uri.parse('http://192.168.1.8/ta_projek/crudtaprojek/read.php'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -158,7 +158,48 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-              const SizedBox(height: 6.0),
+              Container(
+                height: 120,
+                width: double.infinity,
+                child: ListView.builder(
+                  itemCount: _Listdata.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (BuildContext context, int index) {
+                    String cleanedUrlFoto =
+                        _Listdata[index]['url_foto'].replaceAll('\\', '');
+                    return Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 65,
+                            width: 65,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white,
+                              image: DecorationImage(
+                                  image: NetworkImage(cleanedUrlFoto),
+                                  fit: BoxFit.cover),
+                            ),
+                          ),
+                          SizedBox(height: 5), // Spasi antara gambar dan teks
+                          Text(
+                            _Listdata[index]['nama_kota'],
+                            style: GoogleFonts.montserrat(
+                              textStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
               Container(
                 child: Align(
                   child: TabBar(

@@ -1,65 +1,36 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SearchBarExample extends StatefulWidget {
+class TesFirebase extends StatefulWidget {
+  const TesFirebase({super.key});
+
   @override
-  _SearchBarExampleState createState() => _SearchBarExampleState();
+  State<TesFirebase> createState() => _TesFirebaseState();
 }
 
-class _SearchBarExampleState extends State<SearchBarExample> {
-  static const String routeName = '/dummy';
-  TextEditingController _searchController = TextEditingController();
-
+class _TesFirebaseState extends State<TesFirebase> {
+  String realtimeValue = 'bian22';
+  String getOnceValue = 'apiis22';
   @override
   Widget build(BuildContext context) {
+    DatabaseReference _tesRef = FirebaseDatabase.instance.ref().child('count');
+    _tesRef.onValue.listen((event) {
+      setState(() {
+        realtimeValue = event.snapshot.value.toString();
+      });
+    });
     return Scaffold(
-      appBar: AppBar(
-        title: TextField(
-          controller: _searchController,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SearchPage()),
-            );
-          },
-          decoration: InputDecoration(
-            hintText: 'Search...',
-            hintStyle: TextStyle(color: Colors.white),
-            border: InputBorder.none,
-          ),
-          style: TextStyle(color: Colors.white),
+      body: Container(
+        padding: EdgeInsets.all(100),
+        child: Column(
+          children: [
+            Text('asdasd : $realtimeValue'),
+            Text('asdasd2 : $realtimeValue'),
+          ],
         ),
-      ),
-      body: Center(
-        child: Text('Home Screen'), // Ganti dengan tampilan halaman utama Anda
       ),
     );
   }
-}
-
-class SearchPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: TextField(
-          decoration: InputDecoration(
-            hintText: 'Search...',
-            hintStyle: TextStyle(color: Colors.white),
-            border: InputBorder.none,
-          ),
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: Center(
-        child: Text(
-            'Search Results'), // Ganti dengan tampilan hasil pencarian Anda
-      ),
-    );
-  }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: SearchBarExample(),
-  ));
 }

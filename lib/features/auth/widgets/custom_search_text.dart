@@ -99,8 +99,6 @@ class _CustomSearchTextState extends State<CustomSearchText> {
               ),
             ),
             const SizedBox(height: 2.0),
-            const TopHomeBtn(),
-            const SizedBox(height: 4.0),
             const Divider(
               color: Colors.black12, // Warna garis sesuai kebutuhan
               thickness: 1, // Ketebalan garis sesuai kebutuhan

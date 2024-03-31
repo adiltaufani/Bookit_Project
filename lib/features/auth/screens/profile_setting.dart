@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,6 +18,24 @@ class _ProfileSettingState extends State<ProfileSetting> {
   late String _number = "";
   late String _birth = "";
   late String _address = "";
+  String? _firstname;
+  String? lastname;
+  String? number;
+  String? birthdate;
+  String? address;
+  String? email;
+  bool firstnameTrigger = false;
+
+  @override
+  void initState() {
+    fetchData();
+    super.initState();
+  }
+
+  Future<void> fetchData() async {
+    await fetchUserData();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +100,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'John Kirby',
+                                        '${_firstname ?? 'Loading...'}',
                                         style: GoogleFonts.montserrat(
                                           fontSize: 24,
                                           color: Colors.white,
@@ -87,7 +108,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                         ),
                                       ),
                                       Text(
-                                        'johnkirby42@gmail.com',
+                                        '${email ?? 'Loading...'}',
                                         style: GoogleFonts.montserrat(
                                           fontSize: 14,
                                           color: Colors.white54,
@@ -118,117 +139,126 @@ class _ProfileSettingState extends State<ProfileSetting> {
                           horizontal: 32,
                           vertical: 16,
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 18),
-                            Form(
-                              key: _formKey,
-                              child: Column(
-                                children: <Widget>[
-                                  TextFormField(
-                                    initialValue: "John Doe",
-                                    decoration: const InputDecoration(
-                                        labelText: "Name"),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return "Please enter your name";
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (value) {
-                                      if (value != null) {
-                                        _name = value;
-                                      }
-                                    },
-                                  ),
-                                  TextFormField(
-                                    initialValue: "+62 8123123123",
-                                    decoration: const InputDecoration(
-                                      labelText: "Number",
-                                    ),
-                                    keyboardType: TextInputType.phone,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return "Please enter your number";
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (value) {
-                                      if (value != null) {
-                                        _number = value;
-                                      }
-                                    },
-                                  ),
-                                  TextFormField(
-                                    initialValue: "01 January 2000",
-                                    decoration: const InputDecoration(
-                                        labelText: "Birth Date"),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return "Please enter your birth";
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (value) {
-                                      if (value != null) {
-                                        _birth = value;
-                                      }
-                                    },
-                                  ),
-                                  TextFormField(
-                                    initialValue: "Your Address",
-                                    decoration: const InputDecoration(
-                                        labelText: "Address"),
-                                    maxLines:
-                                        null, // This allows for multi-line input
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        // Tambahkan pemeriksaan null
-                                        return "Please enter your address";
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (value) {
-                                      if (value != null) {
-                                        // Tambahkan pemeriksaan null
-                                        _address = value;
-                                      }
-                                    },
-                                  ),
-                                  const SizedBox(height: 26),
-                                  ElevatedButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                        Colors.blue,
-                                      ),
-                                      foregroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                        Colors.white,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      if (_formKey.currentState?.validate() ??
-                                          false) {
-                                        _formKey.currentState?.save();
-                                        // Proses data formulir di sini
-                                      }
-                                    },
-                                    child: Text(
-                                      'Save Profile',
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 14,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                        child: firstnameTrigger!
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 18),
+                                  Form(
+                                    key: _formKey,
+                                    child: Column(
+                                      children: <Widget>[
+                                        TextFormField(
+                                          initialValue: _firstname,
+                                          decoration: const InputDecoration(
+                                              labelText: "Name"),
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return "Please enter your name";
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (value) {
+                                            if (value != null) {
+                                              _name = value;
+                                            }
+                                          },
+                                        ),
+                                        TextFormField(
+                                          initialValue: number,
+                                          decoration: const InputDecoration(
+                                            labelText: "Number",
+                                          ),
+                                          keyboardType: TextInputType.phone,
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return "Please enter your number";
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (value) {
+                                            if (value != null) {
+                                              _number = value;
+                                            }
+                                          },
+                                        ),
+                                        TextFormField(
+                                          initialValue: birthdate,
+                                          decoration: const InputDecoration(
+                                              labelText: "Birth Date"),
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return "Please enter your birth";
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (value) {
+                                            if (value != null) {
+                                              _birth = value;
+                                            }
+                                          },
+                                        ),
+                                        TextFormField(
+                                          initialValue: address,
+                                          decoration: const InputDecoration(
+                                              labelText: "Address"),
+                                          maxLines:
+                                              null, // This allows for multi-line input
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              // Tambahkan pemeriksaan null
+                                              return "Please enter your address";
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (value) {
+                                            if (value != null) {
+                                              // Tambahkan pemeriksaan null
+                                              _address = value;
+                                            }
+                                          },
+                                        ),
+                                        const SizedBox(height: 26),
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(
+                                              Colors.blue,
+                                            ),
+                                            foregroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(
+                                              Colors.white,
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            if (_formKey.currentState
+                                                    ?.validate() ??
+                                                false) {
+                                              _formKey.currentState?.save();
+                                              // Proses data formulir di sini
+                                            }
+                                          },
+                                          child: Text(
+                                            'Save Profile',
+                                            style: GoogleFonts.montserrat(
+                                              fontSize: 14,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
-                              ),
-                            ),
-                          ],
-                        ),
+                              )
+                            : Center(child: CircularProgressIndicator()),
                       ),
                     ),
                   ],
@@ -239,5 +269,43 @@ class _ProfileSettingState extends State<ProfileSetting> {
         ),
       ),
     );
+  }
+
+  Future<void> fetchUserData() async {
+    var user = FirebaseAuth.instance.currentUser;
+
+    // Pastikan user sudah login
+    if (user == null) {
+      // Jika user belum login, tampilkan pesan
+      print("Silakan login terlebih dahulu");
+      return; // Keluar dari metode fetchUserData
+    }
+
+    var url =
+        Uri.parse("http://192.168.1.8/ta_projek/crudtaprojek/view_data.php");
+    String uid = user.uid;
+
+    var response = await http.post(url, body: {
+      "uid": uid,
+    });
+
+    var data = json.decode(response.body);
+    if (data != null) {
+      // Data berhasil diterima, tampilkan firstname dan lastname
+      _firstname = data['firstname'];
+      lastname = data['lastname'];
+      number = data['number'];
+      birthdate = data['birthdate'];
+      address = data['address'];
+      email = data['email'];
+      print('Firstname: $_firstname, Lastname: $lastname');
+      // Lakukan apapun yang Anda ingin lakukan dengan data ini
+    } else {
+      print("Gagal mendapatkan data pengguna");
+    }
+
+    if (_firstname != null) {
+      firstnameTrigger = true;
+    }
   }
 }

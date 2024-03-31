@@ -4,6 +4,7 @@ import 'package:flutter_project/features/auth/screens/auth_screen.dart';
 import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/screens/login_screen.dart';
 import 'package:flutter_project/features/auth/screens/notification_page.dart';
+import 'package:flutter_project/features/home/screens/dummy.dart';
 import 'package:flutter_project/router.dart';
 
 void main() async {

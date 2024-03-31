@@ -2,6 +2,7 @@
   "project_info": {
     "project_number": "286340514293",
     "project_id": "loginsignupta-prototype",
+    "firebase_url": "https://loginsignupta-prototype-default-rtdb.asia-southeast1.firebasedatabase.app",
     "storage_bucket": "loginsignupta-prototype.appspot.com"
   },
   "client": [
