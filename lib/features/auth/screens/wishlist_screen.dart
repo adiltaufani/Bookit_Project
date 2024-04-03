@@ -1,21 +1,29 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/screens/notification_page.dart';
+import 'package:flutter_project/features/auth/screens/search_page.dart';
 import 'package:flutter_project/features/auth/screens/setting_page.dart';
+import 'package:flutter_project/features/auth/services/google_auth_service.dart';
 import 'package:flutter_project/features/auth/widgets/custom_search_text.dart';
-import 'package:flutter_project/features/auth/widgets/landmark_btn.dart';
 import 'package:flutter_project/features/auth/widgets/side_menu.dart';
+import 'package:flutter_project/features/auth/widgets/top_home_btn.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LandmarkScreen extends StatefulWidget {
-  static const String routeName = '/landmark-screen';
-  const LandmarkScreen({super.key});
+class WishlistScreen extends StatefulWidget {
+  static const String routeName = '/wishlist-screen';
+  const WishlistScreen({super.key});
 
   @override
-  State<LandmarkScreen> createState() => _LandmarkScreenState();
+  State<WishlistScreen> createState() => _WishlistScreenState();
 }
 
-class _LandmarkScreenState extends State<LandmarkScreen> {
+class _WishlistScreenState extends State<WishlistScreen> {
+  final GoogleAuthService authService = GoogleAuthService();
+  bool isTextFieldFocused = false;
+  TextEditingController _searchController = TextEditingController();
+  bool _isUp = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -75,18 +83,6 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
           ],
         ),
       ),
-      // child: Container(
-      //     decoration: const BoxDecoration(
-      //       gradient: LinearGradient(
-      //         colors: [
-
-      //         ],
-      //         begin: Alignment.topLeft,
-      //         end: Alignment.bottomRight,
-      //       ),
-      //     ),
-      //     child: Column(
-      //       children: [
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -114,17 +110,18 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
                 ],
               ),
             ),
-            Center(
-              child: Text('KOTAK SEARCH LANDMARK'),
-            ),
             Container(
               margin: const EdgeInsets.fromLTRB(16, 10, 20, 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const SizedBox(width: 5),
+                  Image.asset(
+                    'assets/images/wishlist.png',
+                    height: 30,
+                  ),
+                  const SizedBox(width: 12),
                   Text(
-                    'Landmark Selection',
+                    'Wishlist',
                     style: GoogleFonts.raleway(
                       textStyle: const TextStyle(
                         color: Colors.black,
@@ -137,48 +134,6 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
                 ],
               ),
             ),
-            const Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    LandmarkBtn(
-                      placeName: 'Monas',
-                      imagePath: 'assets/images/contoh2.png',
-                    ),
-                    LandmarkBtn(
-                      placeName: 'Gedung Sate',
-                      imagePath: 'assets/images/image_widget.png',
-                    ),
-                    LandmarkBtn(
-                      placeName: 'Pangandaran Beach',
-                      imagePath: 'assets/images/image_widget.png',
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 12,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    LandmarkBtn(
-                      placeName: 'Pangalengan Tea Garden',
-                      imagePath: 'assets/images/image_widget.png',
-                    ),
-                    LandmarkBtn(
-                      placeName: 'TSM',
-                      imagePath: 'assets/images/image_widget.png',
-                    ),
-                    LandmarkBtn(
-                      placeName: 'Borobudur',
-                      imagePath: 'assets/images/image_widget.png',
-                    ),
-                  ],
-                ),
-              ],
-            )
           ],
         ),
       ),

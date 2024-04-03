@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_project/features/auth/screens/message_screen.dart';
 import 'package:flutter_project/features/auth/screens/profile_setting.dart';
+import 'package:flutter_project/features/auth/screens/transaction_screen.dart';
+import 'package:flutter_project/features/auth/screens/wishlist_screen.dart';
 import 'package:flutter_project/features/auth/services/google_auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -154,7 +157,8 @@ class _SettingPageState extends State<SettingPage> {
                         padding: const EdgeInsets.only(left: 8.0, bottom: 12),
                         child: InkWell(
                           onTap: () {
-                            //
+                            Navigator.pushNamed(
+                                context, WishlistScreen.routeName);
                           },
                           child: Row(
                             children: [
@@ -250,7 +254,8 @@ class _SettingPageState extends State<SettingPage> {
                             left: 8.0, top: 4, bottom: 12),
                         child: InkWell(
                           onTap: () {
-                            //
+                            Navigator.pushNamed(
+                                context, MessageScreen.routeName);
                           },
                           child: Row(
                             children: [
@@ -282,7 +287,8 @@ class _SettingPageState extends State<SettingPage> {
                             left: 8.0, top: 4, bottom: 12),
                         child: InkWell(
                           onTap: () {
-                            //
+                            Navigator.pushNamed(
+                                context, TransactionScreen.routeName);
                           },
                           child: Row(
                             children: [

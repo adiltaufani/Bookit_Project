@@ -3,10 +3,13 @@ import 'package:flutter_project/features/auth/screens/auth_screen.dart';
 import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/screens/landmark_screen.dart';
 import 'package:flutter_project/features/auth/screens/login_screen.dart';
+import 'package:flutter_project/features/auth/screens/message_screen.dart';
 import 'package:flutter_project/features/auth/screens/notification_page.dart';
 import 'package:flutter_project/features/auth/screens/profile_setting.dart';
 import 'package:flutter_project/features/auth/screens/search_page.dart';
 import 'package:flutter_project/features/auth/screens/setting_page.dart';
+import 'package:flutter_project/features/auth/screens/transaction_screen.dart';
+import 'package:flutter_project/features/auth/screens/wishlist_screen.dart';
 import 'package:flutter_project/features/home/screens/near_from_you.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -30,6 +33,21 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const LandmarkScreen(),
+      );
+    case WishlistScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const WishlistScreen(),
+      );
+    case MessageScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const MessageScreen(),
+      );
+    case TransactionScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const TransactionScreen(),
       );
     case SettingPage.routeName:
       return MaterialPageRoute(

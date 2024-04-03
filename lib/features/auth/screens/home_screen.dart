@@ -91,8 +91,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               color: Colors.white,
               borderRadius: BorderRadius.circular(4),
             ),
-            child: Center(
-              child: const CustomSearchText(),
+            child: const Center(
+              child: CustomSearchText(),
             ),
           ),
           actions: [

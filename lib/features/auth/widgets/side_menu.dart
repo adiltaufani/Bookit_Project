@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_project/features/auth/screens/auth_screen.dart';
 import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/screens/landmark_screen.dart';
+import 'package:flutter_project/features/auth/screens/message_screen.dart';
 import 'package:flutter_project/features/auth/screens/notification_page.dart';
 import 'package:flutter_project/features/auth/screens/setting_page.dart';
+import 'package:flutter_project/features/auth/screens/transaction_screen.dart';
+import 'package:flutter_project/features/auth/screens/wishlist_screen.dart';
 import 'package:flutter_project/features/auth/services/google_auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -113,7 +116,9 @@ class SideMenu extends StatelessWidget {
                     ),
                   ),
                   ListTile(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(context, WishlistScreen.routeName);
+                    },
                     leading: const SizedBox(
                       height: 36,
                       width: 36,
@@ -159,7 +164,9 @@ class SideMenu extends StatelessWidget {
                     ),
                   ),
                   ListTile(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(context, TransactionScreen.routeName);
+                    },
                     leading: const SizedBox(
                       height: 36,
                       width: 36,
@@ -181,7 +188,9 @@ class SideMenu extends StatelessWidget {
                     ),
                   ),
                   ListTile(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(context, MessageScreen.routeName);
+                    },
                     leading: const SizedBox(
                       height: 36,
                       width: 36,

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/screens/search_page.dart';
+import 'package:flutter_project/features/auth/screens/setting_page.dart';
 import 'package:flutter_project/features/auth/services/google_auth_service.dart';
+import 'package:flutter_project/features/auth/widgets/custom_search_text.dart';
 import 'package:flutter_project/features/auth/widgets/side_menu.dart';
 import 'package:flutter_project/features/auth/widgets/top_home_btn.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -34,6 +36,7 @@ class _NotificationPageState extends State<NotificationPage> {
     return Scaffold(
       key: _scaffoldKey,
       drawer: SideMenu(),
+      drawerScrimColor: Colors.black38,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: AppBar(
@@ -42,70 +45,6 @@ class _NotificationPageState extends State<NotificationPage> {
               color: Colors.blue,
             ),
           ),
-          title: Container(
-            width: double.infinity,
-            height: 40.0,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Center(
-              child: TextField(
-                textAlignVertical: TextAlignVertical.top,
-                controller: _searchController,
-                decoration: const InputDecoration(
-                  prefixIcon:
-                      // isTextFieldFocused || _searchController.text.isNotEmpty
-                      //     ? null
-                      //     : const
-                      Icon(
-                    Icons.search,
-                    color: Colors.grey,
-                  ),
-                  hintStyle: TextStyle(color: Colors.grey),
-                  contentPadding: EdgeInsets.all(4.0),
-                  hintText: 'Search..',
-                  border: InputBorder.none,
-                  alignLabelWithHint: true,
-                  hintMaxLines: 1,
-                ),
-                onTap: () {
-                  setState(() {
-                    isTextFieldFocused = true;
-                  });
-                },
-                onChanged: (value) {
-                  setState(() {
-                    isTextFieldFocused = value.isNotEmpty;
-                  });
-                },
-                onSubmitted: (value) {
-                  setState(() {
-                    isTextFieldFocused = false;
-                    Navigator.pushNamed(context, SearchPage.routeName);
-                  });
-                },
-              ),
-            ),
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: Image.asset(
-                'assets/images/notification.png',
-                height: 34.0,
-              ),
-            ),
-            IconButton(
-              onPressed: () {
-                authService.signOut(context);
-              },
-              icon: Image.asset(
-                'assets/images/profile.png',
-                height: 38.0,
-              ),
-            ),
-          ],
           leading: IconButton(
             onPressed: () {
               _scaffoldKey.currentState!.openDrawer();
@@ -116,6 +55,37 @@ class _NotificationPageState extends State<NotificationPage> {
               size: 30.0,
             ),
           ),
+          title: Container(
+            width: double.infinity,
+            height: 40.0,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: const Center(
+              child: CustomSearchText(),
+            ),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, NotificationPage.routeName);
+              },
+              icon: Image.asset(
+                'assets/images/notification.png',
+                height: 34.0,
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, SettingPage.routeName);
+              },
+              icon: Image.asset(
+                'assets/images/profile.png',
+                height: 38.0,
+              ),
+            ),
+          ],
         ),
       ),
       body: Container(
@@ -154,7 +124,7 @@ class _NotificationPageState extends State<NotificationPage> {
                     'assets/images/notif_black.png',
                     height: 30,
                   ),
-                  const SizedBox(width: 5),
+                  const SizedBox(width: 12),
                   Text(
                     'Notification',
                     style: GoogleFonts.raleway(
