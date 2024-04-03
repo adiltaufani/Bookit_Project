@@ -19,7 +19,7 @@ class _HomeResortState extends State<HomeResort> {
   Future _getdata() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.1.6/ta_projek/crudtaprojek/readresort.php'),
+        Uri.parse('http://192.168.1.11/ta_projek/crudtaprojek/readresort.php'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

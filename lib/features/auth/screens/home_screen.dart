@@ -10,6 +10,7 @@ import 'package:flutter_project/features/auth/screens/setting_page.dart';
 import 'package:flutter_project/features/auth/services/google_auth_service.dart';
 import 'package:flutter_project/features/auth/widgets/custom_search_text.dart';
 import 'package:flutter_project/features/auth/widgets/nearfrom_btn.dart';
+import 'package:flutter_project/features/auth/widgets/side_menu.dart';
 import 'package:flutter_project/features/auth/widgets/top_home_btn.dart';
 import 'package:flutter_project/features/home/screens/near_from_you.dart';
 import 'package:flutter_project/features/home/widgets/home_hotel.dart';
@@ -56,17 +57,31 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final GoogleAuthService authService = GoogleAuthService();
   bool isTextFieldFocused = true;
   TextEditingController _searchController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     TabController _tabController = TabController(length: 5, vsync: this);
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: SideMenu(),
+      drawerScrimColor: Colors.black38,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: AppBar(
           flexibleSpace: Container(
             decoration: const BoxDecoration(
               color: Colors.blue,
+            ),
+          ),
+          leading: IconButton(
+            onPressed: () {
+              _scaffoldKey.currentState!.openDrawer();
+            },
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.white,
+              size: 30.0,
             ),
           ),
           title: Container(
@@ -100,14 +115,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
             ),
           ],
-          leading: IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.menu,
-              color: Colors.white,
-              size: 30.0,
-            ),
-          ),
         ),
       ),
       body: SingleChildScrollView(

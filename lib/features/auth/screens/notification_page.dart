@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/screens/search_page.dart';
 import 'package:flutter_project/features/auth/services/google_auth_service.dart';
+import 'package:flutter_project/features/auth/widgets/side_menu.dart';
 import 'package:flutter_project/features/auth/widgets/top_home_btn.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,6 +21,7 @@ class _NotificationPageState extends State<NotificationPage> {
   bool isTextFieldFocused = false;
   TextEditingController _searchController = TextEditingController();
   bool _isUp = false;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void _toggleImage() {
     setState(() {
@@ -30,6 +32,8 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: SideMenu(),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: AppBar(
@@ -103,7 +107,9 @@ class _NotificationPageState extends State<NotificationPage> {
             ),
           ],
           leading: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              _scaffoldKey.currentState!.openDrawer();
+            },
             icon: const Icon(
               Icons.menu,
               color: Colors.white,
