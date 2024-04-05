@@ -75,18 +75,6 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
           ],
         ),
       ),
-      // child: Container(
-      //     decoration: const BoxDecoration(
-      //       gradient: LinearGradient(
-      //         colors: [
-
-      //         ],
-      //         begin: Alignment.topLeft,
-      //         end: Alignment.bottomRight,
-      //       ),
-      //     ),
-      //     child: Column(
-      //       children: [
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -114,8 +102,47 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
                 ],
               ),
             ),
-            Center(
-              child: Text('KOTAK SEARCH LANDMARK'),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Material(
+                color: Colors.white70,
+                borderRadius: BorderRadius.circular(9),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    prefixIcon: InkWell(
+                      onTap: () {
+                        //
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.only(left: 6),
+                        child: Icon(
+                          Icons.search_rounded,
+                          color: Colors.black,
+                          size: 23,
+                        ),
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: EdgeInsets.only(top: 10),
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(9),
+                      ),
+                      borderSide: BorderSide.none,
+                    ),
+                    hintText: 'Search for Landmark',
+                    hintFadeDuration: Durations.short3,
+                    hintStyle: GoogleFonts.montserrat(
+                      textStyle: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.black38,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
             Container(
               margin: const EdgeInsets.fromLTRB(16, 10, 20, 16),

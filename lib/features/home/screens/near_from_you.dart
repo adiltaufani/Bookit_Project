@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_project/features/auth/screens/notification_page.dart';
+import 'package:flutter_project/features/auth/screens/setting_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -99,14 +101,18 @@ class _NearFromYouState extends State<NearFromYou> {
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, NotificationPage.routeName);
+              },
               icon: Image.asset(
                 'assets/images/notification.png',
                 height: 34.0,
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, SettingPage.routeName);
+              },
               icon: Image.asset(
                 'assets/images/profile.png',
                 height: 38.0,
@@ -114,11 +120,14 @@ class _NearFromYouState extends State<NearFromYou> {
             ),
           ],
           leading: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              // Go back to the previous screen when the leading widget is tapped.
+              Navigator.pop(context);
+            },
             icon: const Icon(
-              Icons.menu,
+              Icons.arrow_back_ios_new_rounded,
               color: Colors.white,
-              size: 30.0,
+              size: 24.0,
             ),
           ),
         ),
@@ -142,15 +151,17 @@ class _NearFromYouState extends State<NearFromYou> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Column(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Near from you',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w400,
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ],
