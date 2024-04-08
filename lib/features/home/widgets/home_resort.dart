@@ -19,7 +19,8 @@ class _HomeResortState extends State<HomeResort> {
   Future _getdata() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.1.11/ta_projek/crudtaprojek/readresort.php'),
+        Uri.parse(
+            'http://192.168.100.10/ta_projek/crudtaprojek/readresort.php'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -110,6 +111,26 @@ class _HomeResortState extends State<HomeResort> {
                         image: DecorationImage(
                             image: NetworkImage(cleanedUrlFoto),
                             fit: BoxFit.cover),
+                      ),
+                    ),
+                    Container(
+                      width: 240,
+                      height: 275,
+                      padding: EdgeInsets.all(0),
+                      margin: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                            20), // Adjust the radius as needed
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.center,
+                          colors: [
+                            Colors.black.withOpacity(
+                                0.74), // Opacity untuk membuatnya lebih gelap
+                            Colors
+                                .transparent, // Untuk memberikan transisi ke gambar
+                          ],
+                        ),
                       ),
                     ),
                     Positioned(

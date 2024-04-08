@@ -194,8 +194,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                           right: 10,
                           child: InkWell(
                             onTap: _toggleImage,
-                            borderRadius: BorderRadius.circular(
-                                8), // Adjust the border radius as needed
+                            borderRadius: BorderRadius.circular(8),
                             child: AnimatedSwitcher(
                               duration: const Duration(milliseconds: 300),
                               child: _isUp

@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future _getdata() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.1.6/ta_projek/crudtaprojek/read.php'),
+        Uri.parse('http://192.168.100.10/ta_projek/crudtaprojek/read.php'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
