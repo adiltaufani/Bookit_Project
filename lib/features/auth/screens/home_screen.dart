@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_project/features/auth/screens/booking_page.dart';
 import 'package:flutter_project/features/auth/screens/home_apartement.dart';
 import 'package:flutter_project/features/auth/screens/notification_page.dart';
 import 'package:flutter_project/features/auth/screens/search_page.dart';
@@ -158,10 +159,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         ),
                       ],
                     ),
-                    Image.asset(
-                      'assets/images/bookit.png',
-                      height: 20.0,
-                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, BookingPage.routeName);
+                      },
+                      child: Container(
+                        child: Image.asset(
+                          'assets/images/bookit.png',
+                          height: 20,
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

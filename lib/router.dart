@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/features/auth/screens/auth_screen.dart';
+import 'package:flutter_project/features/auth/screens/booking_page.dart';
 import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/screens/landmark_screen.dart';
 import 'package:flutter_project/features/auth/screens/login_screen.dart';
@@ -18,6 +19,16 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const AuthScreen(),
+      );
+    case BookingPage.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const BookingPage(
+          latitude: double.nan, //buat lokasi gugel maps/
+          longitude: double.nan,
+          locationAddress: 'Detailed Location Address\nLocation Address',
+          locationName: 'Location Name',
+        ),
       );
     case SearchPage.routeName:
       return MaterialPageRoute(
