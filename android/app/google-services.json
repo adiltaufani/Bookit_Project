@@ -1,8 +1,8 @@
 {
   "project_info": {
     "project_number": "286340514293",
-    "project_id": "loginsignupta-prototype",
     "firebase_url": "https://loginsignupta-prototype-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "loginsignupta-prototype",
     "storage_bucket": "loginsignupta-prototype.appspot.com"
   },
   "client": [
@@ -13,7 +13,20 @@
           "package_name": "com.example.flutter_project"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "286340514293-gqfsrt668iedqo0ff10bp7ql3fq428f7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_project",
+            "certificate_hash": "17b969d51707b0dd440e3ce57285ef5f1ffcb950"
+          }
+        },
+        {
+          "client_id": "286340514293-kts66edq7vg3b6ml7s2h7p91h0urp9qf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBZllPP5leFgznOCXo3iIxYmO9-Q8upDj0"
@@ -21,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "286340514293-kts66edq7vg3b6ml7s2h7p91h0urp9qf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

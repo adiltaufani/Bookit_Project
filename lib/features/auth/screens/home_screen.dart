@@ -16,6 +16,7 @@ import 'package:flutter_project/features/home/widgets/home_hotel.dart';
 import 'package:flutter_project/features/home/widgets/home_house.dart';
 import 'package:flutter_project/features/home/widgets/home_resort.dart';
 import 'package:flutter_project/features/home/widgets/home_villa.dart';
+import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -34,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future _getdata() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.1.8/ta_projek/crudtaprojek/read.php'),
+        Uri.parse('http://192.168.100.13/ta_projek/crudtaprojek/read.php'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -50,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     _getdata();
+    runPHPCodeOnHomeScreen();
     super.initState();
   }
 
@@ -76,8 +78,27 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               color: Colors.white,
               borderRadius: BorderRadius.circular(4),
             ),
-            child: Center(
-              child: const CustomSearchText(),
+            child: Container(
+              padding: const EdgeInsets.only(top: 10),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, SearchPageWidget.routeName);
+                },
+                child: const Text(
+                  'SIGN UP',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 20,
+                    fontFamily: 'OutfitBlod',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 127, vertical: 10),
+                ),
+              ),
             ),
           ),
           actions: [
@@ -289,6 +310,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     // Membuat objek NumberFormat untuk memformat angka
     NumberFormat formatter = NumberFormat("#,##0", "en_US");
     return formatter.format(number);
+  }
+
+  Future<void> runPHPCodeOnHomeScreen() async {
+    final url =
+        'http://192.168.100.10/ta_projek/crudtaprojek/update_harga_termurah.php'; // Ganti dengan URL endpoint PHP Anda
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        // Permintaan berhasil
+        print('PHP code executed successfully.');
+      } else {
+        // Terjadi kesalahan
+        print('Failed to execute PHP code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error occurred while executing PHP code: $e');
+    }
   }
 }
 

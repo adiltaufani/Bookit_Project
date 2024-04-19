@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_project/common/widgets/custom_password_field.dart';
 import 'package:flutter_project/common/widgets/custom_texfield.dart';
 import 'package:flutter_project/features/auth/screens/auth_screen.dart';
+import 'package:flutter_project/features/auth/screens/forgot_password_screen.dart';
 import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/services/firebase_auth_service.dart';
 import 'package:flutter_project/features/auth/services/google_auth_service.dart';
@@ -161,6 +162,41 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         child: Text(
                           'Sign up',
+                          style: TextStyle(
+                            fontFamily: 'OutfitBlod',
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Forgot your password?",
+                        style: TextStyle(
+                          fontFamily: 'OutfitBlod',
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF0077B2),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 3,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          // Tambahkan logika yang ingin Anda jalankan ketika teks ditekan di sini
+                          // Misalnya, untuk menavigasi ke layar login, Anda dapat menggunakan Navigator
+                          Navigator.pushNamed(
+                              context, ForgotPasswordScreen.routeName);
+                        },
+                        child: Text(
+                          'Forgot password',
                           style: TextStyle(
                             fontFamily: 'OutfitBlod',
                             fontWeight: FontWeight.w500,

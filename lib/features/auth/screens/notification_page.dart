@@ -1,3 +1,5 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -20,6 +22,20 @@ class _NotificationPageState extends State<NotificationPage> {
   bool isTextFieldFocused = false;
   TextEditingController _searchController = TextEditingController();
   bool _isUp = false;
+
+  @override
+  void initState() {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        // This is just a basic example. For real apps, you must show some
+        // friendly dialog box before call the request method.
+        print('masuk notif');
+        // This is very important to not harm the user experience
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
+    super.initState();
+  }
 
   void _toggleImage() {
     setState(() {
@@ -308,10 +324,26 @@ class _NotificationPageState extends State<NotificationPage> {
                   ),
                 ],
               ),
-            )
+            ),
+            ElevatedButton(
+              onPressed: () {
+                triggerNotification();
+              },
+              child: Text('tes notip'),
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  triggerNotification() {
+    FirebaseMessaging.instance.getToken().then((token) {
+      print("FCM Token: $token");
+    });
+    AwesomeNotifications().createNotification(
+      content: NotificationContent(
+          id: 10, channelKey: "basic channel", title: "asdadasdad"),
     );
   }
 }

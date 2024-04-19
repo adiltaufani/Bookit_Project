@@ -19,7 +19,8 @@ class _HomeResortState extends State<HomeResort> {
   Future _getdata() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.1.8/ta_projek/crudtaprojek/readresort.php'),
+        Uri.parse(
+            'http://192.168.100.10/ta_projek/crudtaprojek/readresort.php'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -247,7 +248,7 @@ class _HomeResortState extends State<HomeResort> {
                                 ),
                               ),
                               Text(
-                                formatInteger(_Listdata[index]['harga']
+                                formatInteger(_Listdata[index]['harga_termurah']
                                     .toString()), // Mengonversi integer ke string sebelum memanggil formatInteger
                                 style: GoogleFonts.montserrat(
                                   textStyle: TextStyle(
@@ -279,17 +280,6 @@ class _HomeResortState extends State<HomeResort> {
                               SizedBox(
                                 width: 4,
                               ),
-                              Text(
-                                _Listdata[index]['bedroom'],
-                                style: GoogleFonts.montserrat(
-                                  textStyle: const TextStyle(
-                                    color: Color(0xFF858585),
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w400,
-                                    letterSpacing: -0.6,
-                                  ),
-                                ),
-                              ),
                               SizedBox(
                                 width: 3.5,
                               ),
@@ -313,17 +303,6 @@ class _HomeResortState extends State<HomeResort> {
                               ),
                               SizedBox(
                                 width: 4,
-                              ),
-                              Text(
-                                _Listdata[index]['bathroom'],
-                                style: GoogleFonts.montserrat(
-                                  textStyle: const TextStyle(
-                                    color: Color(0xFF858585),
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w400,
-                                    letterSpacing: -0.6,
-                                  ),
-                                ),
                               ),
                               SizedBox(
                                 width: 3.5,

@@ -83,7 +83,6 @@ class _CustomTabbarState extends State<CustomTabbar>
           child: TabBarView(
             controller: _tabController,
             children: [
-              const SearchPage(),
               Container(
                 child: Column(
                   children: [
