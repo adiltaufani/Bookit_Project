@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_project/features/auth/screens/notification_page.dart';
+import 'package:flutter_project/features/auth/screens/setting_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -21,7 +23,7 @@ class _NearFromYouState extends State<NearFromYou> {
   Future _getdata() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.100.13/ta_projek/crudtaprojek/readhotel.php'),
+        Uri.parse('http://192.168.100.10/ta_projek/crudtaprojek/read.php'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -41,7 +43,16 @@ class _NearFromYouState extends State<NearFromYou> {
   }
 
   bool isTextFieldFocused = false;
+  bool _isUp = false;
+
   TextEditingController _searchController = TextEditingController();
+
+  void _toggleImage() {
+    setState(() {
+      _isUp = !_isUp;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,14 +110,18 @@ class _NearFromYouState extends State<NearFromYou> {
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, NotificationPage.routeName);
+              },
               icon: Image.asset(
                 'assets/images/notification.png',
                 height: 34.0,
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, SettingPage.routeName);
+              },
               icon: Image.asset(
                 'assets/images/profile.png',
                 height: 38.0,
@@ -114,11 +129,14 @@ class _NearFromYouState extends State<NearFromYou> {
             ),
           ],
           leading: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              // Go back to the previous screen when the leading widget is tapped.
+              Navigator.pop(context);
+            },
             icon: const Icon(
-              Icons.menu,
+              Icons.arrow_back_ios_new_rounded,
               color: Colors.white,
-              size: 30.0,
+              size: 24.0,
             ),
           ),
         ),
@@ -142,15 +160,17 @@ class _NearFromYouState extends State<NearFromYou> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Column(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Near from you',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w400,
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ],
@@ -182,9 +202,9 @@ class _NearFromYouState extends State<NearFromYou> {
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: Offset(0, 3),
+                          spreadRadius: 1,
+                          blurRadius: 2,
+                          offset: const Offset(0, 2),
                         ),
                       ],
                     ),
@@ -200,18 +220,24 @@ class _NearFromYouState extends State<NearFromYou> {
                                 fit: BoxFit.cover),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 13,
                         ),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              const SizedBox(
+                                height: 12,
+                              ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Flexible(
+                                  Container(
+                                    constraints:
+                                        const BoxConstraints(maxWidth: 140),
                                     child: Text(
                                       _Listdata[index]['nama_penginapan'],
                                       maxLines: 2,
@@ -226,12 +252,28 @@ class _NearFromYouState extends State<NearFromYou> {
                                       ),
                                     ),
                                   ),
-                                  Icon(
-                                    Icons.save,
-                                    size: 25,
-                                    color: Colors.grey,
+                                  InkWell(
+                                    onTap: _toggleImage,
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: AnimatedSwitcher(
+                                      duration:
+                                          const Duration(milliseconds: 300),
+                                      child: _isUp
+                                          ? Icon(
+                                              Icons.bookmark_rounded,
+                                              color: Colors.black54,
+                                              size: 28,
+                                              key: UniqueKey(),
+                                            )
+                                          : Icon(
+                                              Icons.bookmark_outline_rounded,
+                                              color: Colors.black54,
+                                              size: 28,
+                                              key: UniqueKey(),
+                                            ),
+                                    ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 0,
                                   )
                                 ],
@@ -247,7 +289,7 @@ class _NearFromYouState extends State<NearFromYou> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 5,
                                   ),
                                   Text(
@@ -259,7 +301,7 @@ class _NearFromYouState extends State<NearFromYou> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 4,
                                   ),
                                   Text(
@@ -289,10 +331,10 @@ class _NearFromYouState extends State<NearFromYou> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 5,
                                   ),
-                                  Icon(
+                                  const Icon(
                                     Icons.star,
                                     size: 15,
                                     color: Colors.grey,
@@ -308,7 +350,7 @@ class _NearFromYouState extends State<NearFromYou> {
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 15,
                               ),
                               Row(
@@ -316,7 +358,7 @@ class _NearFromYouState extends State<NearFromYou> {
                                   Text(
                                     'Rp.',
                                     style: GoogleFonts.montserrat(
-                                      textStyle: TextStyle(
+                                      textStyle: const TextStyle(
                                           color:
                                               Color.fromARGB(255, 8, 59, 134),
                                           fontSize: 14,
@@ -327,7 +369,7 @@ class _NearFromYouState extends State<NearFromYou> {
                                     formatInteger(_Listdata[index]['harga']
                                         .toString()), // Mengonversi integer ke string sebelum memanggil formatInteger
                                     style: GoogleFonts.montserrat(
-                                      textStyle: TextStyle(
+                                      textStyle: const TextStyle(
                                           color:
                                               Color.fromARGB(255, 8, 59, 134),
                                           fontSize: 14,

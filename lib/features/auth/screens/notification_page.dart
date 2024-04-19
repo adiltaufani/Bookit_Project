@@ -1,11 +1,13 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/screens/search_page.dart';
+import 'package:flutter_project/features/auth/screens/setting_page.dart';
 import 'package:flutter_project/features/auth/services/google_auth_service.dart';
+import 'package:flutter_project/features/auth/widgets/custom_search_text.dart';
+import 'package:flutter_project/features/auth/widgets/side_menu.dart';
 import 'package:flutter_project/features/auth/widgets/top_home_btn.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,38 +22,64 @@ class NotificationPage extends StatefulWidget {
 class _NotificationPageState extends State<NotificationPage> {
   final GoogleAuthService authService = GoogleAuthService();
   bool isTextFieldFocused = false;
+  bool _isTextVisible = false;
+  bool _isconstscrolled = false;
   TextEditingController _searchController = TextEditingController();
   bool _isUp = false;
-
-  @override
-  void initState() {
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        // This is just a basic example. For real apps, you must show some
-        // friendly dialog box before call the request method.
-        print('masuk notif');
-        // This is very important to not harm the user experience
-        AwesomeNotifications().requestPermissionToSendNotifications();
-      }
-    });
-    super.initState();
-  }
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void _toggleImage() {
     setState(() {
       _isUp = !_isUp;
+
+      if (!_isTextVisible) {
+        _isconstscrolled = !_isconstscrolled;
+        Timer(const Duration(milliseconds: 200), () {
+          _textvis();
+        });
+      } else {
+        _isTextVisible = !_isTextVisible;
+        Timer(const Duration(milliseconds: 0), () {
+          _constvis();
+        });
+      }
+    });
+  }
+
+  void _textvis() {
+    setState(() {
+      _isTextVisible = !_isTextVisible;
+    });
+  }
+
+  void _constvis() {
+    setState(() {
+      _isconstscrolled = !_isconstscrolled;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: SideMenu(),
+      drawerScrimColor: Colors.black38,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: AppBar(
           flexibleSpace: Container(
             decoration: const BoxDecoration(
               color: Colors.blue,
+            ),
+          ),
+          leading: IconButton(
+            onPressed: () {
+              _scaffoldKey.currentState!.openDrawer();
+            },
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.white,
+              size: 30.0,
             ),
           ),
           title: Container(
@@ -61,48 +89,15 @@ class _NotificationPageState extends State<NotificationPage> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(4),
             ),
-            child: Center(
-              child: TextField(
-                textAlignVertical: TextAlignVertical.top,
-                controller: _searchController,
-                decoration: const InputDecoration(
-                  prefixIcon:
-                      // isTextFieldFocused || _searchController.text.isNotEmpty
-                      //     ? null
-                      //     : const
-                      Icon(
-                    Icons.search,
-                    color: Colors.grey,
-                  ),
-                  hintStyle: TextStyle(color: Colors.grey),
-                  contentPadding: EdgeInsets.all(4.0),
-                  hintText: 'Search..',
-                  border: InputBorder.none,
-                  alignLabelWithHint: true,
-                  hintMaxLines: 1,
-                ),
-                onTap: () {
-                  setState(() {
-                    isTextFieldFocused = true;
-                  });
-                },
-                onChanged: (value) {
-                  setState(() {
-                    isTextFieldFocused = value.isNotEmpty;
-                  });
-                },
-                onSubmitted: (value) {
-                  setState(() {
-                    isTextFieldFocused = false;
-                    Navigator.pushNamed(context, SearchPage.routeName);
-                  });
-                },
-              ),
+            child: const Center(
+              child: CustomSearchText(),
             ),
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, NotificationPage.routeName);
+              },
               icon: Image.asset(
                 'assets/images/notification.png',
                 height: 34.0,
@@ -110,7 +105,7 @@ class _NotificationPageState extends State<NotificationPage> {
             ),
             IconButton(
               onPressed: () {
-                authService.signOut(context);
+                Navigator.pushNamed(context, SettingPage.routeName);
               },
               icon: Image.asset(
                 'assets/images/profile.png',
@@ -118,14 +113,6 @@ class _NotificationPageState extends State<NotificationPage> {
               ),
             ),
           ],
-          leading: IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.menu,
-              color: Colors.white,
-              size: 30.0,
-            ),
-          ),
         ),
       ),
       body: Container(
@@ -164,7 +151,7 @@ class _NotificationPageState extends State<NotificationPage> {
                     'assets/images/notif_black.png',
                     height: 30,
                   ),
-                  const SizedBox(width: 5),
+                  const SizedBox(width: 12),
                   Text(
                     'Notification',
                     style: GoogleFonts.raleway(
@@ -183,167 +170,182 @@ class _NotificationPageState extends State<NotificationPage> {
               margin: EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  Container(
-                    height: 260,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 2,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                            margin: const EdgeInsets.fromLTRB(20, 20, 10, 10),
-                            child: Image.asset('assets/images/mail.png')),
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(3, 20, 8, 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'You just reschedule for a book',
-                                        style: GoogleFonts.montserrat(
-                                          textStyle: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            letterSpacing: -0.6,
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        constraints:
-                                            const BoxConstraints(maxWidth: 240),
-                                        child: Text(
-                                          "Dear John Kirby,\n"
-                                          "We're pleased to inform you that your hotel reservation has been successfully rescheduled. Here are the details of your updated booking:\n\n"
-                                          "Reservation ID: [Reservation ID]\n"
-                                          "Hotel Name: [Hotel Name]\n"
-                                          "Original Check-in Date: [Original Check-in Date]\n"
-                                          "New Check-in Date: [New Check-in Date]\n"
-                                          "Original Check-out Date: [Original Check-out Date]\n"
-                                          "New Check-out Date: [New Check-out Date]",
-                                          style: GoogleFonts.montserrat(
-                                            textStyle: const TextStyle(
-                                              color: Colors.black54,
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w500,
-                                              letterSpacing: -0.6,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(top: 2),
-                                        constraints:
-                                            const BoxConstraints(maxWidth: 240),
-                                        child: Text(
-                                          "Booking ID 000000",
-                                          style: GoogleFonts.montserrat(
-                                            textStyle: const TextStyle(
-                                              color: Colors.black54,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                              letterSpacing: -0.6,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(width: 20),
-                                  InkWell(
-                                    onTap: _toggleImage,
-                                    borderRadius: BorderRadius.circular(
-                                        8), // Adjust the border radius as needed
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(
-                                          8.0), // Adjust the padding as needed
-                                      child: AnimatedSwitcher(
-                                        duration: Duration(milliseconds: 300),
-                                        child: _isUp
-                                            ? Image.asset(
-                                                'assets/images/arrow_up.png',
-                                                height: 10,
-                                                key: UniqueKey(),
-                                              )
-                                            : Image.asset(
-                                                'assets/images/arrow_down.png',
-                                                height: 10,
-                                                key: UniqueKey(),
-                                              ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                  ClipRect(
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      height: _isconstscrolled ? 268 : 112,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                              margin: const EdgeInsets.fromLTRB(20, 20, 10, 10),
+                              child: Image.asset('assets/images/mail.png')),
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(3, 20, 8, 10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      '17 August 2023',
-                                      style: GoogleFonts.montserrat(
-                                        textStyle: const TextStyle(
-                                          color: Colors.black54,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          letterSpacing: -0.6,
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'You just reschedule for a book',
+                                          style: GoogleFonts.montserrat(
+                                            textStyle: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: -0.6,
+                                            ),
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {});
+                                          },
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8.0),
+                                            child: AnimatedSwitcher(
+                                                duration:
+                                                    Duration(milliseconds: 300),
+                                                child: _isTextVisible
+                                                    ? Container(
+                                                        child: Container(
+                                                          constraints:
+                                                              const BoxConstraints(
+                                                                  maxWidth:
+                                                                      240),
+                                                          child: Text(
+                                                            "Dear John Kirby,\n"
+                                                            "We're pleased to inform you that your hotel reservation has been successfully rescheduled. Here are the details of your updated booking:\n\n"
+                                                            "Reservation ID: [Reservation ID]\n"
+                                                            "Hotel Name: [Hotel Name]\n"
+                                                            "Original Check-in Date: [Original Check-in Date]\n"
+                                                            "New Check-in Date: [New Check-in Date]\n"
+                                                            "Original Check-out Date: [Original Check-out Date]\n"
+                                                            "New Check-out Date: [New Check-out Date]",
+                                                            style: GoogleFonts
+                                                                .montserrat(
+                                                              textStyle:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .black54,
+                                                                fontSize: 10,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                letterSpacing:
+                                                                    -0.6,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : const SizedBox() // or use a Container with a very small height
+                                                ),
+                                          ),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(top: 2),
+                                          constraints: const BoxConstraints(
+                                              maxWidth: 240),
+                                          child: Text(
+                                            "Booking ID 000000",
+                                            style: GoogleFonts.montserrat(
+                                              textStyle: const TextStyle(
+                                                color: Colors.black54,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                                letterSpacing: -0.6,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(width: 20),
+                                    InkWell(
+                                      onTap: _toggleImage,
+                                      borderRadius: BorderRadius.circular(
+                                          8), // Adjust the border radius as needed
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(
+                                            8.0), // Adjust the padding as needed
+                                        child: AnimatedSwitcher(
+                                          duration: Duration(milliseconds: 300),
+                                          child: _isUp
+                                              ? Image.asset(
+                                                  'assets/images/arrow_up.png',
+                                                  height: 10,
+                                                  key: UniqueKey(),
+                                                )
+                                              : Image.asset(
+                                                  'assets/images/arrow_down.png',
+                                                  height: 10,
+                                                  key: UniqueKey(),
+                                                ),
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ],
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        '17 August 2023',
+                                        style: GoogleFonts.montserrat(
+                                          textStyle: const TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                            letterSpacing: -0.6,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                triggerNotification();
-              },
-              child: Text('tes notip'),
-            ),
+            )
           ],
         ),
       ),
-    );
-  }
-
-  triggerNotification() {
-    FirebaseMessaging.instance.getToken().then((token) {
-      print("FCM Token: $token");
-    });
-    AwesomeNotifications().createNotification(
-      content: NotificationContent(
-          id: 10, channelKey: "basic channel", title: "asdadasdad"),
     );
   }
 }

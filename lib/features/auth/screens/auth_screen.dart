@@ -103,7 +103,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ),
                     // Widget untuk teks
-                    Text(
+                    const Text(
                       'Sign up with Google',
                       style: TextStyle(
                         color: Colors.grey,

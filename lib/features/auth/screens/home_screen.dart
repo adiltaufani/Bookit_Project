@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_project/features/auth/screens/booking_page.dart';
 import 'package:flutter_project/features/auth/screens/home_apartement.dart';
 import 'package:flutter_project/features/auth/screens/notification_page.dart';
 import 'package:flutter_project/features/auth/screens/search_page.dart';
@@ -10,13 +11,13 @@ import 'package:flutter_project/features/auth/screens/setting_page.dart';
 import 'package:flutter_project/features/auth/services/google_auth_service.dart';
 import 'package:flutter_project/features/auth/widgets/custom_search_text.dart';
 import 'package:flutter_project/features/auth/widgets/nearfrom_btn.dart';
+import 'package:flutter_project/features/auth/widgets/side_menu.dart';
 import 'package:flutter_project/features/auth/widgets/top_home_btn.dart';
 import 'package:flutter_project/features/home/screens/near_from_you.dart';
 import 'package:flutter_project/features/home/widgets/home_hotel.dart';
 import 'package:flutter_project/features/home/widgets/home_house.dart';
 import 'package:flutter_project/features/home/widgets/home_resort.dart';
 import 'package:flutter_project/features/home/widgets/home_villa.dart';
-import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -35,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future _getdata() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.100.13/ta_projek/crudtaprojek/read.php'),
+        Uri.parse('http://192.168.100.10/ta_projek/crudtaprojek/read.php'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -51,24 +52,37 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     _getdata();
-    runPHPCodeOnHomeScreen();
     super.initState();
   }
 
   final GoogleAuthService authService = GoogleAuthService();
   bool isTextFieldFocused = true;
   TextEditingController _searchController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     TabController _tabController = TabController(length: 5, vsync: this);
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: SideMenu(),
+      drawerScrimColor: Colors.black38,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: AppBar(
           flexibleSpace: Container(
             decoration: const BoxDecoration(
               color: Colors.blue,
+            ),
+          ),
+          leading: IconButton(
+            onPressed: () {
+              _scaffoldKey.currentState!.openDrawer();
+            },
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.white,
+              size: 30.0,
             ),
           ),
           title: Container(
@@ -78,27 +92,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               color: Colors.white,
               borderRadius: BorderRadius.circular(4),
             ),
-            child: Container(
-              padding: const EdgeInsets.only(top: 10),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, SearchPageWidget.routeName);
-                },
-                child: const Text(
-                  'SIGN UP',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 20,
-                    fontFamily: 'OutfitBlod',
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 127, vertical: 10),
-                ),
-              ),
+            child: const Center(
+              child: CustomSearchText(),
             ),
           ),
           actions: [
@@ -121,14 +116,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
             ),
           ],
-          leading: IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.menu,
-              color: Colors.white,
-              size: 30.0,
-            ),
-          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -172,55 +159,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         ),
                       ],
                     ),
-                    Image.asset(
-                      'assets/images/bookit.png',
-                      height: 20.0,
-                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, BookingPage.routeName);
+                      },
+                      child: Container(
+                        child: Image.asset(
+                          'assets/images/bookit.png',
+                          height: 20,
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
-              Container(
-                height: 120,
-                width: double.infinity,
-                child: ListView.builder(
-                  itemCount: _Listdata.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (BuildContext context, int index) {
-                    String cleanedUrlFoto =
-                        _Listdata[index]['url_foto'].replaceAll('\\', '');
-                    return Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 65,
-                            width: 65,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white,
-                              image: DecorationImage(
-                                  image: NetworkImage(cleanedUrlFoto),
-                                  fit: BoxFit.cover),
-                            ),
-                          ),
-                          SizedBox(height: 5), // Spasi antara gambar dan teks
-                          Text(
-                            _Listdata[index]['nama_kota'],
-                            style: GoogleFonts.montserrat(
-                              textStyle: TextStyle(
-                                color: Colors.black,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
+              const SizedBox(height: 6.0),
               Container(
                 child: Align(
                   child: TabBar(
@@ -310,23 +263,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     // Membuat objek NumberFormat untuk memformat angka
     NumberFormat formatter = NumberFormat("#,##0", "en_US");
     return formatter.format(number);
-  }
-
-  Future<void> runPHPCodeOnHomeScreen() async {
-    final url =
-        'http://192.168.100.10/ta_projek/crudtaprojek/update_harga_termurah.php'; // Ganti dengan URL endpoint PHP Anda
-    try {
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        // Permintaan berhasil
-        print('PHP code executed successfully.');
-      } else {
-        // Terjadi kesalahan
-        print('Failed to execute PHP code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error occurred while executing PHP code: $e');
-    }
   }
 }
 

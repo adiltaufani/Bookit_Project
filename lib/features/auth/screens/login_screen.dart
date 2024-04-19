@@ -148,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(
                           fontFamily: 'OutfitBlod',
                           fontWeight: FontWeight.w500,
-                          color: Color(0xFF0077B2),
+                          color: Color.fromARGB(255, 10, 97, 141),
                         ),
                       ),
                       SizedBox(

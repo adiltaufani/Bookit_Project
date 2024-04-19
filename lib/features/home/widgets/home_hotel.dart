@@ -112,6 +112,26 @@ class _HomeHotelState extends State<HomeHotel> {
                             fit: BoxFit.cover),
                       ),
                     ),
+                    Container(
+                      width: 240,
+                      height: 275,
+                      padding: EdgeInsets.all(0),
+                      margin: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                            20), // Adjust the radius as needed
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.center,
+                          colors: [
+                            Colors.black.withOpacity(
+                                0.74), // Opacity untuk membuatnya lebih gelap
+                            Colors
+                                .transparent, // Untuk memberikan transisi ke gambar
+                          ],
+                        ),
+                      ),
+                    ),
                     Positioned(
                       bottom: 30,
                       left: 20,
