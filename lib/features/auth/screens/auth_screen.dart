@@ -7,6 +7,7 @@ import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/screens/login_screen.dart';
 import 'package:flutter_project/features/auth/services/firebase_auth_service.dart';
 import 'package:flutter_project/features/auth/services/google_auth_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 enum Auth {
   signin,
@@ -59,20 +60,27 @@ class _AuthScreenState extends State<AuthScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.only(right: 40),
-              child: const Text(
+              padding: const EdgeInsets.only(right: 60),
+              child: Text(
                 'Book-it',
-                style: TextStyle(
+                style: GoogleFonts.outfit(
+                  textStyle: const TextStyle(
                     color: Colors.white,
                     fontSize: 60,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'OutfitBlod'),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
             ),
-            const Text(
+            Text(
               'Book with Ease, Anytime, Anywhere!',
-              style: TextStyle(
-                  color: Colors.white, fontSize: 15, fontFamily: 'OutfitLight'),
+              style: GoogleFonts.montserrat(
+                textStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
             const SizedBox(height: 20),
             SizedBox(
@@ -83,8 +91,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   // Tetap gunakan padding yang sesuai
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 105, vertical: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -94,17 +101,19 @@ class _AuthScreenState extends State<AuthScreen> {
                       padding: const EdgeInsets.only(right: 1.0),
                       child: Image.asset(
                         'assets/images/google-logo.png',
-                        width: 24,
-                        height: 24,
+                        width: 26,
+                        height: 26,
                       ),
                     ),
                     // Widget untuk teks
-                    const Text(
+                    Text(
                       'Sign up with Google',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontFamily: 'OutfitBlod',
-                        fontWeight: FontWeight.w500,
+                      style: GoogleFonts.raleway(
+                        textStyle: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ],

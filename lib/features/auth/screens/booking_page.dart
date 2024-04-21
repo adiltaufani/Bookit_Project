@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:flutter_project/features/auth/screens/notification_page.dart';
+import 'package:flutter_project/features/auth/screens/payment_page.dart';
 import 'package:flutter_project/features/auth/widgets/room_type.dart';
 import 'package:flutter_project/features/auth/widgets/transaction_ongoing.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -155,7 +156,7 @@ class _BookingPageState extends State<BookingPage> {
                               // _Listdata[index]['jumlah_reviewer'],
                               style: GoogleFonts.montserrat(
                                 textStyle: const TextStyle(
-                                    color: Colors.black54,
+                                    color: Colors.black,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500),
                               ),
@@ -175,7 +176,7 @@ class _BookingPageState extends State<BookingPage> {
                               // _Listdata[index]['lokasi'],
                               style: GoogleFonts.montserrat(
                                 textStyle: const TextStyle(
-                                    color: Colors.black54,
+                                    color: Colors.black,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500),
                               ),
@@ -525,7 +526,9 @@ class _BookingPageState extends State<BookingPage> {
             right: 10,
             left: 10,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, PaymentPage.routeName);
+              },
               style: ElevatedButton.styleFrom(
                 fixedSize: const Size(double.infinity, 52),
                 elevation: 2,

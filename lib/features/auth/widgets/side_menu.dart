@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_project/features/auth/screens/auth_screen.dart';
 import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/screens/landmark_screen.dart';
@@ -201,6 +203,36 @@ class SideMenu extends StatelessWidget {
                     ),
                     title: Text(
                       'Message',
+                      style: GoogleFonts.raleway(
+                        textStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Divider(
+                      color: Colors.white24,
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      // Navigator.pushNamed(context, MessageScreen.routeName);
+                    },
+                    leading: SizedBox(
+                      height: 36,
+                      width: 36,
+                      child: Image.asset(
+                        'assets/images/chatai.png',
+                        scale: 2.4,
+                      ),
+                    ),
+                    title: Text(
+                      'AI Support',
                       style: GoogleFonts.raleway(
                         textStyle: const TextStyle(
                           color: Colors.white,
