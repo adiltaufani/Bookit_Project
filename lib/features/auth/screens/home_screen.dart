@@ -174,65 +174,62 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
               const SizedBox(height: 6.0),
-              Container(
-                child: Align(
-                  child: TabBar(
-                    labelPadding: const EdgeInsets.only(left: 0, right: 40),
-                    controller: _tabController,
-                    labelColor: Colors.black,
-                    unselectedLabelColor: Colors.grey,
-                    isScrollable: true,
-                    indicatorSize: TabBarIndicatorSize.label,
-                    indicator:
-                        CircleTabIndicator(color: Colors.blue, radius: 4),
-                    tabs: [
-                      Tab(
-                        child: Text(
-                          'House',
-                          style: GoogleFonts.montserrat(
-                            textStyle: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w700),
-                          ),
+              Align(
+                child: TabBar(
+                  labelPadding: const EdgeInsets.only(left: 0, right: 40),
+                  controller: _tabController,
+                  labelColor: Colors.black,
+                  unselectedLabelColor: Colors.grey,
+                  isScrollable: true,
+                  indicatorSize: TabBarIndicatorSize.label,
+                  indicator: CircleTabIndicator(color: Colors.blue, radius: 4),
+                  tabs: [
+                    Tab(
+                      child: Text(
+                        'House',
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w700),
                         ),
                       ),
-                      Tab(
-                        child: Text(
-                          'Apartement',
-                          style: GoogleFonts.montserrat(
-                            textStyle: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w700),
-                          ),
+                    ),
+                    Tab(
+                      child: Text(
+                        'Apartement',
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w700),
                         ),
                       ),
-                      Tab(
-                        child: Text(
-                          'Hotel',
-                          style: GoogleFonts.montserrat(
-                            textStyle: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w700),
-                          ),
+                    ),
+                    Tab(
+                      child: Text(
+                        'Hotel',
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w700),
                         ),
                       ),
-                      Tab(
-                        child: Text(
-                          'Villa',
-                          style: GoogleFonts.montserrat(
-                            textStyle: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w700),
-                          ),
+                    ),
+                    Tab(
+                      child: Text(
+                        'Villa',
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w700),
                         ),
                       ),
-                      Tab(
-                        child: Text(
-                          'Resort',
-                          style: GoogleFonts.montserrat(
-                            textStyle: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w700),
-                          ),
+                    ),
+                    Tab(
+                      child: Text(
+                        'Resort',
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w700),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               Container(

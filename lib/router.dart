@@ -4,8 +4,10 @@ import 'package:flutter_project/features/auth/screens/booking_page.dart';
 import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/screens/landmark_screen.dart';
 import 'package:flutter_project/features/auth/screens/login_screen.dart';
+import 'package:flutter_project/features/auth/screens/message_inbox_screen.dart';
 import 'package:flutter_project/features/auth/screens/message_screen.dart';
 import 'package:flutter_project/features/auth/screens/notification_page.dart';
+import 'package:flutter_project/features/auth/screens/payment_page.dart';
 import 'package:flutter_project/features/auth/screens/profile_setting.dart';
 import 'package:flutter_project/features/auth/screens/search_page.dart';
 import 'package:flutter_project/features/auth/screens/setting_page.dart';
@@ -29,6 +31,16 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           locationAddress: 'Detailed Location Address\nLocation Address',
           locationName: 'Location Name',
         ),
+      );
+    case PaymentPage.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const PaymentPage(
+            // latitude: double.nan, //buat lokasi gugel maps/
+            // longitude: double.nan,
+            // locationAddress: 'Detailed Location Address\nLocation Address',
+            // locationName: 'Location Name',
+            ),
       );
     case SearchPage.routeName:
       return MaterialPageRoute(
@@ -54,6 +66,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const MessageScreen(),
+      );
+    case MessageInboxScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const MessageInboxScreen(),
       );
     case TransactionScreen.routeName:
       return MaterialPageRoute(

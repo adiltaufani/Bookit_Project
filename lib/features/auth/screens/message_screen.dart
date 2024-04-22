@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_project/features/auth/screens/home_screen.dart';
+import 'package:flutter_project/features/auth/screens/message_inbox_screen.dart';
 import 'package:flutter_project/features/auth/screens/notification_page.dart';
 import 'package:flutter_project/features/auth/screens/search_page.dart';
 import 'package:flutter_project/features/auth/screens/setting_page.dart';
@@ -134,6 +135,87 @@ class _MessageScreenState extends State<MessageScreen> {
                 ],
               ),
             ),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, MessageInboxScreen.routeName);
+                },
+                splashColor: Colors.white12,
+                child: Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          const CircleAvatar(
+                            radius: 30,
+                            backgroundColor: Colors.white30,
+                            backgroundImage:
+                                AssetImage('assets/images/profile.png'),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Orchid House\'s Owner',
+                                      style: GoogleFonts.raleway(
+                                        textStyle: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: -0.6,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      '16 Apr',
+                                      style: GoogleFonts.raleway(
+                                        textStyle: const TextStyle(
+                                          color: Colors.black45,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          letterSpacing: -0.6,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 280,
+                                  ),
+                                  child: Text(
+                                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et',
+                                    style: GoogleFonts.raleway(
+                                      textStyle: const TextStyle(
+                                        color: Colors.black45,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        letterSpacing: -0.6,
+                                      ),
+                                    ),
+                                    maxLines: 2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),
