@@ -14,6 +14,7 @@ import 'package:flutter_project/features/auth/screens/setting_page.dart';
 import 'package:flutter_project/features/auth/screens/transaction_screen.dart';
 import 'package:flutter_project/features/auth/screens/wishlist_screen.dart';
 import 'package:flutter_project/features/home/screens/near_from_you.dart';
+import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
@@ -26,10 +27,13 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const BookingPage(
-          latitude: double.nan, //buat lokasi gugel maps/
-          longitude: double.nan,
           locationAddress: 'Detailed Location Address\nLocation Address',
           locationName: 'Location Name',
+          jumlah_reviewer: '',
+          url_foto: '',
+          id: '',
+          latitude: '',
+          longitude: '',
         ),
       );
     case PaymentPage.routeName:
@@ -42,10 +46,18 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
             // locationName: 'Location Name',
             ),
       );
+
+    case SearchPageWidget.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => SearchPageWidget(),
+      );
     case SearchPage.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const SearchPage(),
+        builder: (_) => SearchPage(
+          namaKota: '',
+        ),
       );
     case NotificationPage.routeName:
       return MaterialPageRoute(

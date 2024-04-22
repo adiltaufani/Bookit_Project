@@ -1,15 +1,18 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
-import 'package:flutter_project/features/auth/screens/notification_page.dart';
+import 'package:flutter_project/features/auth/widgets/futniture_widget.dart';
 import 'package:flutter_project/features/auth/screens/payment_page.dart';
 import 'package:flutter_project/features/auth/widgets/room_type.dart';
-import 'package:flutter_project/features/auth/widgets/transaction_ongoing.dart';
+import 'package:flutter_project/features/auth/widgets/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher_string.dart';
 
 class BookingPage extends StatefulWidget {
   static const String routeName = '/booking-page';
@@ -17,20 +20,29 @@ class BookingPage extends StatefulWidget {
     Key? key,
     required this.locationName,
     required this.locationAddress,
+    required this.jumlah_reviewer,
+    required this.url_foto,
+    required this.id,
     required this.latitude,
     required this.longitude,
   }) : super(key: key);
 
   final String locationName;
   final String locationAddress;
-  final double latitude;
-  final double longitude;
+  final String jumlah_reviewer;
+  final String url_foto;
+  final String id;
+  final String latitude;
+  final String longitude;
 
   @override
   State<BookingPage> createState() => _BookingPageState();
 }
 
 class _BookingPageState extends State<BookingPage> {
+  double lat = -6.975003032183382;
+  double long = 107.64594257899627;
+  late Future<Map<String, bool>> futureFurnitureData;
   final _furniture = [
     "wifi",
     "Gym",
@@ -46,10 +58,41 @@ class _BookingPageState extends State<BookingPage> {
     "toilet": Icons.wc_outlined,
     "dinner": Icons.local_dining_rounded,
   };
+  List _Listdata = [];
 
+  Future _getdata() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            'http://172.19.144.1/ta_projek/crudtaprojek/get_rooms_byid.php?uid=${widget.id}'),
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          _Listdata = data;
+          print(_Listdata);
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  List<bool> booleanList = List<bool>.filled(10, true);
   bool _isButtonPressed = false;
   bool _isdatechoosed = false;
   bool _ispersonchoosed = false;
+  String hargaa = '';
+  double totalHarga = 0;
+  String hargaFix = 'Rp.0';
+
+  @override
+  void initState() {
+    futureFurnitureData = fetchFurnitureData();
+    _getdata();
+    print('asdasdasd ${futureFurnitureData}');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,9 +131,15 @@ class _BookingPageState extends State<BookingPage> {
                             indicatorRadius: 4,
                             isLoop: true,
                             children: [
-                              Image.asset(
-                                'assets/images/im1.jpeg',
-                                fit: BoxFit.cover,
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  image: DecorationImage(
+                                      image: NetworkImage(widget.url_foto),
+                                      fit: BoxFit.cover),
+                                ),
                               ),
                               Image.asset(
                                 'assets/images/im2.jpeg',
@@ -137,7 +186,7 @@ class _BookingPageState extends State<BookingPage> {
                       children: [
                         const SizedBox(height: 2),
                         Text(
-                          'Pavilion Hotel',
+                          widget.locationName,
                           // _Listdata[index]['jumlah_reviewer'],
                           style: GoogleFonts.montserrat(
                             textStyle: const TextStyle(
@@ -152,7 +201,7 @@ class _BookingPageState extends State<BookingPage> {
                             const Icon(Icons.star, color: Color(0xFFDF9652)),
                             const SizedBox(width: 6),
                             Text(
-                              'Jumlah Review',
+                              widget.jumlah_reviewer,
                               // _Listdata[index]['jumlah_reviewer'],
                               style: GoogleFonts.montserrat(
                                 textStyle: const TextStyle(
@@ -172,7 +221,7 @@ class _BookingPageState extends State<BookingPage> {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              'lokasi',
+                              widget.locationAddress,
                               // _Listdata[index]['lokasi'],
                               style: GoogleFonts.montserrat(
                                 textStyle: const TextStyle(
@@ -187,7 +236,7 @@ class _BookingPageState extends State<BookingPage> {
                         Padding(
                           padding: const EdgeInsets.only(left: 6.0),
                           child: Text(
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
+                            '${widget.id} Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
                             // _Listdata[index]['lokasi'],
                             style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(
@@ -215,49 +264,7 @@ class _BookingPageState extends State<BookingPage> {
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
-                            children: [
-                              for (int i = 0; i < 5; i++)
-                                //if
-                                Container(
-                                  width: 80,
-                                  height: 80,
-                                  margin: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 243, 248, 254),
-                                    borderRadius: BorderRadius.circular(8),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        blurRadius: 3,
-                                        spreadRadius: 1,
-                                        color: Colors.black26,
-                                        offset: Offset(1, 1),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        _iconMap[_furniture[i]],
-                                        size: 32,
-                                        color: Colors.black,
-                                      ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        _furniture[i],
-                                        style: GoogleFonts.montserrat(
-                                          textStyle: const TextStyle(
-                                            color: Colors.black87,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                            ],
+                            children: [FurniturePage(id: widget.id)],
                           ),
                         ),
                         const SizedBox(height: 24),
@@ -304,8 +311,8 @@ class _BookingPageState extends State<BookingPage> {
                           color: Colors
                               .transparent, // Ensure transparent background
                           child: ElevatedButton(
-                            onPressed: () async {
-                              _isButtonPressed ? null : _launchMapUrl;
+                            onPressed: () {
+                              _openMap(lat, long);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF0A8ED9),
@@ -515,7 +522,363 @@ class _BookingPageState extends State<BookingPage> {
                       ],
                     ),
                   ),
-                  RoomType(),
+                  ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: _Listdata.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          margin: const EdgeInsets.fromLTRB(24, 0, 24, 20),
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 3,
+                                offset: const Offset(1, 2),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              ClipRect(
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  height: 190,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                width: 162,
+                                                height: 102,
+                                                margin:
+                                                    const EdgeInsets.fromLTRB(
+                                                        12, 12, 2, 10),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadiusDirectional
+                                                          .circular(10),
+                                                  image: DecorationImage(
+                                                      image: AssetImage(
+                                                          'assets/images/room.jpeg'),
+                                                      fit: BoxFit.cover),
+                                                ),
+                                              ),
+                                              Container(
+                                                margin:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 12, 0, 10),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              _Listdata[index][
+                                                                  'tipe_kamar'],
+                                                              style: GoogleFonts
+                                                                  .montserrat(
+                                                                textStyle:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  letterSpacing:
+                                                                      -0.6,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      vertical:
+                                                                          2.0),
+                                                              child: Container(
+                                                                constraints:
+                                                                    const BoxConstraints(
+                                                                        maxWidth:
+                                                                            172),
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    const SizedBox(
+                                                                        height:
+                                                                            8),
+                                                                    Row(
+                                                                      children: [
+                                                                        const Icon(
+                                                                            Icons
+                                                                                .king_bed_rounded,
+                                                                            color:
+                                                                                Colors.black54,
+                                                                            size: 16),
+                                                                        const SizedBox(
+                                                                            width:
+                                                                                8),
+                                                                        Text(
+                                                                          "${_Listdata[index]['bedroom']} Bed",
+                                                                          style:
+                                                                              GoogleFonts.montserrat(
+                                                                            textStyle:
+                                                                                const TextStyle(
+                                                                              color: Colors.black54,
+                                                                              fontSize: 12,
+                                                                              fontWeight: FontWeight.w500,
+                                                                              letterSpacing: -0.6,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    Row(
+                                                                      children: [
+                                                                        const Icon(
+                                                                            Icons
+                                                                                .group_rounded,
+                                                                            color:
+                                                                                Colors.black54,
+                                                                            size: 16),
+                                                                        const SizedBox(
+                                                                            width:
+                                                                                8),
+                                                                        Text(
+                                                                          "${_Listdata[index]['kapasitas']} Guest's/Room",
+                                                                          style:
+                                                                              GoogleFonts.montserrat(
+                                                                            textStyle:
+                                                                                const TextStyle(
+                                                                              color: Colors.black54,
+                                                                              fontSize: 12,
+                                                                              fontWeight: FontWeight.w500,
+                                                                              letterSpacing: -0.6,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                12, 0, 0, 8),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Total Payment',
+                                                  style: GoogleFonts.montserrat(
+                                                    textStyle: const TextStyle(
+                                                      color: Colors.black45,
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      letterSpacing: -0.6,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Text.rich(
+                                                  TextSpan(
+                                                      text:
+                                                          'Rp ${_Listdata[index]['harga']}/',
+                                                      style: GoogleFonts
+                                                          .montserrat(
+                                                        textStyle:
+                                                            const TextStyle(
+                                                          color:
+                                                              Color(0xFF225B7B),
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          letterSpacing: -0.6,
+                                                        ),
+                                                      ),
+                                                      children: [
+                                                        TextSpan(
+                                                          text: 'Night',
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            textStyle:
+                                                                const TextStyle(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ]),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                0, 0, 8, 8),
+                                            child: booleanList[index]
+                                                ? ElevatedButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        booleanList[index] =
+                                                            false;
+                                                        hargaa =
+                                                            _Listdata[index]
+                                                                ['harga'];
+                                                        harga = double.parse(
+                                                            hargaa);
+                                                        totalHarga += harga;
+                                                        hargaFix =
+                                                            'Rp. $totalHarga';
+                                                        print(totalHarga);
+                                                      });
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          const Color(
+                                                              0xFF225B7B),
+                                                      elevation: 2,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                    ),
+                                                    child: Text(
+                                                      'Select',
+                                                      style: GoogleFonts
+                                                          .montserrat(
+                                                        textStyle:
+                                                            const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          letterSpacing: -0.6,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : ElevatedButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        booleanList[index] =
+                                                            true;
+                                                        hargaa =
+                                                            _Listdata[index]
+                                                                ['harga'];
+                                                        harga = double.parse(
+                                                            hargaa);
+                                                        totalHarga -= harga;
+                                                        hargaFix =
+                                                            'Rp. $totalHarga';
+                                                        print(totalHarga);
+                                                      });
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor: Colors
+                                                          .white
+                                                          .withOpacity(0.84),
+                                                      elevation: 2,
+                                                      side: BorderSide(
+                                                          color: const Color(
+                                                              0xFF225B7B),
+                                                          width: 1.0),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                    ),
+                                                    child: Text(
+                                                      'Selected',
+                                                      style: GoogleFonts
+                                                          .montserrat(
+                                                        textStyle:
+                                                            const TextStyle(
+                                                          color:
+                                                              Color(0xFF225B7B),
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          letterSpacing: -0.6,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
                   const SizedBox(height: 64),
                 ],
               ),
@@ -541,7 +904,7 @@ class _BookingPageState extends State<BookingPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Rp.199.900.000",
+                    hargaFix,
                     style: GoogleFonts.montserrat(
                       textStyle: const TextStyle(
                         color: Colors.white,
@@ -571,20 +934,57 @@ class _BookingPageState extends State<BookingPage> {
     );
   }
 
-  void _launchMapUrl() async {
-    setState(() {
-      _isButtonPressed = true;
-    });
-    final urlString =
-        'https://www.google.com/maps/search/?api=1&query=${widget.latitude},${widget.longitude}';
-    final url = Uri.parse(urlString);
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
+  Future<void> _openMap(double lat, double long) async {
+    String googleURL =
+        'https://www.google.com/maps/search/?api=1&query=$lat,$long';
+    await canLaunchUrlString(googleURL)
+        ? await launchUrlString(googleURL)
+        : throw 'Could not launch $googleURL';
+  }
+
+  // void _launchMapUrl() async {
+  //   setState(() {
+  //     print('truee');
+  //     _isButtonPressed = true;
+  //   });
+  //   final urlString =
+  //       'https://www.google.com/maps/search/?api=1&query=${widget.latitude},${widget.longitude}';
+  //   final url = Uri.parse(urlString);
+  //   if (await canLaunchUrl(url)) {
+  //     await launchUrl(url);
+  //   } else {
+  //     print('ererere');
+  //   }
+  //   setState(() {
+  //     _isButtonPressed = false;
+  //   });
+  // }
+
+  Future<Map<String, bool>> fetchFurnitureData() async {
+    final url =
+        'http://172.25.112.1/ta_projek/crudtaprojek/get_furniture.php?id=${widget.id}'; // Ganti URL dengan URL API Anda
+
+    // Lakukan permintaan HTTP GET ke API
+    final response = await http.get(Uri.parse(url));
+
+    // Periksa apakah permintaan berhasil
+    if (response.statusCode == 200) {
+      // Parse respons JSON
+      print(response.body);
+      List<dynamic> data = json.decode(response.body);
+
+      // Konversi data ke Map<String, bool>
+      Map<String, bool> furnitureData = {
+        "wifi": int.parse(data[0]['wifi']) == 1,
+        "Gym": int.parse(data[0]['pusat_kebugaran']) == 1,
+        "pool": int.parse(data[0]['kolam_renang']) == 1,
+        "toilet": int.parse(data[0]['parkir']) == 1,
+        "dinner": int.parse(data[0]['restoran']) == 1,
+      };
+      print(furnitureData);
+      return furnitureData;
     } else {
-      // Handle error if unable to launch URL
+      throw Exception('Failed to load data');
     }
-    setState(() {
-      _isButtonPressed = false;
-    });
   }
 }

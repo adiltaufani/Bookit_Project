@@ -18,6 +18,7 @@ import 'package:flutter_project/features/home/widgets/home_hotel.dart';
 import 'package:flutter_project/features/home/widgets/home_house.dart';
 import 'package:flutter_project/features/home/widgets/home_resort.dart';
 import 'package:flutter_project/features/home/widgets/home_villa.dart';
+import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -36,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future _getdata() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.100.10/ta_projek/crudtaprojek/read.php'),
+        Uri.parse('http://192.168.100.13/ta_projek/crudtaprojek/read.php'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -52,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     _getdata();
+    runPHPCodeOnHomeScreen();
     super.initState();
   }
 
@@ -75,16 +77,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               color: Colors.blue,
             ),
           ),
-          leading: IconButton(
-            onPressed: () {
-              _scaffoldKey.currentState!.openDrawer();
-            },
-            icon: const Icon(
-              Icons.menu,
-              color: Colors.white,
-              size: 30.0,
-            ),
-          ),
           title: Container(
             width: double.infinity,
             height: 40.0,
@@ -92,8 +84,27 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               color: Colors.white,
               borderRadius: BorderRadius.circular(4),
             ),
-            child: const Center(
-              child: CustomSearchText(),
+            child: Container(
+              padding: const EdgeInsets.only(top: 10),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, SearchPageWidget.routeName);
+                },
+                child: const Text(
+                  'SIGN UP',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 20,
+                    fontFamily: 'OutfitBlod',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 127, vertical: 10),
+                ),
+              ),
             ),
           ),
           actions: [
@@ -116,6 +127,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
             ),
           ],
+          leading: IconButton(
+            onPressed: () {
+              _scaffoldKey.currentState!.openDrawer();
+            },
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.white,
+              size: 30.0,
+            ),
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -159,77 +180,72 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         ),
                       ],
                     ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, BookingPage.routeName);
-                      },
-                      child: Container(
-                        child: Image.asset(
-                          'assets/images/bookit.png',
-                          height: 20,
-                        ),
-                      ),
-                    )
+                    Image.asset(
+                      'assets/images/bookit.png',
+                      height: 20.0,
+                    ),
                   ],
                 ),
               ),
-              const SizedBox(height: 6.0),
-              Align(
-                child: TabBar(
-                  labelPadding: const EdgeInsets.only(left: 0, right: 40),
-                  controller: _tabController,
-                  labelColor: Colors.black,
-                  unselectedLabelColor: Colors.grey,
-                  isScrollable: true,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  indicator: CircleTabIndicator(color: Colors.blue, radius: 4),
-                  tabs: [
-                    Tab(
-                      child: Text(
-                        'House',
-                        style: GoogleFonts.montserrat(
-                          textStyle: const TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w700),
+              Container(
+                child: Align(
+                  child: TabBar(
+                    labelPadding: const EdgeInsets.only(left: 0, right: 40),
+                    controller: _tabController,
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Colors.grey,
+                    isScrollable: true,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    indicator:
+                        CircleTabIndicator(color: Colors.blue, radius: 4),
+                    tabs: [
+                      Tab(
+                        child: Text(
+                          'House',
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w700),
+                          ),
                         ),
                       ),
-                    ),
-                    Tab(
-                      child: Text(
-                        'Apartement',
-                        style: GoogleFonts.montserrat(
-                          textStyle: const TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w700),
+                      Tab(
+                        child: Text(
+                          'Apartement',
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w700),
+                          ),
                         ),
                       ),
-                    ),
-                    Tab(
-                      child: Text(
-                        'Hotel',
-                        style: GoogleFonts.montserrat(
-                          textStyle: const TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w700),
+                      Tab(
+                        child: Text(
+                          'Hotel',
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w700),
+                          ),
                         ),
                       ),
-                    ),
-                    Tab(
-                      child: Text(
-                        'Villa',
-                        style: GoogleFonts.montserrat(
-                          textStyle: const TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w700),
+                      Tab(
+                        child: Text(
+                          'Villa',
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w700),
+                          ),
                         ),
                       ),
-                    ),
-                    Tab(
-                      child: Text(
-                        'Resort',
-                        style: GoogleFonts.montserrat(
-                          textStyle: const TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w700),
+                      Tab(
+                        child: Text(
+                          'Resort',
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w700),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Container(
@@ -238,11 +254,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 child: TabBarView(
                   controller: _tabController,
                   children: [
-                    const HomeHouse(),
-                    const HomeApartement(),
-                    const HomeHotel(),
-                    const HomeVilla(),
-                    const HomeResort(),
+                    HomeHouse(
+                      tipe: 'readhouse.php',
+                    ),
+                    HomeHouse(
+                      tipe: 'readapartement.php',
+                    ),
+                    HomeHouse(
+                      tipe: 'readhotel.php',
+                    ),
+                    HomeHouse(
+                      tipe: 'readvilla.php',
+                    ),
+                    HomeHouse(
+                      tipe: 'readresort.php',
+                    ),
                   ],
                 ),
               ),
@@ -260,6 +286,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     // Membuat objek NumberFormat untuk memformat angka
     NumberFormat formatter = NumberFormat("#,##0", "en_US");
     return formatter.format(number);
+  }
+
+  Future<void> runPHPCodeOnHomeScreen() async {
+    final url =
+        'http://192.168.100.10/ta_projek/crudtaprojek/update_harga_termurah.php'; // Ganti dengan URL endpoint PHP Anda
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        // Permintaan berhasil
+        print('PHP code executed successfully.');
+      } else {
+        // Terjadi kesalahan
+        print('Failed to execute PHP code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error occurred while executing PHP code: $e');
+    }
   }
 }
 

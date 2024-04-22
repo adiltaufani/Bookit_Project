@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_project/features/auth/screens/booking_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
@@ -94,7 +95,7 @@ class _SearchHouseState extends State<SearchHouse> {
     bool? resepsionis24Jam, // Properti baru untuk resepsionis 24 jam
   }) async {
     final url = Uri.parse(
-        'http://192.168.100.10/ta_projek/crudtaprojek/tes_filter_new.php?'); // Ganti dengan URL API Anda
+        'http://172.19.144.1/ta_projek/crudtaprojek/tes_filter_new.php?'); // Ganti dengan URL API Anda
 
     Map<String, dynamic> queryParams = {};
     if (table != null) queryParams['tipe'] = table.toString();
@@ -159,178 +160,195 @@ class _SearchHouseState extends State<SearchHouse> {
                 itemBuilder: (BuildContext context, int index) {
                   String cleanedUrlFoto =
                       hotels[index].url_foto.replaceAll('\\', '');
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.173,
-                    margin: const EdgeInsets.only(
-                        top: 15,
-                        left: 20,
-                        right: 20), // Atur margin jika diperlukan
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(25.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 150,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            image: DecorationImage(
-                                image: NetworkImage(cleanedUrlFoto),
-                                fit: BoxFit.cover),
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BookingPage(
+                                    locationName: hotels[index].nama_penginapan,
+                                    locationAddress: hotels[index].alamat,
+                                    jumlah_reviewer:
+                                        hotels[index].jumlah_reviewer,
+                                    url_foto: cleanedUrlFoto,
+                                    id: hotels[index].id.toString(),
+                                    latitude: hotels[index].latitude,
+                                    longitude: hotels[index].longitude,
+                                  )));
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.173,
+                      margin: const EdgeInsets.only(
+                          top: 15,
+                          left: 20,
+                          right: 20), // Atur margin jika diperlukan
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(25.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3),
                           ),
-                        ),
-                        SizedBox(
-                          width: 13,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      hotels[index].nama_penginapan,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.montserrat(
-                                        textStyle: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: -0.5,
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 150,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              image: DecorationImage(
+                                  image: NetworkImage(cleanedUrlFoto),
+                                  fit: BoxFit.cover),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 13,
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        hotels[index].nama_penginapan,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.montserrat(
+                                          textStyle: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.w600,
+                                            letterSpacing: -0.5,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Icon(
-                                    Icons.save,
-                                    size: 25,
-                                    color: Colors.grey,
-                                  ),
-                                  SizedBox(
-                                    width: 0,
-                                  )
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    hotels[index].rating.toString(),
-                                    style: GoogleFonts.montserrat(
-                                      textStyle: const TextStyle(
-                                        color: Colors.blue,
-                                        fontSize: 12,
+                                    Icon(
+                                      Icons.save,
+                                      size: 25,
+                                      color: Colors.grey,
+                                    ),
+                                    SizedBox(
+                                      width: 0,
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      hotels[index].rating.toString(),
+                                      style: GoogleFonts.montserrat(
+                                        textStyle: const TextStyle(
+                                          color: Colors.blue,
+                                          fontSize: 12,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    '/',
-                                    style: GoogleFonts.montserrat(
-                                      textStyle: const TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 12,
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      '/',
+                                      style: GoogleFonts.montserrat(
+                                        textStyle: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 12,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 4,
-                                  ),
-                                  Text(
-                                    '(',
-                                    style: GoogleFonts.montserrat(
-                                      textStyle: const TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 12,
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                    Text(
+                                      '(',
+                                      style: GoogleFonts.montserrat(
+                                        textStyle: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 12,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Text(
-                                    hotels[index].jumlah_reviewer.toString(),
-                                    style: GoogleFonts.montserrat(
-                                      textStyle: const TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 12,
+                                    Text(
+                                      hotels[index].jumlah_reviewer.toString(),
+                                      style: GoogleFonts.montserrat(
+                                        textStyle: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 12,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Text(
-                                    ')',
-                                    style: GoogleFonts.montserrat(
-                                      textStyle: const TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 12,
+                                    Text(
+                                      ')',
+                                      style: GoogleFonts.montserrat(
+                                        textStyle: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 12,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Icon(
-                                    Icons.star,
-                                    size: 15,
-                                    color: Colors.grey,
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                hotels[index].alamat,
-                                style: GoogleFonts.montserrat(
-                                  textStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 12,
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      size: 15,
+                                      color: Colors.grey,
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  hotels[index].alamat,
+                                  style: GoogleFonts.montserrat(
+                                    textStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    'Rp.',
-                                    style: GoogleFonts.montserrat(
-                                      textStyle: TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 8, 59, 134),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Rp.',
+                                      style: GoogleFonts.montserrat(
+                                        textStyle: TextStyle(
+                                            color:
+                                                Color.fromARGB(255, 8, 59, 134),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    formatInteger(hotels[index]
-                                        .harga
-                                        .toString()), // Mengonversi integer ke string sebelum memanggil formatInteger
-                                    style: GoogleFonts.montserrat(
-                                      textStyle: TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 8, 59, 134),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
+                                    Text(
+                                      formatInteger(hotels[index]
+                                          .harga
+                                          .toString()), // Mengonversi integer ke string sebelum memanggil formatInteger
+                                      style: GoogleFonts.montserrat(
+                                        textStyle: TextStyle(
+                                            color:
+                                                Color.fromARGB(255, 8, 59, 134),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -375,8 +393,10 @@ class Hotel {
   final String url_foto;
   final String nama_penginapan;
   final int rating;
-  final int jumlah_reviewer;
+  final String jumlah_reviewer;
   final String alamat;
+  final String latitude;
+  final String longitude;
   final double harga;
   final String kota;
   final String tipe;
@@ -394,6 +414,8 @@ class Hotel {
     required this.rating,
     required this.jumlah_reviewer,
     required this.alamat,
+    required this.latitude,
+    required this.longitude,
     required this.harga,
     required this.kota,
     required this.tipe,
@@ -411,8 +433,10 @@ class Hotel {
       url_foto: json['url_foto'],
       nama_penginapan: json['nama_penginapan'],
       rating: int.parse(json['rating']),
-      jumlah_reviewer: int.parse(json['jumlah_reviewer']),
+      jumlah_reviewer: json['jumlah_reviewer'],
       alamat: json['alamat'],
+      latitude: json['latitude'],
+      longitude: json['longitude'],
       harga: double.parse(json['harga_termurah']),
       kota: json['kota'],
       tipe: json['tipe'],

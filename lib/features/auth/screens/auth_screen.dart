@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_project/common/widgets/custom_password_field.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/screens/login_screen.dart';
 import 'package:flutter_project/features/auth/services/firebase_auth_service.dart';
 import 'package:flutter_project/features/auth/services/google_auth_service.dart';
+import 'package:http/http.dart' as http;
 
 enum Auth {
   signin,
@@ -237,15 +240,43 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
-  void _signUp() async {
+  Future<void> register() async {
+    var url =
+        Uri.parse("http://172.19.144.1/ta_projek/crudtaprojek/register.php");
+    String firstName = _nameController.text;
+    String lastName = _lastnameController.text;
+    String email = _emailController.text;
+
+    User? user = FirebaseAuth.instance.currentUser;
+    String uid = user!.uid;
+
+    var response = await http.post(url, body: {
+      "firstname": firstName,
+      "lastname": lastName,
+      "email": email,
+      "uid": uid,
+    });
+
+    var data = json.decode(response.body);
+    if (data == "Error") {
+      // User already exist
+      print("User already exists");
+    } else {
+      // Registration successful
+      print("Registration successful");
+    }
+  }
+
+  Future _signUp() async {
     String email = _emailController.text;
     String password = _passwordController.text;
 
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
 
     if (user != null) {
-      print("Succesfully created");
+      register();
       Navigator.pushNamed(context, HomeScreen.routeName);
+      print("Succesfully created");
     } else {
       print('some error occured');
     }

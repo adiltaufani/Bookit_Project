@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,6 @@ import 'package:flutter_project/features/auth/screens/profile_setting.dart';
 import 'package:flutter_project/features/auth/screens/transaction_screen.dart';
 import 'package:flutter_project/features/auth/screens/wishlist_screen.dart';
 import 'package:flutter_project/features/auth/services/google_auth_service.dart';
-import 'package:flutter_project/features/auth/widgets/get_username.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SettingPage extends StatefulWidget {
@@ -574,7 +572,7 @@ class _SettingPageState extends State<SettingPage> {
     }
 
     var url =
-        Uri.parse("http://192.168.1.8/ta_projek/crudtaprojek/view_data.php");
+        Uri.parse("http://172.19.144.1/ta_projek/crudtaprojek/view_data.php");
     String uid = user.uid;
 
     var response = await http.post(url, body: {

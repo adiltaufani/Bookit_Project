@@ -20,7 +20,7 @@ class _HomeApartementState extends State<HomeApartement> {
     try {
       final response = await http.get(
         Uri.parse(
-            'http://192.168.100.10/ta_projek/crudtaprojek/readapartement.php'),
+            'http://172.25.112.1/ta_projek/crudtaprojek/readapartement.php'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
