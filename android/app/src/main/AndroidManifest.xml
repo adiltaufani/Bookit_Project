@@ -1,26 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <uses-permission android:name="android.permission.INTERNET" />
     
-    <!-- Permission untuk mendapatkan informasi akun (opsional) -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    
-    <!-- Permission untuk mengakses informasi lokasi (opsional) -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    
-    <!-- Permission untuk mengakses profil pengguna (opsional) -->
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    
-    <!-- Permission untuk mengakses email pengguna (opsional) -->
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    
-    <!-- Permission untuk mendapatkan ID perangkat Google (opsional) -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    
-    <!-- Permission untuk menulis ke penyimpanan eksternal (opsional) -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    
-    <!-- Permission untuk membaca dari penyimpanan eksternal (opsional) -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
         android:label="flutter_project"
         android:name="${applicationName}"
@@ -28,6 +7,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:enableOnBackInvokedCallback="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
@@ -52,4 +32,26 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    
+    
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+<!-- Provide required visibility configuration for API level 30 and above -->
+<queries>
+  <!-- If your app checks for SMS support -->
+  <intent>
+    <action android:name="android.intent.action.VIEW" />
+    <data android:scheme="sms" />
+  </intent>
+  <!-- If your app checks for call support -->
+  <intent>
+    <action android:name="android.intent.action.VIEW" />
+    <data android:scheme="tel" />
+  </intent>
+  <!-- If your application checks for inAppBrowserView launch mode support -->
+  <intent>
+    <action android:name="android.support.customtabs.action.CustomTabsService" />
+  </intent>
+</queries>
 </manifest>
