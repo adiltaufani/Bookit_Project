@@ -9,6 +9,7 @@ import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/screens/login_screen.dart';
 import 'package:flutter_project/features/auth/services/firebase_auth_service.dart';
 import 'package:flutter_project/features/auth/services/google_auth_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 enum Auth {
@@ -62,20 +63,27 @@ class _AuthScreenState extends State<AuthScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.only(right: 40),
-              child: const Text(
+              padding: const EdgeInsets.only(right: 60),
+              child: Text(
                 'Book-it',
-                style: TextStyle(
+                style: GoogleFonts.outfit(
+                  textStyle: const TextStyle(
                     color: Colors.white,
                     fontSize: 60,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'OutfitBlod'),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
             ),
-            const Text(
+            Text(
               'Book with Ease, Anytime, Anywhere!',
-              style: TextStyle(
-                  color: Colors.white, fontSize: 15, fontFamily: 'OutfitLight'),
+              style: GoogleFonts.montserrat(
+                textStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
             const SizedBox(height: 20),
             SizedBox(
@@ -242,7 +250,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<void> register() async {
     var url =
-        Uri.parse("http://172.19.144.1/ta_projek/crudtaprojek/register.php");
+        Uri.parse("http://192.168.100.10/ta_projek/crudtaprojek/register.php");
     String firstName = _nameController.text;
     String lastName = _lastnameController.text;
     String email = _emailController.text;

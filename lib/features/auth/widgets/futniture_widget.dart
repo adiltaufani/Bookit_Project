@@ -22,7 +22,7 @@ class _FurniturePageState extends State<FurniturePage> {
 
   Future<Map<String, bool>> fetchFurnitureData() async {
     final url =
-        'http://172.19.144.1/ta_projek/crudtaprojek/get_furniture.php?id=${widget.id}';
+        'http://192.168.100.10/ta_projek/crudtaprojek/get_furniture.php?id=${widget.id}';
 
     final response = await http.get(Uri.parse(url));
 
@@ -34,7 +34,7 @@ class _FurniturePageState extends State<FurniturePage> {
         "Gym": int.parse(data[0]['pusat_kebugaran']) == 1,
         "pool": int.parse(data[0]['kolam_renang']) == 1,
         "toilet": int.parse(data[0]['parkir']) == 1,
-        "dinner": int.parse(data[0]['restoran']) == 1,
+        "breakfast": int.parse(data[0]['restoran']) == 1,
       };
 
       return furnitureData;
@@ -82,9 +82,9 @@ class _FurniturePageState extends State<FurniturePage> {
               buildIconWidget(Icons.wc_outlined, 'toilet'),
             );
           }
-          if (furnitureData != null && furnitureData['dinner'] == true) {
+          if (furnitureData != null && furnitureData['breakfast'] == true) {
             iconsToDisplay.add(
-              buildIconWidget(Icons.dinner_dining, 'dinner'),
+              buildIconWidget(Icons.breakfast_dining, 'breakfast'),
             );
           }
 

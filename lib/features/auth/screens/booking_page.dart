@@ -48,7 +48,7 @@ class _BookingPageState extends State<BookingPage> {
     "Gym",
     "pool",
     "toilet",
-    "dinner",
+    "Breakfast",
   ];
 
   final Map<String, IconData> _iconMap = {
@@ -56,7 +56,7 @@ class _BookingPageState extends State<BookingPage> {
     "Gym": Icons.sports_gymnastics_rounded,
     "pool": Icons.pool_rounded,
     "toilet": Icons.wc_outlined,
-    "dinner": Icons.local_dining_rounded,
+    "Breakfast": Icons.local_dining_rounded,
   };
   List _Listdata = [];
 
@@ -64,7 +64,7 @@ class _BookingPageState extends State<BookingPage> {
     try {
       final response = await http.get(
         Uri.parse(
-            'http://172.19.144.1/ta_projek/crudtaprojek/get_rooms_byid.php?uid=${widget.id}'),
+            'http://192.168.1.13/ta_projek/crudtaprojek/get_rooms_byid.php?uid=${widget.id}'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -962,7 +962,7 @@ class _BookingPageState extends State<BookingPage> {
 
   Future<Map<String, bool>> fetchFurnitureData() async {
     final url =
-        'http://172.25.112.1/ta_projek/crudtaprojek/get_furniture.php?id=${widget.id}'; // Ganti URL dengan URL API Anda
+        'http://192.168.1.13/ta_projek/crudtaprojek/get_furniture.php?id=${widget.id}'; // Ganti URL dengan URL API Anda
 
     // Lakukan permintaan HTTP GET ke API
     final response = await http.get(Uri.parse(url));
@@ -979,7 +979,7 @@ class _BookingPageState extends State<BookingPage> {
         "Gym": int.parse(data[0]['pusat_kebugaran']) == 1,
         "pool": int.parse(data[0]['kolam_renang']) == 1,
         "toilet": int.parse(data[0]['parkir']) == 1,
-        "dinner": int.parse(data[0]['restoran']) == 1,
+        "Breakfast": int.parse(data[0]['restoran']) == 1,
       };
       print(furnitureData);
       return furnitureData;

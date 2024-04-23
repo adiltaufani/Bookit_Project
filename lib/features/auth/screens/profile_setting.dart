@@ -282,7 +282,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
     }
 
     var url =
-        Uri.parse("http://192.168.1.8/ta_projek/crudtaprojek/view_data.php");
+        Uri.parse("http://192.168.100.10/ta_projek/crudtaprojek/view_data.php");
     String uid = user.uid;
 
     var response = await http.post(url, body: {

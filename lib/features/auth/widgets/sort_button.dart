@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_project/common/widgets/custom_texfield.dart';
 import 'package:flutter_project/features/auth/screens/search_page.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+List<String> options = ['option 1', 'option 2'];
 
 class SortButton extends StatefulWidget {
   String namaKota;
   String? tanggal_checkin;
   String? tanggal_checkout;
+
   int? hargaMin;
   int? hargaMax;
   int? Bintang;
@@ -51,12 +55,18 @@ class _SortButtonState extends State<SortButton> {
   TextEditingController _bintangController = TextEditingController();
   final focusNode = FocusNode();
   OverlayEntry? entry;
+  String selectedOption = options[0];
+  //ubah sesuai harga min dan max yang bisa ditampilkan disearch
+  double _hargaMinValue = 0;
+  double _hargaMaxValue = 400000;
+  //rating
+  bool ratingselected = false;
 
   void showOverlay() {
     final overlay = Overlay.of(context);
     final size = MediaQuery.of(context).size; // Mendapatkan ukuran layar
-    final overlayWidth = size.width * 0.8; // Lebar overlay
-    final overlayHeight = size.height * 0.5; // Tinggi overlay
+    final overlayWidth = size.width * 0.9; // Lebar overlay
+    final overlayHeight = size.height * 0.7; // Tinggi overlay
 
     entry = OverlayEntry(
       builder: (context) => Stack(
@@ -76,6 +86,7 @@ class _SortButtonState extends State<SortButton> {
           Positioned(
             width: overlayWidth,
             height: overlayHeight,
+
             left: (size.width - overlayWidth) /
                 2, // Menempatkan di tengah horizontal
             top: (size.height - overlayHeight) /
@@ -146,120 +157,439 @@ class _SortButtonState extends State<SortButton> {
 
   Widget buildOverlay() => Material(
         elevation: 8,
+        color: Colors.transparent,
         child: StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
-            return SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    height: MediaQuery.sizeOf(context).height,
-                    width: double.infinity,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextFormField(
-                          controller: _hargaMinController,
-                          decoration: InputDecoration(labelText: 'Harga Min'),
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            setState(() {
-                              _filterhargaAwal = int.tryParse(value);
-                            });
-                          },
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextFormField(
-                          controller: _hargaMaxController,
-                          decoration: InputDecoration(labelText: 'Harga Max'),
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            setState(() {
-                              _filterhargaAkhir = int.tryParse(value);
-                            });
-                          },
-                        ),
-                        SizedBox(height: 8),
-                        TextFormField(
-                          controller: _bintangController,
-                          decoration: InputDecoration(labelText: 'Bintang'),
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            setState(() {
-                              bintang = int.tryParse(value);
-                            });
-                          },
-                        ),
-                        SizedBox(height: 8),
-                        CheckboxListTile(
-                          title: Text('Wifi'),
-                          value: wifi ?? false,
-                          onChanged: (value) {
-                            setState(() {
-                              wifi = value;
-                            });
-                          },
-                        ),
-                        SizedBox(height: 8),
-                        CheckboxListTile(
-                          title: Text('Kolam Renang'),
-                          value: kolamRenang ?? false,
-                          onChanged: (value) {
-                            setState(() {
-                              kolamRenang = value;
-                            });
-                          },
-                        ),
-                        CheckboxListTile(
-                          title: Text('Parkir'),
-                          value: parkir ?? false,
-                          onChanged: (value) {
-                            setState(() {
-                              parkir = value;
-                            });
-                          },
-                        ),
-                        CheckboxListTile(
-                          title: Text('Restoran'),
-                          value: restoran ?? false,
-                          onChanged: (value) {
-                            setState(() {
-                              restoran = value;
-                            });
-                          },
-                        ),
-                        CheckboxListTile(
-                          title: Text('Gym'),
-                          value: gym ?? false,
-                          onChanged: (value) {
-                            setState(() {
-                              gym = value;
-                            });
-                          },
-                        ),
-                        CheckboxListTile(
-                          title: Text('Resepsionis 24 jam'),
-                          value: resepsionis24jam ?? false,
-                          onChanged: (value) {
-                            setState(() {
-                              resepsionis24jam = value;
-                            });
-                          },
-                        ),
-                        SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            _loadHotels(); // Panggil fungsi _loadHotels() saat tombol ditekan
-                          },
-                          child: Text('Terapkan Filter'),
-                        ),
-                      ],
+            String minLabel = '\$$_hargaMinValue';
+            String maxLabel = '\$$_hargaMaxValue';
+            return Container(
+              decoration: BoxDecoration(
+                borderRadius:
+                    BorderRadius.circular(12), // Atur corner radius di sini
+                color: Colors.blue[50],
+              ),
+              padding: EdgeInsets.all(6),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Container(
+                            width: double.maxFinite,
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Center(
+                              child: Text(
+                                'Filter',
+                                style: GoogleFonts.montserrat(
+                                  textStyle: const TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Divider(height: 2),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Sort By',
+                            style: GoogleFonts.montserrat(
+                              textStyle: const TextStyle(
+                                color: Colors.black87,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: -0.2,
+                              ),
+                            ),
+                          ),
+                          Column(
+                            children: <Widget>[
+                              SizedBox(
+                                height: 40,
+                                child: RadioListTile(
+                                  title: Text(
+                                    'Price: Low to High',
+                                    style: GoogleFonts.montserrat(
+                                      textStyle: const TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        letterSpacing: -0.4,
+                                      ),
+                                    ),
+                                  ),
+                                  activeColor: const Color(0xFF225B7B),
+                                  value: options[0],
+                                  selected: false,
+                                  groupValue: selectedOption,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedOption = value.toString();
+                                    });
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                height: 44,
+                                child: RadioListTile(
+                                  title: Text(
+                                    'Rating: High to Low',
+                                    style: GoogleFonts.montserrat(
+                                      textStyle: const TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        letterSpacing: -0.4,
+                                      ),
+                                    ),
+                                  ),
+                                  activeColor: const Color(0xFF225B7B),
+                                  value: options[1],
+                                  groupValue: selectedOption,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedOption = value.toString();
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Price Range',
+                            style: GoogleFonts.montserrat(
+                              textStyle: const TextStyle(
+                                color: Colors.black87,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: -0.2,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  margin: const EdgeInsets.all(2),
+                                  child: TextFormField(
+                                    controller: _hargaMinController,
+                                    decoration: InputDecoration(
+                                      labelText: 'Min',
+                                      labelStyle: GoogleFonts.montserrat(
+                                        textStyle: const TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          letterSpacing: -0.4,
+                                        ),
+                                      ),
+                                      enabledBorder: const OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.black45),
+                                      ),
+                                      focusedBorder: const OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.blue),
+                                      ),
+                                      contentPadding: const EdgeInsets.all(16),
+                                    ),
+                                    keyboardType: TextInputType.number,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _filterhargaAwal = int.tryParse(value);
+                                      });
+                                    },
+                                    onEditingComplete: () {
+                                      setState(() {
+                                        _hargaMinValue = double.tryParse(
+                                                _hargaMinController.text) ??
+                                            0.0;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  margin: const EdgeInsets.all(2),
+                                  child: TextFormField(
+                                    controller: _hargaMaxController,
+                                    decoration: InputDecoration(
+                                      labelText: 'Max',
+                                      labelStyle: GoogleFonts.montserrat(
+                                        textStyle: const TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          letterSpacing: -0.4,
+                                        ),
+                                      ),
+                                      enabledBorder: const OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.black45),
+                                      ),
+                                      focusedBorder: const OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.blue),
+                                      ),
+                                      contentPadding: const EdgeInsets.all(16),
+                                    ),
+                                    keyboardType: TextInputType.number,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _filterhargaAkhir = int.tryParse(value);
+                                      });
+                                    },
+                                    onEditingComplete: () {
+                                      setState(() {
+                                        _hargaMaxValue = double.tryParse(
+                                                _hargaMaxController.text) ??
+                                            0.0;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          RangeSlider(
+                            values: RangeValues(_hargaMinValue, _hargaMaxValue),
+                            min: 0,
+                            max: 400000,
+                            divisions: 20,
+                            onChanged: (values) {
+                              setState(() {
+                                _hargaMinValue = values.start;
+                                _hargaMaxValue = values.end;
+                                _hargaMinController.text =
+                                    _hargaMinValue.toStringAsFixed(0);
+                                _hargaMaxController.text =
+                                    _hargaMaxValue.toStringAsFixed(0);
+                              });
+                            },
+                            inactiveColor: Colors.black12,
+                            activeColor: const Color(0xFF225B7B),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Rating',
+                            style: GoogleFonts.montserrat(
+                              textStyle: const TextStyle(
+                                color: Colors.black87,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: -0.2,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: ChoiceChip(
+                                  label: Text(
+                                    '4',
+                                    style: GoogleFonts.montserrat(
+                                      textStyle: TextStyle(
+                                        color: ratingselected
+                                            ? Colors.white
+                                            : Colors.black45,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: -0.2,
+                                      ),
+                                    ),
+                                  ),
+                                  avatar: Icon(
+                                    Icons.star,
+                                    color: ratingselected
+                                        ? Colors.yellow[700]
+                                        : Colors.black38,
+                                  ),
+                                  shadowColor: Colors.black12,
+                                  selected: ratingselected,
+                                  showCheckmark: false,
+                                  side: const BorderSide(color: Colors.black12),
+                                  selectedColor: const Color(0xFF225B7B),
+                                  onSelected: (value) {
+                                    setState(() {
+                                      ratingselected = value;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            'Facilities',
+                            style: GoogleFonts.montserrat(
+                              textStyle: const TextStyle(
+                                color: Colors.black87,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: -0.2,
+                              ),
+                            ),
+                          ),
+                          CheckboxListTile(
+                            title: Text(
+                              'Wifi',
+                              style: GoogleFonts.montserrat(
+                                textStyle: const TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: -0.4,
+                                ),
+                              ),
+                            ),
+                            value: wifi ?? false,
+                            activeColor: const Color(0xFF225B7B),
+                            onChanged: (value) {
+                              setState(() {
+                                wifi = value;
+                              });
+                            },
+                          ),
+                          CheckboxListTile(
+                            title: Text(
+                              'Kolam Renang',
+                              style: GoogleFonts.montserrat(
+                                textStyle: const TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: -0.4,
+                                ),
+                              ),
+                            ),
+                            activeColor: const Color(0xFF225B7B),
+                            value: kolamRenang ?? false,
+                            onChanged: (value) {
+                              setState(() {
+                                kolamRenang = value;
+                              });
+                            },
+                          ),
+                          CheckboxListTile(
+                            title: Text(
+                              'Parkir',
+                              style: GoogleFonts.montserrat(
+                                textStyle: const TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: -0.4,
+                                ),
+                              ),
+                            ),
+                            activeColor: const Color(0xFF225B7B),
+                            value: parkir ?? false,
+                            onChanged: (value) {
+                              setState(() {
+                                parkir = value;
+                              });
+                            },
+                          ),
+                          CheckboxListTile(
+                            title: Text(
+                              'Restoran',
+                              style: GoogleFonts.montserrat(
+                                textStyle: const TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: -0.4,
+                                ),
+                              ),
+                            ),
+                            activeColor: const Color(0xFF225B7B),
+                            value: restoran ?? false,
+                            onChanged: (value) {
+                              setState(() {
+                                restoran = value;
+                              });
+                            },
+                          ),
+                          CheckboxListTile(
+                            title: Text(
+                              'Gym',
+                              style: GoogleFonts.montserrat(
+                                textStyle: const TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: -0.4,
+                                ),
+                              ),
+                            ),
+                            activeColor: const Color(0xFF225B7B),
+                            value: gym ?? false,
+                            onChanged: (value) {
+                              setState(() {
+                                gym = value;
+                              });
+                            },
+                          ),
+                          CheckboxListTile(
+                            title: Text(
+                              'Resepsionis 24 jam',
+                              style: GoogleFonts.montserrat(
+                                textStyle: const TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: -0.4,
+                                ),
+                              ),
+                            ),
+                            activeColor: const Color(0xFF225B7B),
+                            value: resepsionis24jam ?? false,
+                            onChanged: (value) {
+                              setState(() {
+                                resepsionis24jam = value;
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () {
+                              _loadHotels(); // Panggil fungsi _loadHotels() saat tombol ditekan
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                const Color(0xFF225B7B),
+                              ),
+                              elevation: MaterialStateProperty.all(5),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text(
+                                'Apply Filter',
+                                style: GoogleFonts.montserrat(
+                                  textStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },

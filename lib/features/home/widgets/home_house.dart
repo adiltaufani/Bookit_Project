@@ -21,7 +21,8 @@ class _HomeHouseState extends State<HomeHouse> {
   Future _getdata() async {
     try {
       final response = await http.get(
-        Uri.parse('http://172.19.144.1/ta_projek/crudtaprojek/${widget.tipe}'),
+        Uri.parse(
+            'http://192.168.100.10/ta_projek/crudtaprojek/${widget.tipe}'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

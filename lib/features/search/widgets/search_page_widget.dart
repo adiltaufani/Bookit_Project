@@ -147,11 +147,17 @@ class _SearchPageWidgetState extends State<SearchPageWidget> {
           Row(
             children: [
               Expanded(
-                  child: CustomTextField(
-                      controller: _tanggalawal, hintText: 'hintText')),
+                  child: Container(
+                margin: const EdgeInsets.all(6),
+                child: CustomTextField(
+                    controller: _tanggalawal, hintText: 'Book in'),
+              )),
               Expanded(
-                  child: CustomTextField(
-                      controller: _tanggalakhir, hintText: 'hintText')),
+                  child: Container(
+                margin: const EdgeInsets.all(6),
+                child: CustomTextField(
+                    controller: _tanggalakhir, hintText: 'Book out'),
+              )),
             ],
           ),
 

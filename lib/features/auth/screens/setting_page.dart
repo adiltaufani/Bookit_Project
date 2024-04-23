@@ -572,7 +572,7 @@ class _SettingPageState extends State<SettingPage> {
     }
 
     var url =
-        Uri.parse("http://172.19.144.1/ta_projek/crudtaprojek/view_data.php");
+        Uri.parse("http://192.168.100.10/ta_projek/crudtaprojek/view_data.php");
     String uid = user.uid;
 
     var response = await http.post(url, body: {
