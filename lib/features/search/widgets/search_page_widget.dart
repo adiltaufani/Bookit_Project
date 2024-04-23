@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_project/common/widgets/custom_texfield.dart';
 import 'package:flutter_project/features/auth/screens/notification_page.dart';
 import 'package:flutter_project/features/auth/screens/search_page.dart';
 import 'package:flutter_project/features/auth/screens/setting_page.dart';
 import 'package:flutter_project/features/auth/widgets/custom_search_text.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SearchPageWidget extends StatefulWidget {
   static const String routeName = '/search-page-widget';
@@ -147,19 +149,124 @@ class _SearchPageWidgetState extends State<SearchPageWidget> {
           Row(
             children: [
               Expanded(
+                flex: 3,
+                child: InkWell(
+                  onTap: () {},
                   child: Container(
-                margin: const EdgeInsets.all(6),
-                child: CustomTextField(
-                    controller: _tanggalawal, hintText: 'Book in'),
-              )),
+                    margin: const EdgeInsets.all(6),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '2024-04-02',
+                          style: GoogleFonts.montserrat(
+                            textStyle: TextStyle(
+                              color: Colors.blue[800],
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -0.6,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'Rabu',
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: -0.6,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Text('-'),
               Expanded(
+                flex: 3,
+                child: InkWell(
+                  onTap: () {},
                   child: Container(
-                margin: const EdgeInsets.all(6),
-                child: CustomTextField(
-                    controller: _tanggalakhir, hintText: 'Book out'),
-              )),
+                    margin: const EdgeInsets.all(6),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '2024-04-04',
+                          style: GoogleFonts.montserrat(
+                            textStyle: TextStyle(
+                              color: Colors.blue[800],
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -0.6,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'Jumat',
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: -0.6,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Center(
+                child: Container(
+                  height: 26,
+                  width: 1,
+                  color: Colors.black12,
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: InkWell(
+                  onTap: () {},
+                  child: Container(
+                    margin: const EdgeInsets.all(6),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'o1 Room',
+                          style: GoogleFonts.montserrat(
+                            textStyle: TextStyle(
+                              color: Colors.blue[800],
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -0.6,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          '01 Guest(s)',
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: -0.6,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
+          const Divider(height: 10),
 
           // Expanded memastikan bahwa ListView.builder tumbuh sesuai dengan ruang yang tersedia
           Expanded(
@@ -169,7 +276,7 @@ class _SearchPageWidgetState extends State<SearchPageWidget> {
                 child: ListView.builder(
                   itemCount: _foundKota.length,
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   itemBuilder: (BuildContext context, int index) {
                     final kota = _foundKota[index];
