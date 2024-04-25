@@ -6,8 +6,8 @@ import 'package:flutter_project/common/widgets/custom_texfield.dart';
 import 'package:flutter_project/features/auth/screens/auth_screen.dart';
 import 'package:flutter_project/features/auth/screens/forgot_password_screen.dart';
 import 'package:flutter_project/features/auth/screens/home_screen.dart';
-import 'package:flutter_project/features/auth/services/firebase_auth_service.dart';
-import 'package:flutter_project/features/auth/services/google_auth_service.dart';
+import 'package:flutter_project/features/auth/services/auth/firebase_auth_service.dart';
+import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {

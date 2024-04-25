@@ -4,7 +4,7 @@ import 'package:flutter_project/features/auth/screens/booking_page.dart';
 import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/screens/landmark_screen.dart';
 import 'package:flutter_project/features/auth/screens/login_screen.dart';
-import 'package:flutter_project/features/auth/screens/message_inbox_screen.dart';
+import 'package:flutter_project/features/auth/screens/message_chat_screen.dart';
 import 'package:flutter_project/features/auth/screens/message_screen.dart';
 import 'package:flutter_project/features/auth/screens/notification_page.dart';
 import 'package:flutter_project/features/auth/screens/payment_page.dart';
@@ -79,11 +79,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const MessageScreen(),
       );
-    case MessageInboxScreen.routeName:
-      return MaterialPageRoute(
-        settings: routeSettings,
-        builder: (_) => const MessageInboxScreen(),
-      );
+
     case TransactionScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,

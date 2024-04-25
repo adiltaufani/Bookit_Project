@@ -5,7 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_project/features/auth/screens/notification_page.dart';
 import 'package:flutter_project/features/auth/screens/setting_page.dart';
-import 'package:flutter_project/features/auth/services/google_auth_service.dart';
+import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
 import 'package:flutter_project/features/auth/widgets/side_menu.dart';
 import 'package:flutter_project/features/home/widgets/home_house.dart';
 import 'package:flutter_project/features/search/widgets/search_page_widget.dart';

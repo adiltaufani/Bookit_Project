@@ -8,7 +8,7 @@ import 'package:flutter_project/features/auth/screens/message_screen.dart';
 import 'package:flutter_project/features/auth/screens/profile_setting.dart';
 import 'package:flutter_project/features/auth/screens/transaction_screen.dart';
 import 'package:flutter_project/features/auth/screens/wishlist_screen.dart';
-import 'package:flutter_project/features/auth/services/google_auth_service.dart';
+import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SettingPage extends StatefulWidget {

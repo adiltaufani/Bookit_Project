@@ -9,7 +9,7 @@ import 'package:flutter_project/features/auth/screens/notification_page.dart';
 import 'package:flutter_project/features/auth/screens/setting_page.dart';
 import 'package:flutter_project/features/auth/screens/transaction_screen.dart';
 import 'package:flutter_project/features/auth/screens/wishlist_screen.dart';
-import 'package:flutter_project/features/auth/services/google_auth_service.dart';
+import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SideMenu extends StatelessWidget {

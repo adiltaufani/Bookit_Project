@@ -7,8 +7,8 @@ import 'package:flutter_project/common/widgets/custom_password_field.dart';
 import 'package:flutter_project/common/widgets/custom_texfield.dart';
 import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/screens/login_screen.dart';
-import 'package:flutter_project/features/auth/services/firebase_auth_service.dart';
-import 'package:flutter_project/features/auth/services/google_auth_service.dart';
+import 'package:flutter_project/features/auth/services/auth/firebase_auth_service.dart';
+import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
@@ -189,6 +189,11 @@ class _AuthScreenState extends State<AuthScreen> {
                           _signUp();
                         }
                       },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 127, vertical: 10),
+                      ),
                       child: const Text(
                         'SIGN UP',
                         style: TextStyle(
@@ -198,11 +203,6 @@ class _AuthScreenState extends State<AuthScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 127, vertical: 10),
-                      ),
                     ),
                   ),
                   const SizedBox(
@@ -211,7 +211,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         'Already have an accont?',
                         style: TextStyle(
                           fontFamily: 'OutfitBlod',
@@ -219,7 +219,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           color: Color(0xFF0077B2),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 3,
                       ),
                       GestureDetector(
@@ -228,7 +228,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           // Misalnya, untuk menavigasi ke layar login, Anda dapat menggunakan Navigator
                           Navigator.pushNamed(context, LoginScreen.routeName);
                         },
-                        child: Text(
+                        child: const Text(
                           'Login',
                           style: TextStyle(
                             fontFamily: 'OutfitBlod',
@@ -278,8 +278,10 @@ class _AuthScreenState extends State<AuthScreen> {
   Future _signUp() async {
     String email = _emailController.text;
     String password = _passwordController.text;
-
-    User? user = await _auth.signUpWithEmailAndPassword(email, password);
+    String firstName = _nameController.text;
+    String lastName = _lastnameController.text;
+    User? user = await _auth.signUpWithEmailAndPassword(
+        email, password, firstName, lastName);
 
     if (user != null) {
       register();
