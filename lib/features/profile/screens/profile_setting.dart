@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_project/variables.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +15,6 @@ class ProfileSetting extends StatefulWidget {
 
 class _ProfileSettingState extends State<ProfileSetting> {
   final _formKey = GlobalKey<FormState>();
-  late String _name = "";
-  late String _number = "";
-  late String _birth = "";
-  late String _address = "";
   String? _firstname;
   String? lastname;
   String? number;
@@ -74,7 +71,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                       padding: const EdgeInsets.only(left: 24),
                       child: Row(
                         children: [
-                          Container(
+                          SizedBox(
                             height: 124,
                             child: Padding(
                               padding: const EdgeInsets.all(20.0),
@@ -100,7 +97,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '${_firstname ?? 'Loading...'}',
+                                        _firstname ?? 'Loading...',
                                         style: GoogleFonts.montserrat(
                                           fontSize: 24,
                                           color: Colors.white,
@@ -108,7 +105,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                         ),
                                       ),
                                       Text(
-                                        '${email ?? 'Loading...'}',
+                                        email ?? 'Loading...',
                                         style: GoogleFonts.montserrat(
                                           fontSize: 14,
                                           color: Colors.white54,
@@ -139,7 +136,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                           horizontal: 32,
                           vertical: 16,
                         ),
-                        child: firstnameTrigger!
+                        child: firstnameTrigger
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -160,9 +157,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                             return null;
                                           },
                                           onSaved: (value) {
-                                            if (value != null) {
-                                              _name = value;
-                                            }
+                                            if (value != null) {}
                                           },
                                         ),
                                         TextFormField(
@@ -179,9 +174,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                             return null;
                                           },
                                           onSaved: (value) {
-                                            if (value != null) {
-                                              _number = value;
-                                            }
+                                            if (value != null) {}
                                           },
                                         ),
                                         TextFormField(
@@ -196,9 +189,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                             return null;
                                           },
                                           onSaved: (value) {
-                                            if (value != null) {
-                                              _birth = value;
-                                            }
+                                            if (value != null) {}
                                           },
                                         ),
                                         TextFormField(
@@ -218,7 +209,6 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                           onSaved: (value) {
                                             if (value != null) {
                                               // Tambahkan pemeriksaan null
-                                              _address = value;
                                             }
                                           },
                                         ),
@@ -258,7 +248,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                   ),
                                 ],
                               )
-                            : Center(child: CircularProgressIndicator()),
+                            : const Center(child: CircularProgressIndicator()),
                       ),
                     ),
                   ],
@@ -277,12 +267,10 @@ class _ProfileSettingState extends State<ProfileSetting> {
     // Pastikan user sudah login
     if (user == null) {
       // Jika user belum login, tampilkan pesan
-      print("Silakan login terlebih dahulu");
       return; // Keluar dari metode fetchUserData
     }
 
-    var url =
-        Uri.parse("http://192.168.100.10/ta_projek/crudtaprojek/view_data.php");
+    var url = Uri.parse("http://$ipaddr/ta_projek/crudtaprojek/view_data.php");
     String uid = user.uid;
 
     var response = await http.post(url, body: {
@@ -298,10 +286,9 @@ class _ProfileSettingState extends State<ProfileSetting> {
       birthdate = data['birthdate'];
       address = data['address'];
       email = data['email'];
-      print('Firstname: $_firstname, Lastname: $lastname');
       // Lakukan apapun yang Anda ingin lakukan dengan data ini
     } else {
-      print("Gagal mendapatkan data pengguna");
+      throw ("Gagal mendapatkan data pengguna");
     }
 
     if (_firstname != null) {

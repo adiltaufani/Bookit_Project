@@ -1,11 +1,16 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_project/features/auth/screens/notification_page.dart';
-import 'package:flutter_project/features/auth/screens/setting_page.dart';
-import 'package:flutter_project/features/auth/widgets/custom_search_text.dart';
-import 'package:flutter_project/features/auth/widgets/landmark_btn.dart';
+import 'package:flutter_project/features/landmark/model/landmark_model.dart';
+import 'package:flutter_project/features/notification/screens/notification_page.dart';
+import 'package:flutter_project/features/profile/screens/setting_page.dart';
+import 'package:flutter_project/features/search/widgets/custom_search_text.dart';
+import 'package:flutter_project/features/landmark/widgets/landmark_btn.dart';
 import 'package:flutter_project/features/auth/widgets/side_menu.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 
 class LandmarkScreen extends StatefulWidget {
   static const String routeName = '/landmark-screen';
@@ -16,7 +21,38 @@ class LandmarkScreen extends StatefulWidget {
 }
 
 class _LandmarkScreenState extends State<LandmarkScreen> {
+  static List<LandmarkModel> main_landmark_list = [];
+  List<LandmarkModel> display_list = [];
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Future<void> _getData() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            'http://172.19.144.1/ta_projek/crudtaprojek/read_landmark.php'),
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> jsonData = jsonDecode(response.body);
+        List<LandmarkModel> landmarkList = jsonData.map((data) {
+          return LandmarkModel(data['landmark_url'], data['landmark_name']);
+        }).toList();
+
+        setState(() {
+          main_landmark_list = landmarkList;
+          display_list = List.from(main_landmark_list);
+          print(main_landmark_list[0].landmark_name);
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    _getData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +112,7 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
         ),
       ),
       body: Container(
+        height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -164,48 +201,24 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
                 ],
               ),
             ),
-            const Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    LandmarkBtn(
-                      placeName: 'Monas',
-                      imagePath: 'assets/images/contoh2.png',
-                    ),
-                    LandmarkBtn(
-                      placeName: 'Gedung Sate',
-                      imagePath: 'assets/images/image_widget.png',
-                    ),
-                    LandmarkBtn(
-                      placeName: 'Pangandaran Beach',
-                      imagePath: 'assets/images/image_widget.png',
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 12,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    LandmarkBtn(
-                      placeName: 'Pangalengan Tea Garden',
-                      imagePath: 'assets/images/image_widget.png',
-                    ),
-                    LandmarkBtn(
-                      placeName: 'TSM',
-                      imagePath: 'assets/images/image_widget.png',
-                    ),
-                    LandmarkBtn(
-                      placeName: 'Borobudur',
-                      imagePath: 'assets/images/image_widget.png',
-                    ),
-                  ],
-                ),
-              ],
-            )
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              height: double.infinity,
+              width: double.infinity,
+              child: ListView.builder(
+                padding: EdgeInsets.all(8), // Tambahkan padding di sini
+                itemCount: display_list.length,
+                itemBuilder: (context, index) {
+                  String cleanedUrlFoto =
+                      display_list[index].landmark_url!.replaceAll('\\', '');
+                  return LandmarkBtn(
+                      placeName: display_list[index].landmark_name!,
+                      imagePath: cleanedUrlFoto);
+                },
+              ),
+            ),
           ],
         ),
       ),

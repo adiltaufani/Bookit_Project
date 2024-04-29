@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_project/features/auth/screens/message_chat_screen.dart';
-import 'package:flutter_project/features/auth/screens/notification_page.dart';
-import 'package:flutter_project/features/auth/screens/setting_page.dart';
+import 'package:flutter_project/features/message/screens/message_chat_screen.dart';
 import 'package:flutter_project/features/auth/services/auth/firebase_auth_service.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
-import 'package:flutter_project/features/auth/services/chat/chat_service.dart';
-import 'package:flutter_project/features/auth/widgets/custom_search_text.dart';
+import 'package:flutter_project/features/message/services/chat_service.dart';
 import 'package:flutter_project/features/auth/widgets/side_menu.dart';
 import 'package:flutter_project/features/auth/widgets/user_tile.dart';
+import 'package:flutter_project/features/notification/screens/notification_page.dart';
+import 'package:flutter_project/features/profile/screens/setting_page.dart';
+import 'package:flutter_project/features/search/widgets/custom_search_text.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MessageScreen extends StatefulWidget {
@@ -23,8 +23,6 @@ class _MessageScreenState extends State<MessageScreen> {
   final FirebaseAuthService _authService = FirebaseAuthService();
   final ChatService _chatService = ChatService();
   bool isTextFieldFocused = false;
-  TextEditingController _searchController = TextEditingController();
-  bool _isUp = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -167,10 +165,13 @@ class _MessageScreenState extends State<MessageScreen> {
 
   Widget _buildUserListItem(
       Map<String, dynamic> userData, BuildContext context) {
+    String senderUid = _authService.getCurrentUser()!.uid;
     //display all user
     if (userData['email'] != _authService.getCurrentUser()!.email) {
       return UserTile(
         email: userData['email'],
+        recieverUid: userData['uid'],
+        senderUid: senderUid,
         onTap: () {
           Navigator.push(
             context,

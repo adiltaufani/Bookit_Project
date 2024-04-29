@@ -41,18 +41,22 @@ dependencies:
   firebase_auth: ^4.19.3
   google_sign_in: ^6.2.1
   http: ^1.2.1
-  intl: ^0.19.0
+  intl: ^0.18.0
   firebase_database: ^10.4.11
   get: ^4.6.6
   awesome_notifications_core: ^0.9.0
-  awesome_notifications: ^0.9.3+1
+  awesome_notifications: ^0.8.2
   firebase_messaging: ^14.8.1
   firebase_analytics_web: ^0.5.7+1
   firebase_analytics: ^10.10.1
   flutter_image_slideshow: any
   url_launcher:  ^6.2.6
   cloud_firestore: ^4.17.1
-
+  dash_chat_2: ^0.0.20
+  chat_gpt_sdk: ^2.2.5
+  flutter_gemini: ^2.0.3
+  image_picker: ^1.1.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

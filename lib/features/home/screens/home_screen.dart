@@ -1,11 +1,7 @@
-import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_project/features/auth/screens/notification_page.dart';
-import 'package:flutter_project/features/auth/screens/setting_page.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
+import 'package:flutter_project/features/notification/screens/notification_page.dart';
+import 'package:flutter_project/features/profile/screens/setting_page.dart';
 import 'package:flutter_project/features/auth/widgets/side_menu.dart';
 import 'package:flutter_project/features/home/widgets/home_house.dart';
 import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
@@ -22,34 +18,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  List _Listdata = [];
-  bool _isSearchPageVisible = false;
-  Future _getdata() async {
-    try {
-      final response = await http.get(
-        Uri.parse('http://192.168.100.10/ta_projek/crudtaprojek/read.php'),
-      );
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        setState(() {
-          _Listdata = data;
-        });
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
   @override
   void initState() {
-    _getdata();
     runPHPCodeOnHomeScreen();
     super.initState();
   }
 
   final GoogleAuthService authService = GoogleAuthService();
   bool isTextFieldFocused = true;
-  TextEditingController _searchController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -296,6 +272,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 }
 
+// ignore: must_be_immutable
 class CircleTabIndicator extends Decoration {
   final Color color;
   double radius;

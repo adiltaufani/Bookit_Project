@@ -42,8 +42,6 @@ class _TransactionRecentState extends State<TransactionRecent> {
   bool _isconstscrolled = false;
   bool _isUp = false;
 
-  TextEditingController _searchController = TextEditingController();
-
   void _toggleImage() {
     setState(() {
       _isUp = !_isUp;
@@ -57,8 +55,7 @@ class _TransactionRecentState extends State<TransactionRecent> {
         itemCount:
             _Listdata.length, // Ganti dengan jumlah item yang Anda inginkan
         itemBuilder: (BuildContext context, int index) {
-          String cleanedUrlFoto =
-              _Listdata[index]['url_foto'].replaceAll('\\', '');
+          _Listdata[index]['url_foto'].replaceAll('\\', '');
           return Container(
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(

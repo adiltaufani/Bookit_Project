@@ -1,28 +1,29 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_project/features/auth/screens/booking_page.dart';
+import 'package:flutter_project/features/booking/screens/booking_page.dart';
 import 'package:flutter_project/features/home/screens/near_from_you.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
+// ignore: must_be_immutable
 class HomeHouse extends StatefulWidget {
   String tipe;
-  HomeHouse({required this.tipe});
+  HomeHouse({super.key, required this.tipe});
 
   @override
   State<HomeHouse> createState() => _HomeHouseState();
 }
 
 class _HomeHouseState extends State<HomeHouse> {
+  // ignore: non_constant_identifier_names
   List _Listdata = [];
 
   Future _getdata() async {
     try {
       final response = await http.get(
-        Uri.parse(
-            'http://192.168.100.10/ta_projek/crudtaprojek/${widget.tipe}'),
+        Uri.parse('http://$ipaddr/ta_projek/crudtaprojek/${widget.tipe}'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -31,14 +32,13 @@ class _HomeHouseState extends State<HomeHouse> {
         });
       }
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 
   @override
   void initState() {
     _getdata();
-    print(_Listdata);
     super.initState();
   }
 
@@ -92,7 +92,7 @@ class _HomeHouseState extends State<HomeHouse> {
               ],
             ),
           ),
-          Container(
+          SizedBox(
             height: 300,
             width: double.infinity,
             child: ListView.builder(
@@ -106,8 +106,8 @@ class _HomeHouseState extends State<HomeHouse> {
                     Container(
                       height: 275,
                       width: 240,
-                      padding: EdgeInsets.all(0),
-                      margin: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(0),
+                      margin: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: Colors.white,
@@ -119,8 +119,8 @@ class _HomeHouseState extends State<HomeHouse> {
                     Container(
                       width: 240,
                       height: 275,
-                      padding: EdgeInsets.all(0),
-                      margin: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(0),
+                      margin: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(
                             20), // Adjust the radius as needed
@@ -145,7 +145,7 @@ class _HomeHouseState extends State<HomeHouse> {
                           Text(
                             _Listdata[index]['nama_penginapan'],
                             style: GoogleFonts.montserrat(
-                              textStyle: TextStyle(
+                              textStyle: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold,
@@ -155,7 +155,7 @@ class _HomeHouseState extends State<HomeHouse> {
                           Text(
                             _Listdata[index]['alamat'],
                             style: GoogleFonts.montserrat(
-                              textStyle: TextStyle(
+                              textStyle: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
@@ -170,7 +170,7 @@ class _HomeHouseState extends State<HomeHouse> {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Container(
@@ -203,12 +203,12 @@ class _HomeHouseState extends State<HomeHouse> {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           ListView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: _Listdata.length,
             itemBuilder: (BuildContext context, int index) {
               String cleanedUrlFoto =
@@ -225,7 +225,7 @@ class _HomeHouseState extends State<HomeHouse> {
                                 jumlah_reviewer: _Listdata[index]
                                     ['jumlah_reviewer'],
                                 url_foto: cleanedUrlFoto,
-                                id: _Listdata[index]['id'],
+                                hotel_id: _Listdata[index]['id'],
                                 latitude: _Listdata[index]['latitude'],
                                 longitude: _Listdata[index]['longitude'],
                               )));
@@ -251,7 +251,7 @@ class _HomeHouseState extends State<HomeHouse> {
                               fit: BoxFit.cover),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 13,
                       ),
                       Expanded(
@@ -273,7 +273,7 @@ class _HomeHouseState extends State<HomeHouse> {
                                 ),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 4,
                             ),
                             Row(
@@ -281,7 +281,7 @@ class _HomeHouseState extends State<HomeHouse> {
                                 Text(
                                   'Rp.',
                                   style: GoogleFonts.montserrat(
-                                    textStyle: TextStyle(
+                                    textStyle: const TextStyle(
                                         color: Color.fromARGB(255, 8, 59, 134),
                                         fontSize: 14,
                                         fontWeight: FontWeight.w400),
@@ -292,7 +292,7 @@ class _HomeHouseState extends State<HomeHouse> {
                                           ['harga_termurah']
                                       .toString()), // Mengonversi integer ke string sebelum memanggil formatInteger
                                   style: GoogleFonts.montserrat(
-                                    textStyle: TextStyle(
+                                    textStyle: const TextStyle(
                                         color: Color.fromARGB(255, 8, 59, 134),
                                         fontSize: 14,
                                         fontWeight: FontWeight.w400),
@@ -301,7 +301,7 @@ class _HomeHouseState extends State<HomeHouse> {
                                 Text(
                                   ' / night',
                                   style: GoogleFonts.montserrat(
-                                    textStyle: TextStyle(
+                                    textStyle: const TextStyle(
                                         color: Color.fromARGB(255, 8, 59, 134),
                                         fontSize: 14,
                                         fontWeight: FontWeight.w400),
@@ -309,7 +309,7 @@ class _HomeHouseState extends State<HomeHouse> {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5,
                             ),
                             Row(
@@ -318,23 +318,23 @@ class _HomeHouseState extends State<HomeHouse> {
                                   'assets/images/bedroom.png',
                                   height: 24.0,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 4,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 3.5,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 8,
                                 ),
                                 Image.asset(
                                   'assets/images/bathroom.png',
                                   height: 24.0,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 4,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 3.5,
                                 ),
                                 Text(

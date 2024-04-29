@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/features/auth/services/auth/firebase_auth_service.dart';
-import 'package:flutter_project/features/auth/services/chat/chat_service.dart';
+import 'package:flutter_project/features/message/screens/message_screen.dart';
+import 'package:flutter_project/features/message/services/chat_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MessageInboxScreen extends StatefulWidget {
@@ -101,7 +102,7 @@ class _MessageInboxScreenState extends State<MessageInboxScreen> {
           ),
           leading: IconButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.pushNamed(context, MessageScreen.routeName);
             },
             icon: Icon(
               Icons.arrow_back_ios_new,

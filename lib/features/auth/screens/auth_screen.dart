@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_project/common/widgets/custom_password_field.dart';
 import 'package:flutter_project/common/widgets/custom_texfield.dart';
-import 'package:flutter_project/features/auth/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/screens/login_screen.dart';
 import 'package:flutter_project/features/auth/services/auth/firebase_auth_service.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
+import 'package:flutter_project/features/home/screens/home_screen.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
@@ -249,8 +248,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Future<void> register() async {
-    var url =
-        Uri.parse("http://192.168.100.10/ta_projek/crudtaprojek/register.php");
+    var url = Uri.parse("http://$ipaddr/ta_projek/crudtaprojek/register.php");
     String firstName = _nameController.text;
     String lastName = _lastnameController.text;
     String email = _emailController.text;

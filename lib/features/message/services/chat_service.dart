@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_project/features/auth/services/chat/message.dart';
+import 'package:flutter_project/features/message/services/message.dart';
 
 class ChatService {
   //get instance of firestore & auth
@@ -94,6 +94,29 @@ class ChatService {
     } catch (error) {
       // Handle any errors
       print('Error getting last message: $error');
+      return null;
+    }
+  }
+
+  Future<DateTime?> getLastMessageTime(String chatRoomId) async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('chat_rooms')
+          .doc(chatRoomId)
+          .collection('messages')
+          .orderBy("timestamp", descending: true)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // Ambil waktu dari dokumen pertama
+        Timestamp timestamp = querySnapshot.docs.first.get('timestamp');
+        return timestamp.toDate(); // Konversi Timestamp ke DateTime
+      } else {
+        return null;
+      }
+    } catch (error) {
+      print('Error getting last message time: $error');
       return null;
     }
   }

@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/features/auth/screens/auth_screen.dart';
-import 'package:flutter_project/features/auth/screens/booking_page.dart';
-import 'package:flutter_project/features/auth/screens/home_screen.dart';
-import 'package:flutter_project/features/auth/screens/landmark_screen.dart';
 import 'package:flutter_project/features/auth/screens/login_screen.dart';
-import 'package:flutter_project/features/auth/screens/message_chat_screen.dart';
-import 'package:flutter_project/features/auth/screens/message_screen.dart';
-import 'package:flutter_project/features/auth/screens/notification_page.dart';
-import 'package:flutter_project/features/auth/screens/payment_page.dart';
-import 'package:flutter_project/features/auth/screens/profile_setting.dart';
-import 'package:flutter_project/features/auth/screens/search_page.dart';
-import 'package:flutter_project/features/auth/screens/setting_page.dart';
-import 'package:flutter_project/features/auth/screens/transaction_screen.dart';
-import 'package:flutter_project/features/auth/screens/wishlist_screen.dart';
+import 'package:flutter_project/features/message/screens/message_chat_screen.dart';
+import 'package:flutter_project/features/booking/screens/booking_page.dart';
+import 'package:flutter_project/features/chatAI/screens/aichat_page.dart';
+import 'package:flutter_project/features/home/screens/home_screen.dart';
 import 'package:flutter_project/features/home/screens/near_from_you.dart';
+import 'package:flutter_project/features/landmark/screens/landmark_screen.dart';
+import 'package:flutter_project/features/message/screens/message_screen.dart';
+import 'package:flutter_project/features/notification/screens/notification_page.dart';
+import 'package:flutter_project/features/payment/screens/payment_page.dart';
+import 'package:flutter_project/features/payment/screens/transaction_screen.dart';
+import 'package:flutter_project/features/profile/screens/profile_setting.dart';
+import 'package:flutter_project/features/profile/screens/setting_page.dart';
+import 'package:flutter_project/features/search/screens/search_page.dart';
 import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
+import 'package:flutter_project/features/wishlist/screens/wishlist_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
@@ -26,12 +27,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case BookingPage.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const BookingPage(
+        builder: (_) => BookingPage(
           locationAddress: 'Detailed Location Address\nLocation Address',
           locationName: 'Location Name',
           jumlah_reviewer: '',
           url_foto: '',
-          id: '',
+          hotel_id: '',
           latitude: '',
           longitude: '',
         ),
@@ -39,18 +40,24 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case PaymentPage.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const PaymentPage(
-            // latitude: double.nan, //buat lokasi gugel maps/
-            // longitude: double.nan,
-            // locationAddress: 'Detailed Location Address\nLocation Address',
-            // locationName: 'Location Name',
-            ),
+        builder: (_) => PaymentPage(
+          id: '',
+          hotel_id: '',
+          nama_penginapan: '',
+          hargaTotal: '',
+          lokasi: '',
+          startDate: '',
+          url_foto: '',
+          endDate: '',
+          adultValue: 0,
+          childValue: 0,
+        ),
       );
 
     case SearchPageWidget.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => SearchPageWidget(),
+        builder: (_) => const SearchPageWidget(),
       );
     case SearchPage.routeName:
       return MaterialPageRoute(
@@ -59,6 +66,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           namaKota: '',
         ),
       );
+    case AIChatPage.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => AIChatPage(),
+      );
+
     case NotificationPage.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
@@ -79,7 +92,14 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const MessageScreen(),
       );
-
+    case MessageInboxScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => MessageInboxScreen(
+          receiverEmail: '',
+          receiverID: '',
+        ),
+      );
     case TransactionScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,

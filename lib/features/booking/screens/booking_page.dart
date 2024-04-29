@@ -1,97 +1,129 @@
 import 'dart:convert';
-import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
-import 'package:flutter_project/features/auth/widgets/futniture_widget.dart';
-import 'package:flutter_project/features/auth/screens/payment_page.dart';
-import 'package:flutter_project/features/auth/widgets/room_type.dart';
+import 'package:flutter_project/features/booking/widgets/futniture_widget.dart';
+import 'package:flutter_project/features/payment/screens/payment_page.dart';
 import 'package:flutter_project/features/auth/widgets/variables.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher_string.dart';
 
+// ignore: must_be_immutable
 class BookingPage extends StatefulWidget {
   static const String routeName = '/booking-page';
-  const BookingPage({
+  BookingPage({
     Key? key,
     required this.locationName,
     required this.locationAddress,
     required this.jumlah_reviewer,
     required this.url_foto,
-    required this.id,
+    required this.hotel_id,
     required this.latitude,
     required this.longitude,
+    this.tanggalAwal,
+    this.tanggalAkhir,
   }) : super(key: key);
 
   final String locationName;
   final String locationAddress;
   final String jumlah_reviewer;
   final String url_foto;
-  final String id;
+  final String hotel_id;
   final String latitude;
   final String longitude;
+  String? tanggalAwal;
+  String? tanggalAkhir;
 
   @override
   State<BookingPage> createState() => _BookingPageState();
 }
 
 class _BookingPageState extends State<BookingPage> {
+  DateTimeRange selectedDates = DateTimeRange(
+    start: DateTime.now(),
+    end: DateTime.now(),
+  );
   double lat = -6.975003032183382;
   double long = 107.64594257899627;
   late Future<Map<String, bool>> futureFurnitureData;
-  final _furniture = [
-    "wifi",
-    "Gym",
-    "pool",
-    "toilet",
-    "Breakfast",
-  ];
 
-  final Map<String, IconData> _iconMap = {
-    "wifi": Icons.wifi_rounded,
-    "Gym": Icons.sports_gymnastics_rounded,
-    "pool": Icons.pool_rounded,
-    "toilet": Icons.wc_outlined,
-    "Breakfast": Icons.local_dining_rounded,
-  };
   List _Listdata = [];
 
   Future _getdata() async {
-    try {
-      final response = await http.get(
-        Uri.parse(
-            'http://192.168.1.13/ta_projek/crudtaprojek/get_rooms_byid.php?uid=${widget.id}'),
-      );
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        setState(() {
-          _Listdata = data;
-          print(_Listdata);
-        });
+    if (widget.tanggalAwal != null && widget.tanggalAkhir != null) {
+      try {
+        final response = await http.get(
+          Uri.parse(
+              'http://${ipaddr}/ta_projek/crudtaprojek/get_rooms_byid.php?uid=${widget.hotel_id}&tanggal_checkin=${widget.tanggalAwal}&tanggal_checkout=${widget.tanggalAkhir}'),
+        );
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          setState(() {
+            _Listdata = data;
+            print(_Listdata);
+          });
+        }
+      } catch (e) {
+        print(e);
       }
-    } catch (e) {
-      print(e);
+    } else {
+      try {
+        DateTime tanggal = DateTime.now();
+        DateTime tanggalbesok = tanggal.add(Duration(days: 1));
+        String formattedTanggal = tanggal.toIso8601String().substring(0, 10);
+        String formattedTanggalbesok =
+            tanggalbesok.toIso8601String().substring(0, 10);
+
+        final response = await http.get(
+          Uri.parse(
+              'http://${ipaddr}/ta_projek/crudtaprojek/get_rooms_byid.php?uid=${widget.hotel_id}&tanggal_checkin=${formattedTanggal}&tanggal_checkout=${formattedTanggalbesok}'),
+        );
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          setState(() {
+            _Listdata = data;
+            print(_Listdata);
+          });
+        }
+      } catch (e) {
+        print(e);
+      }
     }
   }
 
   List<bool> booleanList = List<bool>.filled(10, true);
-  bool _isButtonPressed = false;
   bool _isdatechoosed = false;
   bool _ispersonchoosed = false;
   String hargaa = '';
   double totalHarga = 0;
   String hargaFix = 'Rp.0';
+  DateTime? startDate;
+  DateTime? endDate;
+  String formattedStartDate = '';
+  String formattedEndDate = '';
+  String startdateNew = '';
+  String enddateNew = '';
+  int _selectedValueAdult = 0;
+  int _selectedValueChild = 0;
+  List<String> selectedRoomIds = [];
+  String roomsIds = '';
 
   @override
   void initState() {
-    futureFurnitureData = fetchFurnitureData();
     _getdata();
-    print('asdasdasd ${futureFurnitureData}');
     super.initState();
+  }
+
+  void _formatSelectedDates() {
+    formattedStartDate = selectedDates.start.toIso8601String().substring(0, 10);
+    formattedEndDate = selectedDates.end.toIso8601String().substring(0, 10);
+    DateTime date = DateTime.parse(formattedStartDate);
+    DateTime date2 = DateTime.parse(formattedEndDate);
+    startdateNew = DateFormat('dd MMMM yyyy').format(date);
+    enddateNew = DateFormat('dd MMMM yyyy').format(date2);
   }
 
   @override
@@ -236,7 +268,7 @@ class _BookingPageState extends State<BookingPage> {
                         Padding(
                           padding: const EdgeInsets.only(left: 6.0),
                           child: Text(
-                            '${widget.id} Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
+                            '${id} Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
                             // _Listdata[index]['lokasi'],
                             style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(
@@ -264,7 +296,7 @@ class _BookingPageState extends State<BookingPage> {
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
-                            children: [FurniturePage(id: widget.id)],
+                            children: [FurniturePage(id: widget.hotel_id)],
                           ),
                         ),
                         const SizedBox(height: 24),
@@ -369,11 +401,24 @@ class _BookingPageState extends State<BookingPage> {
                           child: Material(
                             color: Colors.transparent,
                             child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _isdatechoosed = !_isdatechoosed;
-                                });
-                                //choose date
+                              onTap: () async {
+                                final DateTimeRange? dateTimeRange =
+                                    await showDateRangePicker(
+                                  context: context,
+                                  firstDate: DateTime(2000),
+                                  lastDate: DateTime(3000),
+                                );
+                                if (dateTimeRange != null) {
+                                  setState(() {
+                                    selectedDates = dateTimeRange;
+                                    startDate = dateTimeRange.start;
+                                    endDate = dateTimeRange.end;
+                                    _formatSelectedDates();
+                                    print('Tanggal Awal: $formattedStartDate');
+                                    print('Tanggal Akhir: $formattedEndDate');
+                                    _isdatechoosed = true;
+                                  });
+                                }
                               },
                               child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 200),
@@ -399,7 +444,7 @@ class _BookingPageState extends State<BookingPage> {
                                             ),
                                             const SizedBox(width: 4),
                                             Text(
-                                              '19 May 2024',
+                                              '${startdateNew} / ${enddateNew}',
                                               style: GoogleFonts.montserrat(
                                                 textStyle: const TextStyle(
                                                   color: Colors.blue,
@@ -442,7 +487,68 @@ class _BookingPageState extends State<BookingPage> {
                             child: InkWell(
                               onTap: () {
                                 setState(() {
-                                  _ispersonchoosed = !_ispersonchoosed;
+                                  showCupertinoModalPopup(
+                                    context: context,
+                                    builder: (_) => SizedBox(
+                                      width: double.infinity,
+                                      height: 250,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: CupertinoPicker(
+                                              backgroundColor: Colors.white,
+                                              itemExtent: 30,
+                                              scrollController:
+                                                  FixedExtentScrollController(
+                                                initialItem: 1,
+                                              ),
+                                              children: const [
+                                                Text('0 Adult'),
+                                                Text('1 Adult'),
+                                                Text('2 Adult'),
+                                                Text('3 Adult'),
+                                                Text('4 Adult'),
+                                                Text('5 Adult'),
+                                                Text('6 Adult'),
+                                              ],
+                                              onSelectedItemChanged:
+                                                  (int value) {
+                                                setState(() {
+                                                  _selectedValueAdult = value;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: CupertinoPicker(
+                                              backgroundColor: Colors.white,
+                                              itemExtent: 30,
+                                              scrollController:
+                                                  FixedExtentScrollController(
+                                                initialItem: 1,
+                                              ),
+                                              children: const [
+                                                Text('0 Child'),
+                                                Text('1 Child'),
+                                                Text('2 Child'),
+                                                Text('3 Child'),
+                                                Text('4 Child'),
+                                                Text('5 Child'),
+                                                Text('6 Child'),
+                                              ],
+                                              onSelectedItemChanged:
+                                                  (int value) {
+                                                setState(() {
+                                                  _selectedValueChild = value;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                  _ispersonchoosed = true;
                                 });
                                 //add person
                               },
@@ -470,7 +576,7 @@ class _BookingPageState extends State<BookingPage> {
                                             ),
                                             const SizedBox(width: 4),
                                             Text(
-                                              '2 Adults, 1 child',
+                                              '${_selectedValueAdult} Adult, ${_selectedValueChild} Child',
                                               style: GoogleFonts.montserrat(
                                                 textStyle: const TextStyle(
                                                   color: Colors.blue,
@@ -788,7 +894,14 @@ class _BookingPageState extends State<BookingPage> {
                                                         totalHarga += harga;
                                                         hargaFix =
                                                             'Rp. $totalHarga';
-                                                        print(totalHarga);
+                                                        selectedRoomIds.add(
+                                                            _Listdata[index]
+                                                                ['id']);
+                                                        roomsIds =
+                                                            _Listdata[index]
+                                                                ['id'];
+                                                        print(
+                                                            '${totalHarga}, ${selectedRoomIds}');
                                                       });
                                                     },
                                                     style: ElevatedButton
@@ -832,7 +945,12 @@ class _BookingPageState extends State<BookingPage> {
                                                         totalHarga -= harga;
                                                         hargaFix =
                                                             'Rp. $totalHarga';
-                                                        print(totalHarga);
+                                                        selectedRoomIds.remove(
+                                                            _Listdata[index]
+                                                                ['id']);
+                                                        roomsIds = '';
+                                                        print(
+                                                            '${totalHarga}, ${selectedRoomIds}');
                                                       });
                                                     },
                                                     style: ElevatedButton
@@ -890,7 +1008,44 @@ class _BookingPageState extends State<BookingPage> {
             left: 10,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, PaymentPage.routeName);
+                if (startDate == null ||
+                    endDate == null ||
+                    _selectedValueAdult == 0 ||
+                    totalHarga == 0) {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Input Tidak Sesuai'),
+                          content: Text(
+                              'Mohon piih tanggal, jumlah orang, dan pilih kamar'),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('ok'))
+                          ],
+                        );
+                      });
+                } else {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => PaymentPage(
+                        id: roomsIds,
+                        hotel_id: widget.hotel_id,
+                        url_foto: widget.url_foto,
+                        nama_penginapan: widget.locationName,
+                        lokasi: widget.locationAddress,
+                        hargaTotal: hargaFix,
+                        startDate: startdateNew,
+                        endDate: enddateNew,
+                        adultValue: _selectedValueAdult,
+                        childValue: _selectedValueChild,
+                      ),
+                    ),
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
                 fixedSize: const Size(double.infinity, 52),
@@ -959,32 +1114,4 @@ class _BookingPageState extends State<BookingPage> {
   //     _isButtonPressed = false;
   //   });
   // }
-
-  Future<Map<String, bool>> fetchFurnitureData() async {
-    final url =
-        'http://192.168.1.13/ta_projek/crudtaprojek/get_furniture.php?id=${widget.id}'; // Ganti URL dengan URL API Anda
-
-    // Lakukan permintaan HTTP GET ke API
-    final response = await http.get(Uri.parse(url));
-
-    // Periksa apakah permintaan berhasil
-    if (response.statusCode == 200) {
-      // Parse respons JSON
-      print(response.body);
-      List<dynamic> data = json.decode(response.body);
-
-      // Konversi data ke Map<String, bool>
-      Map<String, bool> furnitureData = {
-        "wifi": int.parse(data[0]['wifi']) == 1,
-        "Gym": int.parse(data[0]['pusat_kebugaran']) == 1,
-        "pool": int.parse(data[0]['kolam_renang']) == 1,
-        "toilet": int.parse(data[0]['parkir']) == 1,
-        "Breakfast": int.parse(data[0]['restoran']) == 1,
-      };
-      print(furnitureData);
-      return furnitureData;
-    } else {
-      throw Exception('Failed to load data');
-    }
-  }
 }

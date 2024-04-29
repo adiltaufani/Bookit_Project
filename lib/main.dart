@@ -2,22 +2,18 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_project/dummysearchoverlay.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_project/features/auth/screens/auth_screen.dart';
-import 'package:flutter_project/features/auth/screens/notification_page.dart';
-import 'package:flutter_project/features/auth/screens/home_screen.dart';
-import 'package:flutter_project/features/auth/screens/login_screen.dart';
-import 'package:flutter_project/features/auth/screens/notification_page.dart';
-import 'package:flutter_project/features/home/screens/dummy.dart';
-import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
+import 'package:flutter_project/features/home/screens/home_screen.dart';
+import 'package:flutter_project/features/chatAI/widgets/consts.dart';
 import 'package:flutter_project/firebase_options.dart';
 import 'package:flutter_project/router.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
+// import 'package:firebase_analytics/firebase_analytics.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  // FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   FirebaseMessaging.onBackgroundMessage(_firebasePushHandler);
   AwesomeNotifications().initialize(
     null,
@@ -30,6 +26,7 @@ void main() async {
     ],
     debug: true,
   );
+  Gemini.init(apiKey: GEMINI_API_KEY);
   runApp(const MyApp());
 }
 

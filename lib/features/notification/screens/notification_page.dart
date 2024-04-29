@@ -1,14 +1,9 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_project/features/auth/screens/home_screen.dart';
-import 'package:flutter_project/features/auth/screens/search_page.dart';
-import 'package:flutter_project/features/auth/screens/setting_page.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
-import 'package:flutter_project/features/auth/widgets/custom_search_text.dart';
+import 'package:flutter_project/features/profile/screens/setting_page.dart';
+import 'package:flutter_project/features/search/widgets/custom_search_text.dart';
 import 'package:flutter_project/features/auth/widgets/side_menu.dart';
-import 'package:flutter_project/features/auth/widgets/top_home_btn.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NotificationPage extends StatefulWidget {
@@ -24,7 +19,6 @@ class _NotificationPageState extends State<NotificationPage> {
   bool isTextFieldFocused = false;
   bool _isTextVisible = false;
   bool _isconstscrolled = false;
-  TextEditingController _searchController = TextEditingController();
   bool _isUp = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -167,7 +161,7 @@ class _NotificationPageState extends State<NotificationPage> {
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
+              margin: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
                   ClipRect(
@@ -230,37 +224,34 @@ class _NotificationPageState extends State<NotificationPage> {
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 8.0),
                                             child: AnimatedSwitcher(
-                                                duration:
-                                                    Duration(milliseconds: 300),
+                                                duration: const Duration(
+                                                    milliseconds: 300),
                                                 child: _isTextVisible
                                                     ? Container(
-                                                        child: Container(
-                                                          constraints:
-                                                              const BoxConstraints(
-                                                                  maxWidth:
-                                                                      240),
-                                                          child: Text(
-                                                            "Dear John Kirby,\n"
-                                                            "We're pleased to inform you that your hotel reservation has been successfully rescheduled. Here are the details of your updated booking:\n\n"
-                                                            "Reservation ID: [Reservation ID]\n"
-                                                            "Hotel Name: [Hotel Name]\n"
-                                                            "Original Check-in Date: [Original Check-in Date]\n"
-                                                            "New Check-in Date: [New Check-in Date]\n"
-                                                            "Original Check-out Date: [Original Check-out Date]\n"
-                                                            "New Check-out Date: [New Check-out Date]",
-                                                            style: GoogleFonts
-                                                                .montserrat(
-                                                              textStyle:
-                                                                  const TextStyle(
-                                                                color: Colors
-                                                                    .black54,
-                                                                fontSize: 10,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                letterSpacing:
-                                                                    -0.6,
-                                                              ),
+                                                        constraints:
+                                                            const BoxConstraints(
+                                                                maxWidth: 240),
+                                                        child: Text(
+                                                          "Dear John Kirby,\n"
+                                                          "We're pleased to inform you that your hotel reservation has been successfully rescheduled. Here are the details of your updated booking:\n\n"
+                                                          "Reservation ID: [Reservation ID]\n"
+                                                          "Hotel Name: [Hotel Name]\n"
+                                                          "Original Check-in Date: [Original Check-in Date]\n"
+                                                          "New Check-in Date: [New Check-in Date]\n"
+                                                          "Original Check-out Date: [Original Check-out Date]\n"
+                                                          "New Check-out Date: [New Check-out Date]",
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            textStyle:
+                                                                const TextStyle(
+                                                              color: Colors
+                                                                  .black54,
+                                                              fontSize: 10,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              letterSpacing:
+                                                                  -0.6,
                                                             ),
                                                           ),
                                                         ),
@@ -270,7 +261,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                           ),
                                         ),
                                         Container(
-                                          margin: EdgeInsets.only(top: 2),
+                                          margin: const EdgeInsets.only(top: 2),
                                           constraints: const BoxConstraints(
                                               maxWidth: 240),
                                           child: Text(
@@ -296,7 +287,8 @@ class _NotificationPageState extends State<NotificationPage> {
                                         padding: const EdgeInsets.all(
                                             8.0), // Adjust the padding as needed
                                         child: AnimatedSwitcher(
-                                          duration: Duration(milliseconds: 300),
+                                          duration:
+                                              const Duration(milliseconds: 300),
                                           child: _isUp
                                               ? Image.asset(
                                                   'assets/images/arrow_up.png',

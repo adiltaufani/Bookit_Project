@@ -1,18 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_project/features/auth/screens/home_screen.dart';
+import 'package:flutter_project/features/home/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/widgets/sort_button.dart';
-import 'package:flutter_project/features/auth/widgets/top_home_btn.dart';
 import 'package:flutter_project/features/search/widgets/search_house.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// ignore: must_be_immutable
 class SearchPage extends StatefulWidget {
   String namaKota;
   String? tanggal_checkin;
   String? tanggal_checkout;
-  int? hargaAwal;
-  int? hargaAkhir;
+  double? hargaAwal;
+  double? hargaAkhir;
   int? bintang;
   bool? wifi;
   bool? kolamRenang;
@@ -335,68 +333,65 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                 color: Colors.black12, // Warna garis sesuai kebutuhan
                 thickness: 1, // Ketebalan garis sesuai kebutuhan
               ),
-              Container(
-                child: Align(
-                  child: TabBar(
-                    labelPadding: const EdgeInsets.only(left: 0, right: 40),
-                    controller: _tabController,
-                    labelColor: Colors.black,
-                    unselectedLabelColor: Colors.grey,
-                    isScrollable: true,
-                    indicatorSize: TabBarIndicatorSize.label,
-                    indicator:
-                        CircleTabIndicator(color: Colors.blue, radius: 4),
-                    tabs: [
-                      Tab(
-                        child: Text(
-                          'House',
-                          style: GoogleFonts.montserrat(
-                            textStyle: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w700),
-                          ),
+              Align(
+                child: TabBar(
+                  labelPadding: const EdgeInsets.only(left: 0, right: 40),
+                  controller: _tabController,
+                  labelColor: Colors.black,
+                  unselectedLabelColor: Colors.grey,
+                  isScrollable: true,
+                  indicatorSize: TabBarIndicatorSize.label,
+                  indicator: CircleTabIndicator(color: Colors.blue, radius: 4),
+                  tabs: [
+                    Tab(
+                      child: Text(
+                        'House',
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w700),
                         ),
                       ),
-                      Tab(
-                        child: Text(
-                          'Apartement',
-                          style: GoogleFonts.montserrat(
-                            textStyle: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w700),
-                          ),
+                    ),
+                    Tab(
+                      child: Text(
+                        'Apartement',
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w700),
                         ),
                       ),
-                      Tab(
-                        child: Text(
-                          'Hotel',
-                          style: GoogleFonts.montserrat(
-                            textStyle: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w700),
-                          ),
+                    ),
+                    Tab(
+                      child: Text(
+                        'Hotel',
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w700),
                         ),
                       ),
-                      Tab(
-                        child: Text(
-                          'Villa',
-                          style: GoogleFonts.montserrat(
-                            textStyle: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w700),
-                          ),
+                    ),
+                    Tab(
+                      child: Text(
+                        'Villa',
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w700),
                         ),
                       ),
-                      Tab(
-                        child: Text(
-                          'Resort',
-                          style: GoogleFonts.montserrat(
-                            textStyle: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w700),
-                          ),
+                    ),
+                    Tab(
+                      child: Text(
+                        'Resort',
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w700),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              Container(
+              SizedBox(
                 height: 1000,
                 width: double.maxFinite,
                 child: TabBarView(
