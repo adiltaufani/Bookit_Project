@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:http/http.dart' as http;
 
 class FurniturePage extends StatefulWidget {
@@ -22,7 +23,7 @@ class _FurniturePageState extends State<FurniturePage> {
 
   Future<Map<String, bool>> fetchFurnitureData() async {
     final url =
-        'http://192.168.100.10/ta_projek/crudtaprojek/get_furniture.php?id=${widget.id}';
+        'http://${ipaddr}/ta_projek/crudtaprojek/get_furniture.php?id=${widget.id}';
 
     final response = await http.get(Uri.parse(url));
 
@@ -62,27 +63,27 @@ class _FurniturePageState extends State<FurniturePage> {
           List<Widget> iconsToDisplay = [];
 
           // Tambahkan ikon berdasarkan nilai true
-          if (furnitureData != null && furnitureData['wifi'] == true) {
+          if (furnitureData['wifi'] == true) {
             iconsToDisplay.add(
               buildIconWidget(Icons.wifi, 'WiFi'),
             );
           }
-          if (furnitureData != null && furnitureData['Gym'] == true) {
+          if (furnitureData['Gym'] == true) {
             iconsToDisplay.add(
               buildIconWidget(Icons.sports_gymnastics, 'Gym'),
             );
           }
-          if (furnitureData != null && furnitureData['pool'] == true) {
+          if (furnitureData['pool'] == true) {
             iconsToDisplay.add(
               buildIconWidget(Icons.pool, 'pool'),
             );
           }
-          if (furnitureData != null && furnitureData['toilet'] == true) {
+          if (furnitureData['toilet'] == true) {
             iconsToDisplay.add(
               buildIconWidget(Icons.wc_outlined, 'toilet'),
             );
           }
-          if (furnitureData != null && furnitureData['breakfast'] == true) {
+          if (furnitureData['breakfast'] == true) {
             iconsToDisplay.add(
               buildIconWidget(Icons.breakfast_dining, 'breakfast'),
             );

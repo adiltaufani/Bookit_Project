@@ -1,15 +1,12 @@
 import 'dart:convert';
 import 'dart:async';
+import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_project/features/auth/screens/notification_page.dart';
-import 'package:flutter_project/features/auth/screens/setting_page.dart';
-import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
-import 'package:flutter_project/features/auth/widgets/custom_search_text.dart';
+import 'package:flutter_project/features/notification/screens/notification_page.dart';
+import 'package:flutter_project/features/profile/screens/setting_page.dart';
+import 'package:flutter_project/features/search/widgets/custom_search_text.dart';
 import 'package:flutter_project/features/auth/widgets/side_menu.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -36,7 +33,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
         });
       }
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 
@@ -170,8 +167,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 itemCount: _Listdata
                     .length, // Ganti dengan jumlah item yang Anda inginkan
                 itemBuilder: (BuildContext context, int index) {
-                  String cleanedUrlFoto =
-                      _Listdata[index]['url_foto'].replaceAll('\\', '');
+                  _Listdata[index]['url_foto'].replaceAll('\\', '');
                   return Container(
                     width: MediaQuery.of(context).size.width,
                     height: 128,

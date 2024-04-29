@@ -1,17 +1,11 @@
 import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_project/features/auth/screens/home_screen.dart';
-import 'package:flutter_project/features/auth/screens/notification_page.dart';
-import 'package:flutter_project/features/auth/screens/search_page.dart';
-import 'package:flutter_project/features/auth/screens/setting_page.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
-import 'package:flutter_project/features/auth/widgets/custom_search_text.dart';
+import 'package:flutter_project/features/notification/screens/notification_page.dart';
+import 'package:flutter_project/features/profile/screens/setting_page.dart';
+import 'package:flutter_project/features/search/widgets/custom_search_text.dart';
 import 'package:flutter_project/features/auth/widgets/side_menu.dart';
-import 'package:flutter_project/features/auth/widgets/top_home_btn.dart';
-import 'package:flutter_project/features/auth/widgets/transaction_ongoing.dart';
+import 'package:flutter_project/features/profile/widgets/transaction_ongoing.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TransactionScreen extends StatefulWidget {

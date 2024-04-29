@@ -1,19 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_project/common/widgets/custom_texfield.dart';
-import 'package:flutter_project/features/auth/screens/search_page.dart';
+import 'package:flutter_project/features/search/screens/search_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 List<String> options = ['option 1', 'option 2'];
 
+// ignore: must_be_immutable
 class SortButton extends StatefulWidget {
   String namaKota;
   String? tanggal_checkin;
   String? tanggal_checkout;
-
-  int? hargaMin;
-  int? hargaMax;
+  double? hargaMin;
+  double? hargaMax;
   int? Bintang;
   bool? Wifi;
   bool? KolamRenang;
@@ -41,8 +38,6 @@ class SortButton extends StatefulWidget {
 }
 
 class _SortButtonState extends State<SortButton> {
-  int? _filterhargaAwal;
-  int? _filterhargaAkhir;
   int? bintang;
   bool? wifi;
   bool? kolamRenang;
@@ -58,9 +53,11 @@ class _SortButtonState extends State<SortButton> {
   String selectedOption = options[0];
   //ubah sesuai harga min dan max yang bisa ditampilkan disearch
   double _hargaMinValue = 0;
-  double _hargaMaxValue = 400000;
+  double _hargaMaxValue = 4000000;
   //rating
   bool ratingselected = false;
+  List<bool> booleanList = List<bool>.filled(10, false);
+  List rating = [1, 2, 3, 4, 5];
 
   void showOverlay() {
     final overlay = Overlay.of(context);
@@ -117,11 +114,11 @@ class _SortButtonState extends State<SortButton> {
 
     if (widget.hargaMin != null) {
       _hargaMinController.text = widget.hargaMin.toString();
-      _filterhargaAwal = widget.hargaMin;
+      _hargaMinValue = widget.hargaMin!;
     }
     if (widget.hargaMax != null) {
       _hargaMaxController.text = widget.hargaMax.toString();
-      _filterhargaAkhir = widget.hargaMax;
+      _hargaMaxValue = widget.hargaMax!;
     }
     if (widget.Bintang != null) {
       _bintangController.text = widget.Bintang.toString();
@@ -160,8 +157,6 @@ class _SortButtonState extends State<SortButton> {
         color: Colors.transparent,
         child: StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
-            String minLabel = '\$$_hargaMinValue';
-            String maxLabel = '\$$_hargaMaxValue';
             return Container(
               decoration: BoxDecoration(
                 borderRadius:
@@ -302,7 +297,7 @@ class _SortButtonState extends State<SortButton> {
                                     keyboardType: TextInputType.number,
                                     onChanged: (value) {
                                       setState(() {
-                                        _filterhargaAwal = int.tryParse(value);
+                                        _hargaMinValue = double.parse(value);
                                       });
                                     },
                                     onEditingComplete: () {
@@ -343,7 +338,7 @@ class _SortButtonState extends State<SortButton> {
                                     keyboardType: TextInputType.number,
                                     onChanged: (value) {
                                       setState(() {
-                                        _filterhargaAkhir = int.tryParse(value);
+                                        _hargaMaxValue = double.parse(value);
                                       });
                                     },
                                     onEditingComplete: () {
@@ -361,7 +356,7 @@ class _SortButtonState extends State<SortButton> {
                           RangeSlider(
                             values: RangeValues(_hargaMinValue, _hargaMaxValue),
                             min: 0,
-                            max: 400000,
+                            max: 4000000,
                             divisions: 20,
                             onChanged: (values) {
                               setState(() {
@@ -392,39 +387,58 @@ class _SortButtonState extends State<SortButton> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: ChoiceChip(
-                                  label: Text(
-                                    '4',
-                                    style: GoogleFonts.montserrat(
-                                      textStyle: TextStyle(
-                                        color: ratingselected
-                                            ? Colors.white
-                                            : Colors.black45,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        letterSpacing: -0.2,
-                                      ),
-                                    ),
-                                  ),
-                                  avatar: Icon(
-                                    Icons.star,
-                                    color: ratingselected
-                                        ? Colors.yellow[700]
-                                        : Colors.black38,
-                                  ),
-                                  shadowColor: Colors.black12,
-                                  selected: ratingselected,
-                                  showCheckmark: false,
-                                  side: const BorderSide(color: Colors.black12),
-                                  selectedColor: const Color(0xFF225B7B),
-                                  onSelected: (value) {
-                                    setState(() {
-                                      ratingselected = value;
-                                    });
-                                  },
-                                ),
+                              Container(
+                                width: 326,
+                                height: 50,
+                                child: ListView.builder(
+                                    itemCount: rating.length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Container(
+                                        padding: const EdgeInsets.only(
+                                            left: 5, right: 5),
+                                        child: ChoiceChip(
+                                          label: Text(
+                                            '${rating[index]}',
+                                            style: GoogleFonts.montserrat(
+                                              textStyle: TextStyle(
+                                                color: booleanList[index]
+                                                    ? Colors.white
+                                                    : Colors.black45,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                                letterSpacing: -0.2,
+                                              ),
+                                            ),
+                                          ),
+                                          avatar: Icon(
+                                            Icons.star,
+                                            color: booleanList[index]
+                                                ? Colors.yellow[700]
+                                                : Colors.black38,
+                                          ),
+                                          shadowColor: Colors.black12,
+                                          selected: booleanList[index],
+                                          showCheckmark: false,
+                                          side: const BorderSide(
+                                              color: Colors.black12),
+                                          selectedColor:
+                                              const Color(0xFF225B7B),
+                                          onSelected: (value) {
+                                            setState(() {
+                                              if (booleanList[index] == true) {
+                                                booleanList[index] = false;
+                                              } else {
+                                                booleanList[index] = true;
+                                                bintang = rating[index];
+                                                print(bintang);
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      );
+                                    }),
                               ),
                             ],
                           ),
@@ -620,8 +634,8 @@ class _SortButtonState extends State<SortButton> {
                 namaKota: widget.namaKota,
                 tanggal_checkin: widget.tanggal_checkin,
                 tanggal_checkout: widget.tanggal_checkout,
-                hargaAwal: _filterhargaAwal,
-                hargaAkhir: _filterhargaAkhir,
+                hargaAwal: _hargaMinValue,
+                hargaAkhir: _hargaMaxValue,
                 bintang: bintang,
                 wifi: wifi,
                 kolamRenang: kolamRenang,

@@ -13,12 +13,12 @@ class RoomType extends StatefulWidget {
     required this.id,
   }) : super(key: key);
   @override
+  // ignore: library_private_types_in_public_api
   _RoomTypeState createState() => _RoomTypeState();
 }
 
 class _RoomTypeState extends State<RoomType> {
   bool isTextFieldFocused = false;
-  bool _isroomchoosed = true;
   List<bool> booleanList = List<bool>.filled(10, true);
 
   //nama room
@@ -27,6 +27,7 @@ class _RoomTypeState extends State<RoomType> {
   //harga
   //availability
   //foto room
+  // ignore: non_constant_identifier_names
   List _Listdata = [];
 
   Future _getdata() async {
@@ -39,11 +40,11 @@ class _RoomTypeState extends State<RoomType> {
         final data = jsonDecode(response.body);
         setState(() {
           _Listdata = data;
-          print(_Listdata);
+          throw (_Listdata);
         });
       }
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 
@@ -58,7 +59,7 @@ class _RoomTypeState extends State<RoomType> {
     //listview
     return ListView.builder(
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: _Listdata.length,
         itemBuilder: (BuildContext context, int index) {
           return Container(
@@ -102,7 +103,7 @@ class _RoomTypeState extends State<RoomType> {
                                   decoration: BoxDecoration(
                                     borderRadius:
                                         BorderRadiusDirectional.circular(10),
-                                    image: DecorationImage(
+                                    image: const DecorationImage(
                                         image: AssetImage(
                                             'assets/images/room.jpeg'),
                                         fit: BoxFit.cover),
@@ -314,8 +315,8 @@ class _RoomTypeState extends State<RoomType> {
                                         backgroundColor:
                                             Colors.white.withOpacity(0.84),
                                         elevation: 2,
-                                        side: BorderSide(
-                                            color: const Color(0xFF225B7B),
+                                        side: const BorderSide(
+                                            color: Color(0xFF225B7B),
                                             width: 1.0),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:

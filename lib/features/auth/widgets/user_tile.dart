@@ -1,11 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project/features/message/services/chat_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
-class UserTile extends StatelessWidget {
+class UserTile extends StatefulWidget {
   final String email;
+  final String recieverUid;
+  final String senderUid;
   final void Function()? onTap;
 
-  const UserTile({super.key, required this.email, this.onTap});
+  const UserTile({
+    super.key,
+    required this.email,
+    required this.recieverUid,
+    required this.senderUid,
+    this.onTap,
+  });
+
+  @override
+  State<UserTile> createState() => _UserTileState();
+}
+
+class _UserTileState extends State<UserTile> {
+  final ChatService _chatService = ChatService();
+  late Future<String?> _lastMessageFuture;
+  late Future<DateTime?> _lastMessageTimeFuture;
+
+  @override
+  void initState() {
+    _lastMessageFuture = _chatService
+        .getLastMessage('${widget.recieverUid}-${widget.senderUid}');
+    _lastMessageTimeFuture = _chatService
+        .getLastMessageTime('${widget.recieverUid}-${widget.senderUid}');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +42,7 @@ class UserTile extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: onTap,
+          onTap: widget.onTap,
           splashColor: Colors.white12,
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -37,7 +65,7 @@ class UserTile extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                email,
+                                widget.email,
                                 style: GoogleFonts.raleway(
                                   textStyle: const TextStyle(
                                     color: Colors.black,
@@ -47,16 +75,38 @@ class UserTile extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Text(
-                                '16 Apr',
-                                style: GoogleFonts.raleway(
-                                  textStyle: const TextStyle(
-                                    color: Colors.black45,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: -0.6,
-                                  ),
-                                ),
+                              FutureBuilder<DateTime?>(
+                                future: _lastMessageTimeFuture,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
+                                  } else if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  } else {
+                                    DateTime? lastMessageTime = snapshot.data;
+                                    if (lastMessageTime != null) {
+                                      String formattedDate =
+                                          DateFormat('d MMMM')
+                                              .format(lastMessageTime);
+                                      String timeAgo =
+                                          _getTimeAgo(lastMessageTime);
+                                      return Text(
+                                        timeAgo, // Convert Timestamp to DateTime and format it
+                                        style: GoogleFonts.raleway(
+                                          textStyle: const TextStyle(
+                                            color: Colors.black45,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            letterSpacing: -0.6,
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      return const Text('No messages found.');
+                                    }
+                                  }
+                                },
                               ),
                             ],
                           ),
@@ -64,17 +114,26 @@ class UserTile extends StatelessWidget {
                             constraints: const BoxConstraints(
                               maxWidth: 280,
                             ),
-                            child: Text(
-                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et',
-                              style: GoogleFonts.raleway(
-                                textStyle: const TextStyle(
-                                  color: Colors.black45,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: -0.6,
-                                ),
-                              ),
-                              maxLines: 2,
+                            child: FutureBuilder<String?>(
+                              future: _lastMessageFuture,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  // Tampilkan loading indicator jika data masih diambil
+                                  return const CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  // Tampilkan pesan error jika terjadi kesalahan
+                                  return Text('Error: ${snapshot.error}');
+                                } else {
+                                  // Tampilkan last message jika data berhasil diambil
+                                  String? lastMessage = snapshot.data;
+                                  if (lastMessage != null) {
+                                    return Text(lastMessage);
+                                  } else {
+                                    return const Text('No messages found.');
+                                  }
+                                }
+                              },
                             ),
                           ),
                         ],
@@ -88,5 +147,19 @@ class UserTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getTimeAgo(DateTime time) {
+    Duration difference = DateTime.now().difference(time);
+    if (difference.inDays > 0) {
+      return DateFormat('d MMMM')
+          .format(time); // Lebih dari 24 jam, tampilkan tanggal
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours} ${difference.inHours == 1 ? 'hour' : 'hours'} ago';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes} ${difference.inMinutes == 1 ? 'minute' : 'minutes'} ago';
+    } else {
+      return 'just now';
+    }
   }
 }

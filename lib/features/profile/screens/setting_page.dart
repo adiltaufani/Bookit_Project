@@ -1,14 +1,13 @@
 import 'dart:convert';
+import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_project/features/auth/screens/message_screen.dart';
-import 'package:flutter_project/features/auth/screens/profile_setting.dart';
-import 'package:flutter_project/features/auth/screens/transaction_screen.dart';
-import 'package:flutter_project/features/auth/screens/wishlist_screen.dart';
-import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
+import 'package:flutter_project/features/message/screens/message_screen.dart';
+import 'package:flutter_project/features/profile/screens/profile_setting.dart';
+import 'package:flutter_project/features/payment/screens/transaction_screen.dart';
+import 'package:flutter_project/features/wishlist/screens/wishlist_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SettingPage extends StatefulWidget {
@@ -572,7 +571,7 @@ class _SettingPageState extends State<SettingPage> {
     }
 
     var url =
-        Uri.parse("http://192.168.100.10/ta_projek/crudtaprojek/view_data.php");
+        Uri.parse("http://${ipaddr}/ta_projek/crudtaprojek/view_data.php");
     String uid = user.uid;
 
     var response = await http.post(url, body: {

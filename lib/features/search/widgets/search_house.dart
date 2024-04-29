@@ -1,18 +1,19 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_project/features/auth/screens/booking_page.dart';
+import 'package:flutter_project/features/booking/screens/booking_page.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
+// ignore: must_be_immutable
 class SearchHouse extends StatefulWidget {
   final String terusan;
   final String terusan2;
   String? tanggal_checkin;
   String? tanggal_checkout;
-  int? hargaAwal;
-  int? hargaAkhir;
+  double? hargaAwal;
+  double? hargaAkhir;
   int? bintang;
   bool? wifi;
   bool? kolamRenang;
@@ -42,8 +43,6 @@ class SearchHouse extends StatefulWidget {
 }
 
 class _SearchHouseState extends State<SearchHouse> {
-  List _Listdata = [];
-  String? _errorMessage;
   late List<Hotel> hotels = [];
 
   // Future<void> _getData() async {
@@ -84,8 +83,8 @@ class _SearchHouseState extends State<SearchHouse> {
     String? kota,
     String? tanggal_checkin,
     String? tanggal_checkout,
-    int? hargaMin,
-    int? hargaMax,
+    double? hargaMin,
+    double? hargaMax,
     int? bintang,
     bool? wifi,
     bool? kolamRenang,
@@ -95,7 +94,7 @@ class _SearchHouseState extends State<SearchHouse> {
     bool? resepsionis24Jam, // Properti baru untuk resepsionis 24 jam
   }) async {
     final url = Uri.parse(
-        'http://192.168.100.10/ta_projek/crudtaprojek/tes_filter_new.php?'); // Ganti dengan URL API Anda
+        'http://${ipaddr}/ta_projek/crudtaprojek/tes_filter_new.php?'); // Ganti dengan URL API Anda
 
     Map<String, dynamic> queryParams = {};
     if (table != null) queryParams['tipe'] = table.toString();
@@ -171,9 +170,11 @@ class _SearchHouseState extends State<SearchHouse> {
                                     jumlah_reviewer:
                                         hotels[index].jumlah_reviewer,
                                     url_foto: cleanedUrlFoto,
-                                    id: hotels[index].id.toString(),
+                                    hotel_id: hotels[index].id.toString(),
                                     latitude: hotels[index].latitude,
                                     longitude: hotels[index].longitude,
+                                    tanggalAwal: widget.tanggal_checkin,
+                                    tanggalAkhir: widget.tanggal_checkout,
                                   )));
                     },
                     child: Container(

@@ -1,10 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_project/dummysearchoverlay.dart';
-import 'package:flutter_project/features/auth/screens/search_page.dart';
-import 'package:flutter_project/features/auth/widgets/top_home_btn.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_project/features/search/screens/search_page.dart';
 
 class CustomSearchText extends StatefulWidget {
   const CustomSearchText({super.key});
@@ -21,7 +16,7 @@ class _CustomSearchTextState extends State<CustomSearchText> {
   String? kotaPost;
 
   void showOverlay() {
-    final overlay = Overlay.of(context)!;
+    final overlay = Overlay.of(context);
     final renderBox = context.findRenderObject() as RenderBox;
     final size = renderBox.size;
     final offset = renderBox.localToGlobal(Offset.zero);
@@ -104,7 +99,7 @@ class _CustomSearchTextState extends State<CustomSearchText> {
         elevation: 8,
         child: Column(
           children: <Widget>[
-            Container(
+            SizedBox(
               height: 500,
               width: double.infinity,
               child: ListView.builder(

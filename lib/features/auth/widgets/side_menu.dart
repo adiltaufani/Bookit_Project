@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_project/features/auth/screens/auth_screen.dart';
-import 'package:flutter_project/features/auth/screens/home_screen.dart';
-import 'package:flutter_project/features/auth/screens/landmark_screen.dart';
-import 'package:flutter_project/features/auth/screens/message_screen.dart';
-import 'package:flutter_project/features/auth/screens/notification_page.dart';
-import 'package:flutter_project/features/auth/screens/setting_page.dart';
-import 'package:flutter_project/features/auth/screens/transaction_screen.dart';
-import 'package:flutter_project/features/auth/screens/wishlist_screen.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
+import 'package:flutter_project/features/chatAI/screens/aichat_page.dart';
+import 'package:flutter_project/features/home/screens/home_screen.dart';
+import 'package:flutter_project/features/landmark/screens/landmark_screen.dart';
+import 'package:flutter_project/features/message/screens/message_screen.dart';
+import 'package:flutter_project/features/notification/screens/notification_page.dart';
+import 'package:flutter_project/features/payment/screens/transaction_screen.dart';
+import 'package:flutter_project/features/profile/screens/setting_page.dart';
+import 'package:flutter_project/features/wishlist/screens/wishlist_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SideMenu extends StatelessWidget {
@@ -221,7 +221,7 @@ class SideMenu extends StatelessWidget {
                   ),
                   ListTile(
                     onTap: () {
-                      // Navigator.pushNamed(context, MessageScreen.routeName);
+                      Navigator.pushNamed(context, AIChatPage.routeName);
                     },
                     leading: SizedBox(
                       height: 36,

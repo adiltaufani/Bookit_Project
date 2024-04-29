@@ -27,38 +27,16 @@ class _LandmarkBtnState extends State<LandmarkBtn> {
               elevation: 5,
               borderRadius: BorderRadius.circular(15),
               child: Container(
-                width: 112,
-                height: 112,
+                width: 150,
+                height: 150,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Image.asset(
-                    widget.imagePath,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                  ),
+                  borderRadius: BorderRadius.circular(25),
+                  image: DecorationImage(
+                      image: NetworkImage(widget.imagePath), fit: BoxFit.cover),
                 ),
               ),
             ),
             // Shadow Overlay
-            Container(
-              width: 112,
-              height: 112,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [
-                    Colors.black.withOpacity(0.68),
-                    Colors.transparent,
-                  ],
-                ),
-              ),
-            ),
 
             // Text Overlay
             Positioned(
