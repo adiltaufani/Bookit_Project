@@ -37,9 +37,11 @@ class PaymentPage extends StatefulWidget {
 }
 
 List<String> options = ['option 1', 'option2'];
+List<String> paymentOption = ['option 1', 'option2'];
 
 class _PaymentPageState extends State<PaymentPage> {
   String selectedOption = options[0];
+  String paySelectedOption = paymentOption[0];
   final userbookform = GlobalKey<FormState>();
   String gendervalue = 'Mr.';
   bool isLoading = true;
@@ -823,12 +825,12 @@ class _PaymentPageState extends State<PaymentPage> {
                                               ),
                                               activeColor:
                                                   const Color(0xFF225B7B),
-                                              value: options[0],
+                                              value: paymentOption[0],
                                               selected: false,
-                                              groupValue: selectedOption,
+                                              groupValue: paySelectedOption,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  selectedOption =
+                                                  paySelectedOption =
                                                       value.toString();
                                                 });
                                               },
@@ -850,11 +852,11 @@ class _PaymentPageState extends State<PaymentPage> {
                                               ),
                                               activeColor:
                                                   const Color(0xFF225B7B),
-                                              value: options[1],
-                                              groupValue: selectedOption,
+                                              value: paymentOption[1],
+                                              groupValue: paySelectedOption,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  selectedOption =
+                                                  paySelectedOption =
                                                       value.toString();
                                                 });
                                               },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
 import 'package:flutter_project/features/notification/screens/notification_page.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
@@ -43,32 +44,39 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               color: Colors.blue,
             ),
           ),
-          title: Container(
-            width: double.infinity,
-            height: 40.0,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4),
-            ),
+          title: GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, SearchPageWidget.routeName);
+            },
             child: Container(
-              padding: const EdgeInsets.only(top: 10),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, SearchPageWidget.routeName);
-                },
-                child: const Text(
-                  'SIGN UP',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 20,
-                    fontFamily: 'OutfitBlod',
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 127, vertical: 10),
+              width: double.infinity,
+              height: 40.0,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Icon(
+                      Icons.search,
+                      color: Colors.black26,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Search..',
+                      style: GoogleFonts.montserrat(
+                        textStyle: const TextStyle(
+                          color: Colors.black26,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -0.6,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -105,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         ),
       ),
-      body: SingleChildScrollView(
+      body: Material(
         child: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -125,23 +133,29 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Column(
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Location',
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w300,
-                            color: Color(0xFF757575),
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                              color: Colors.black54,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              letterSpacing: -0.6,
+                            ),
                           ),
                         ),
                         Text(
                           'Jakarta',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w400,
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       ],
@@ -153,17 +167,24 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ],
                 ),
               ),
+              const Divider(
+                color: Colors.black12,
+                height: 0.5,
+              ),
               Container(
                 child: Align(
                   child: TabBar(
                     labelPadding: const EdgeInsets.only(left: 0, right: 40),
                     controller: _tabController,
                     labelColor: Colors.black,
-                    unselectedLabelColor: Colors.grey,
+                    unselectedLabelColor: Colors.black26,
                     isScrollable: true,
                     indicatorSize: TabBarIndicatorSize.label,
-                    indicator:
-                        CircleTabIndicator(color: Colors.blue, radius: 4),
+                    padding: const EdgeInsets.only(bottom: 10),
+                    indicator: UnderlineTabIndicator(
+                        borderSide: BorderSide(color: Colors.blue, width: 4.6),
+                        borderRadius: BorderRadius.circular(10)),
+                    dividerColor: Colors.black12,
                     tabs: [
                       Tab(
                         child: Text(
@@ -214,9 +235,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-              Container(
-                height: MediaQuery.of(context).size.height,
-                width: double.maxFinite,
+              Expanded(
+                // height: MediaQuery.of(context).size.height * 1,
+                // width: double.maxFinite,
                 child: TabBarView(
                   controller: _tabController,
                   children: [

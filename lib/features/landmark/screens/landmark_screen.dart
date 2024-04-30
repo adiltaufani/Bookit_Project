@@ -205,18 +205,39 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
               height: 20,
             ),
             Container(
-              height: double.infinity,
-              width: double.infinity,
-              child: ListView.builder(
-                padding: EdgeInsets.all(8), // Tambahkan padding di sini
-                itemCount: display_list.length,
-                itemBuilder: (context, index) {
-                  String cleanedUrlFoto =
-                      display_list[index].landmark_url!.replaceAll('\\', '');
-                  return LandmarkBtn(
-                      placeName: display_list[index].landmark_name!,
-                      imagePath: cleanedUrlFoto);
-                },
+              child:
+                  // ListView.builder(
+                  //   padding: EdgeInsets.all(8), // Tambahkan padding di sini
+                  //   itemCount: display_list.length,
+                  //   itemBuilder: (context, index) {
+                  //     String cleanedUrlFoto =
+                  //         display_list[index].landmark_url!.replaceAll('\\', '');
+                  //     return LandmarkBtn(
+                  //         placeName: display_list[index].landmark_name!,
+                  //         imagePath: cleanedUrlFoto);
+                  //   },
+                  // ),
+                  const Wrap(
+                runSpacing: 10,
+                children: [
+                  //for 6x
+                  LandmarkBtn(
+                    imagePath: '',
+                    //display_list[i].landmark_url!.replaceAll('//', ''),
+                    placeName: 'bandung',
+                  ),
+                  //buat liat contoh doang
+                  LandmarkBtn(
+                    imagePath: '',
+                    //display_list[i].landmark_url!.replaceAll('//', ''),
+                    placeName: 'bandung',
+                  ),
+                  LandmarkBtn(
+                    imagePath: '',
+                    //display_list[i].landmark_url!.replaceAll('//', ''),
+                    placeName: 'bandung',
+                  ),
+                ],
               ),
             ),
           ],

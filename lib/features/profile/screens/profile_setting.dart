@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_project/variables.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -77,18 +78,41 @@ class _ProfileSettingState extends State<ProfileSetting> {
                               padding: const EdgeInsets.all(20.0),
                               child: Row(
                                 children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(100),
-                                    child: const AspectRatio(
-                                      aspectRatio:
-                                          1.0, // 1:1 aspect ratio (square)
-                                      child: Image(
-                                        image: AssetImage(
-                                            'assets/images/john.jpg'),
-                                        fit:
-                                            BoxFit.cover, // Fills the container
-                                      ),
-                                    ),
+                                  Stack(
+                                    children: [
+                                      GestureDetector(
+                                          onTap: () {},
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            child: const AspectRatio(
+                                              aspectRatio:
+                                                  1.0, // Mengatur aspect ratio menjadi 1:1 (persegi)
+                                              child: Image(
+                                                image: AssetImage(
+                                                    'assets/images/profile.png'),
+                                                fit: BoxFit
+                                                    .cover, // Atur agar gambar memenuhi ukuran persegi
+                                              ),
+                                            ),
+                                          )),
+                                      Positioned(
+                                          bottom: 1,
+                                          right: 1,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(4),
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                    color: Colors.black26),
+                                                color: Colors.white),
+                                            child: Icon(
+                                              Icons.edit,
+                                              size: 15,
+                                              color: Colors.black54,
+                                            ),
+                                          ))
+                                    ],
                                   ),
                                   const SizedBox(width: 18),
                                   Column(

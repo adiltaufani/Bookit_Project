@@ -33,6 +33,15 @@ class _AIChatPageState extends State<AIChatPage> {
           'AI Asisstant',
           style: TextStyle(color: Colors.white),
         ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: _buildUI(),
     );
@@ -52,7 +61,10 @@ class _AIChatPageState extends State<AIChatPage> {
       onSend: _sendMessage,
       messages: messages,
       messageOptions: const MessageOptions(
-          currentUserContainerColor: Colors.black, containerColor: Colors.blue),
+          currentUserTextColor: Color(0xFF19465F),
+          textColor: Colors.white,
+          currentUserContainerColor: Color(0xFF92D5FB),
+          containerColor: Colors.blue),
     );
   }
 

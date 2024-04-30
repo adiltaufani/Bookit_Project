@@ -103,7 +103,7 @@ class _UserTileState extends State<UserTile> {
                                         ),
                                       );
                                     } else {
-                                      return const Text('No messages found.');
+                                      return Container();
                                     }
                                   }
                                 },
@@ -130,7 +130,7 @@ class _UserTileState extends State<UserTile> {
                                   if (lastMessage != null) {
                                     return Text(lastMessage);
                                   } else {
-                                    return const Text('No messages found.');
+                                    return const Text('No messages.');
                                   }
                                 }
                               },

@@ -4,7 +4,7 @@ import 'package:flutter_project/features/auth/services/auth/firebase_auth_servic
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
 import 'package:flutter_project/features/message/services/chat_service.dart';
 import 'package:flutter_project/features/auth/widgets/side_menu.dart';
-import 'package:flutter_project/features/auth/widgets/user_tile.dart';
+import 'package:flutter_project/features/message/services/user_tile.dart';
 import 'package:flutter_project/features/notification/screens/notification_page.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
 import 'package:flutter_project/features/search/widgets/custom_search_text.dart';
