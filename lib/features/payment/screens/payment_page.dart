@@ -58,7 +58,7 @@ class _PaymentPageState extends State<PaymentPage> {
     try {
       final response = await http.get(
         Uri.parse(
-            'http://${ipaddr}/ta_projek/crudtaprojek/payment_rooms.php?uid=${widget.hotel_id}&id=${widget.id}'),
+            'https://projekta.seculab.space/crudtaprojek/payment_rooms.php?uid=${widget.hotel_id}&id=${widget.id}'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -934,7 +934,7 @@ class _PaymentPageState extends State<PaymentPage> {
     }
 
     var url =
-        Uri.parse("http://192.168.1.8/ta_projek/crudtaprojek/view_data.php");
+        Uri.parse("https://projekta.seculab.space/crudtaprojek/view_data.php");
     String uid = user.uid;
 
     var response = await http.post(url, body: {

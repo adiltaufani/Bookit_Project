@@ -34,7 +34,7 @@ class _RoomTypeState extends State<RoomType> {
     try {
       final response = await http.get(
         Uri.parse(
-            'http://172.25.112.1/ta_projek/crudtaprojek/get_rooms_byid.php?uid=${widget.id}'),
+            'https://projekta.seculab.space/crudtaprojek/get_rooms_byid.php?uid=${widget.id}'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

@@ -277,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Future<void> runPHPCodeOnHomeScreen() async {
     final url =
-        'http://192.168.100.10/ta_projek/crudtaprojek/update_harga_termurah.php'; // Ganti dengan URL endpoint PHP Anda
+        'https://projekta.seculab.space/crudtaprojek/update_harga_termurah.php'; // Ganti dengan URL endpoint PHP Anda
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {

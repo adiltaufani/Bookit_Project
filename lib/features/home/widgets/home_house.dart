@@ -23,7 +23,7 @@ class _HomeHouseState extends State<HomeHouse> {
   Future _getdata() async {
     try {
       final response = await http.get(
-        Uri.parse('http://$ipaddr/ta_projek/crudtaprojek/${widget.tipe}'),
+        Uri.parse('https://projekta.seculab.space/crudtaprojek/${widget.tipe}'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

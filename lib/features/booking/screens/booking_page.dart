@@ -57,7 +57,7 @@ class _BookingPageState extends State<BookingPage> {
       try {
         final response = await http.get(
           Uri.parse(
-              'http://${ipaddr}/ta_projek/crudtaprojek/get_rooms_byid.php?uid=${widget.hotel_id}&tanggal_checkin=${widget.tanggalAwal}&tanggal_checkout=${widget.tanggalAkhir}'),
+              'https://projekta.seculab.space/crudtaprojek/get_rooms_byid.php?uid=${widget.hotel_id}&tanggal_checkin=${widget.tanggalAwal}&tanggal_checkout=${widget.tanggalAkhir}'),
         );
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body);
@@ -79,7 +79,7 @@ class _BookingPageState extends State<BookingPage> {
 
         final response = await http.get(
           Uri.parse(
-              'http://${ipaddr}/ta_projek/crudtaprojek/get_rooms_byid.php?uid=${widget.hotel_id}&tanggal_checkin=${formattedTanggal}&tanggal_checkout=${formattedTanggalbesok}'),
+              'https://projekta.seculab.space/crudtaprojek/get_rooms_byid.php?uid=${widget.hotel_id}&tanggal_checkin=${formattedTanggal}&tanggal_checkout=${formattedTanggalbesok}'),
         );
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body);

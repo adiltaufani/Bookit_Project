@@ -94,7 +94,7 @@ class _SearchHouseState extends State<SearchHouse> {
     bool? resepsionis24Jam, // Properti baru untuk resepsionis 24 jam
   }) async {
     final url = Uri.parse(
-        'http://${ipaddr}/ta_projek/crudtaprojek/tes_filter_new.php?'); // Ganti dengan URL API Anda
+        'https://projekta.seculab.space/crudtaprojek/tes_filter_new.php?'); // Ganti dengan URL API Anda
 
     Map<String, dynamic> queryParams = {};
     if (table != null) queryParams['tipe'] = table.toString();

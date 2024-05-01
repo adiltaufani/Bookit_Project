@@ -546,7 +546,7 @@ class _AINavigateScreenState extends State<AINavigateScreen> {
     try {
       final response = await http.get(
         Uri.parse(
-            'http://$ipaddr/ta_projek/crudtaprojek/ai_fetch.php?${widget.namaKota}'),
+            'https://projekta.seculab.space/crudtaprojek/ai_fetch.php?${widget.namaKota}'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

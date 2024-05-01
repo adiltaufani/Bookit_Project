@@ -294,7 +294,8 @@ class _ProfileSettingState extends State<ProfileSetting> {
       return; // Keluar dari metode fetchUserData
     }
 
-    var url = Uri.parse("http://$ipaddr/ta_projek/crudtaprojek/view_data.php");
+    var url =
+        Uri.parse("https://projekta.seculab.space/crudtaprojek/view_data.php");
     String uid = user.uid;
 
     var response = await http.post(url, body: {

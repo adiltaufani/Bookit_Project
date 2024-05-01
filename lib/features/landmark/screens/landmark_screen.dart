@@ -29,7 +29,7 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
     try {
       final response = await http.get(
         Uri.parse(
-            'http://172.19.144.1/ta_projek/crudtaprojek/read_landmark.php'),
+            'https://projekta.seculab.space/crudtaprojek/read_landmark.php'),
       );
       if (response.statusCode == 200) {
         List<dynamic> jsonData = jsonDecode(response.body);

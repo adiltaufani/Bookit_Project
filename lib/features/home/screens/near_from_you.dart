@@ -23,7 +23,7 @@ class _NearFromYouState extends State<NearFromYou> {
   Future _getdata() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.100.10/ta_projek/crudtaprojek/read.php'),
+        Uri.parse('https://projekta.seculab.space/crudtaprojek/read.php'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
