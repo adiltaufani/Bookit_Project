@@ -1,19 +1,21 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_project/features/auth/screens/auth_screen.dart';
+import 'package:flutter_project/features/auth/screens/login_screen.dart';
 import 'package:flutter_project/features/home/screens/home_screen.dart';
 import 'package:flutter_project/features/chatAI/widgets/consts.dart';
+import 'package:flutter_project/features/message/screens/tes.dart';
 import 'package:flutter_project/firebase_options.dart';
 import 'package:flutter_project/router.dart';
-// import 'package:firebase_analytics/firebase_analytics.dart';
 
+// import 'package:firebase_analytics/firebase_analytics.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   FirebaseMessaging.onBackgroundMessage(_firebasePushHandler);
   AwesomeNotifications().initialize(
     null,
@@ -30,20 +32,35 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({Key? key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      onGenerateRoute: (settings) => generateRoute(settings),
-      home: AuthScreen(),
+    return FutureBuilder(
+      // Check if user is logged in
+      future: FirebaseAuth.instance.authStateChanges().first,
+      builder: (context, AsyncSnapshot<User?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator(); // Show loading indicator while checking user authentication state
+        } else {
+          // If user is not logged in, redirect to AuthScreen
+          if (snapshot.data == null) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              onGenerateRoute: (settings) => generateRoute(settings),
+              home: LoginScreen(),
+            );
+          } else {
+            // If user is logged in, redirect to HomeScreen
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              onGenerateRoute: (settings) => generateRoute(settings),
+              home: HomeScreen(),
+            );
+          }
+        }
+      },
     );
   }
 }

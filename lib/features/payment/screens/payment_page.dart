@@ -37,11 +37,9 @@ class PaymentPage extends StatefulWidget {
 }
 
 List<String> options = ['option 1', 'option2'];
-List<String> paymentOption = ['option 1', 'option2'];
 
 class _PaymentPageState extends State<PaymentPage> {
   String selectedOption = options[0];
-  String paySelectedOption = paymentOption[0];
   final userbookform = GlobalKey<FormState>();
   String gendervalue = 'Mr.';
   bool isLoading = true;
@@ -51,7 +49,7 @@ class _PaymentPageState extends State<PaymentPage> {
   String? birthdate;
   String? address;
   String? email;
-  bool firstnameTrigger = false;
+  bool firstnameTrigger = true;
   List _Listdata = [];
 
   Future _getdata() async {
@@ -480,174 +478,32 @@ class _PaymentPageState extends State<PaymentPage> {
                                         color: Colors.black12,
                                       ),
                                     ),
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      child: Form(
-                                        key: userbookform,
-                                        child: Column(
-                                          children: [
-                                            TextFormField(
-                                              initialValue: email,
-                                              decoration: InputDecoration(
-                                                labelText: 'Email Address',
-                                                hintText: 'email',
-                                                hintStyle:
-                                                    GoogleFonts.montserrat(
-                                                  textStyle: const TextStyle(
-                                                    color: Colors.black26,
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                    letterSpacing: -0.4,
-                                                  ),
-                                                ),
-                                                labelStyle:
-                                                    GoogleFonts.montserrat(
-                                                  textStyle: const TextStyle(
-                                                    color: Color(0xFF225B7B),
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                    letterSpacing: -0.4,
-                                                  ),
-                                                ),
-                                                enabledBorder:
-                                                    const UnderlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color(
-                                                          0xFF225B7B)), // Warna garis saat aktif/fokus
-                                                ),
-                                                focusedBorder:
-                                                    const UnderlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color(
-                                                          0xFF225B7B)), // Warna garis saat aktif/fokus
-                                                ),
-                                              ),
-                                              validator: (value) {
-                                                if (value!.isEmpty ||
-                                                    !RegExp(r'^[a-z A-Z]+$')
-                                                        .hasMatch(value)) {
-                                                  return "Enter Correct username";
-                                                } else {
-                                                  return null;
-                                                }
-                                              },
-                                            ),
-                                            const SizedBox(
-                                              height: 12,
-                                            ),
-                                            Row(
-                                              children: [
-                                                Expanded(
-                                                  flex: 2,
-                                                  child: Container(
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                            right: 6.0,
-                                                            top: 32),
-                                                    child:
-                                                        DropdownButton<String>(
-                                                      items: const [
-                                                        DropdownMenuItem<
-                                                            String>(
-                                                          value: 'Mr.',
-                                                          child: Text('Mr.'),
-                                                        ),
-                                                        DropdownMenuItem<
-                                                            String>(
-                                                          value: 'Mrs.',
-                                                          child: Text('Mrs.'),
-                                                        ),
-                                                      ],
-                                                      onChanged:
-                                                          (String? value) {
-                                                        setState(() {
-                                                          gendervalue =
-                                                              value.toString();
-                                                        });
-                                                      },
-                                                      hint: Text(
-                                                        gendervalue,
-                                                        style: GoogleFonts
-                                                            .montserrat(
-                                                          textStyle:
-                                                              const TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            letterSpacing: -0.4,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      underline: Container(
-                                                        height: 1,
-                                                        color:
-                                                            Color(0xFF225B7B),
-                                                      ),
-                                                      icon: const Icon(
-                                                        Icons
-                                                            .arrow_drop_down_rounded,
-                                                        color:
-                                                            Color(0xFF225B7B),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  flex: 4,
-                                                  child: Container(
-                                                    margin: EdgeInsets.only(
-                                                        right: 8),
-                                                    child: TextFormField(
-                                                      initialValue: _firstname,
-                                                      decoration:
-                                                          InputDecoration(
-                                                        labelText: 'First Name',
-                                                        labelStyle: GoogleFonts
-                                                            .montserrat(
-                                                          textStyle:
-                                                              const TextStyle(
-                                                            color: Color(
-                                                                0xFF225B7B),
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            letterSpacing: -0.4,
-                                                          ),
-                                                        ),
-                                                        enabledBorder:
-                                                            const UnderlineInputBorder(
-                                                          borderSide: BorderSide(
-                                                              color: Color(
-                                                                  0xFF225B7B)), // Warna garis saat aktif/fokus
-                                                        ),
-                                                        focusedBorder:
-                                                            const UnderlineInputBorder(
-                                                          borderSide: BorderSide(
-                                                              color: Color(
-                                                                  0xFF225B7B)), // Warna garis saat aktif/fokus
-                                                        ),
-                                                      ),
-                                                      validator: (value) {
-                                                        if (value!.isEmpty ||
-                                                            !RegExp(r'^[a-z A-Z]+$')
-                                                                .hasMatch(
-                                                                    value)) {
-                                                          return "Enter Correct username";
-                                                        } else {
-                                                          return null;
-                                                        }
-                                                      },
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  flex: 4,
-                                                  child: TextFormField(
-                                                    initialValue: lastname,
+                                    firstnameTrigger
+                                        ? CircularProgressIndicator()
+                                        : Container(
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Form(
+                                              key: userbookform,
+                                              child: Column(
+                                                children: [
+                                                  TextFormField(
+                                                    initialValue: email,
                                                     decoration: InputDecoration(
-                                                      labelText: 'Last Name',
+                                                      labelText:
+                                                          'Email Address',
+                                                      hintText: 'email',
+                                                      hintStyle: GoogleFonts
+                                                          .montserrat(
+                                                        textStyle:
+                                                            const TextStyle(
+                                                          color: Colors.black26,
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          letterSpacing: -0.4,
+                                                        ),
+                                                      ),
                                                       labelStyle: GoogleFonts
                                                           .montserrat(
                                                         textStyle:
@@ -684,88 +540,269 @@ class _PaymentPageState extends State<PaymentPage> {
                                                       }
                                                     },
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                            TextFormField(
-                                              initialValue: number,
-                                              decoration: InputDecoration(
-                                                labelText: 'Phone Number',
-                                                labelStyle:
-                                                    GoogleFonts.montserrat(
-                                                  textStyle: const TextStyle(
-                                                    color: Color(0xFF225B7B),
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                    letterSpacing: -0.4,
+                                                  const SizedBox(
+                                                    height: 12,
                                                   ),
-                                                ),
-                                                enabledBorder:
-                                                    const UnderlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color(
-                                                          0xFF225B7B)), // Warna garis saat aktif/fokus
-                                                ),
-                                                focusedBorder:
-                                                    const UnderlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color(
-                                                          0xFF225B7B)), // Warna garis saat aktif/fokus
-                                                ),
-                                              ),
-                                              validator: (value) {
-                                                if (value!.isEmpty ||
-                                                    !RegExp(r'^[a-z A-Z]+$')
-                                                        .hasMatch(value)) {
-                                                  return "Enter Correct username";
-                                                } else {
-                                                  return null;
-                                                }
-                                              },
-                                            ),
-                                            TextFormField(
-                                              initialValue: address,
-                                              decoration: InputDecoration(
-                                                labelText: 'City of Origin',
-                                                labelStyle:
-                                                    GoogleFonts.montserrat(
-                                                  textStyle: const TextStyle(
-                                                    color: Color(0xFF225B7B),
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                    letterSpacing: -0.4,
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        flex: 2,
+                                                        child: Container(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  right: 6.0,
+                                                                  top: 32),
+                                                          child: DropdownButton<
+                                                              String>(
+                                                            items: const [
+                                                              DropdownMenuItem<
+                                                                  String>(
+                                                                value: 'Mr.',
+                                                                child:
+                                                                    Text('Mr.'),
+                                                              ),
+                                                              DropdownMenuItem<
+                                                                  String>(
+                                                                value: 'Mrs.',
+                                                                child: Text(
+                                                                    'Mrs.'),
+                                                              ),
+                                                            ],
+                                                            onChanged: (String?
+                                                                value) {
+                                                              setState(() {
+                                                                gendervalue = value
+                                                                    .toString();
+                                                              });
+                                                            },
+                                                            hint: Text(
+                                                              gendervalue,
+                                                              style: GoogleFonts
+                                                                  .montserrat(
+                                                                textStyle:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  letterSpacing:
+                                                                      -0.4,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            underline:
+                                                                Container(
+                                                              height: 1,
+                                                              color: Color(
+                                                                  0xFF225B7B),
+                                                            ),
+                                                            icon: const Icon(
+                                                              Icons
+                                                                  .arrow_drop_down_rounded,
+                                                              color: Color(
+                                                                  0xFF225B7B),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        flex: 4,
+                                                        child: Container(
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  right: 8),
+                                                          child: TextFormField(
+                                                            initialValue:
+                                                                _firstname,
+                                                            decoration:
+                                                                InputDecoration(
+                                                              labelText:
+                                                                  'First Name',
+                                                              labelStyle:
+                                                                  GoogleFonts
+                                                                      .montserrat(
+                                                                textStyle:
+                                                                    const TextStyle(
+                                                                  color: Color(
+                                                                      0xFF225B7B),
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  letterSpacing:
+                                                                      -0.4,
+                                                                ),
+                                                              ),
+                                                              enabledBorder:
+                                                                  const UnderlineInputBorder(
+                                                                borderSide: BorderSide(
+                                                                    color: Color(
+                                                                        0xFF225B7B)), // Warna garis saat aktif/fokus
+                                                              ),
+                                                              focusedBorder:
+                                                                  const UnderlineInputBorder(
+                                                                borderSide: BorderSide(
+                                                                    color: Color(
+                                                                        0xFF225B7B)), // Warna garis saat aktif/fokus
+                                                              ),
+                                                            ),
+                                                            validator: (value) {
+                                                              if (value!
+                                                                      .isEmpty ||
+                                                                  !RegExp(r'^[a-z A-Z]+$')
+                                                                      .hasMatch(
+                                                                          value)) {
+                                                                return "Enter Correct username";
+                                                              } else {
+                                                                return null;
+                                                              }
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        flex: 4,
+                                                        child: TextFormField(
+                                                          initialValue:
+                                                              lastname,
+                                                          decoration:
+                                                              InputDecoration(
+                                                            labelText:
+                                                                'Last Name',
+                                                            labelStyle:
+                                                                GoogleFonts
+                                                                    .montserrat(
+                                                              textStyle:
+                                                                  const TextStyle(
+                                                                color: Color(
+                                                                    0xFF225B7B),
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                letterSpacing:
+                                                                    -0.4,
+                                                              ),
+                                                            ),
+                                                            enabledBorder:
+                                                                const UnderlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color: Color(
+                                                                      0xFF225B7B)), // Warna garis saat aktif/fokus
+                                                            ),
+                                                            focusedBorder:
+                                                                const UnderlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color: Color(
+                                                                      0xFF225B7B)), // Warna garis saat aktif/fokus
+                                                            ),
+                                                          ),
+                                                          validator: (value) {
+                                                            if (value!
+                                                                    .isEmpty ||
+                                                                !RegExp(r'^[a-z A-Z]+$')
+                                                                    .hasMatch(
+                                                                        value)) {
+                                                              return "Enter Correct username";
+                                                            } else {
+                                                              return null;
+                                                            }
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                ),
-                                                enabledBorder:
-                                                    const UnderlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color(
-                                                          0xFF225B7B)), // Warna garis saat aktif/fokus
-                                                ),
-                                                focusedBorder:
-                                                    const UnderlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color(
-                                                          0xFF225B7B)), // Warna garis saat aktif/fokus
-                                                ),
+                                                  TextFormField(
+                                                    initialValue: number,
+                                                    decoration: InputDecoration(
+                                                      labelText: 'Phone Number',
+                                                      labelStyle: GoogleFonts
+                                                          .montserrat(
+                                                        textStyle:
+                                                            const TextStyle(
+                                                          color:
+                                                              Color(0xFF225B7B),
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          letterSpacing: -0.4,
+                                                        ),
+                                                      ),
+                                                      enabledBorder:
+                                                          const UnderlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: Color(
+                                                                0xFF225B7B)), // Warna garis saat aktif/fokus
+                                                      ),
+                                                      focusedBorder:
+                                                          const UnderlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: Color(
+                                                                0xFF225B7B)), // Warna garis saat aktif/fokus
+                                                      ),
+                                                    ),
+                                                    validator: (value) {
+                                                      if (value!.isEmpty ||
+                                                          !RegExp(r'^[a-z A-Z]+$')
+                                                              .hasMatch(
+                                                                  value)) {
+                                                        return "Enter Correct username";
+                                                      } else {
+                                                        return null;
+                                                      }
+                                                    },
+                                                  ),
+                                                  TextFormField(
+                                                    initialValue: address,
+                                                    decoration: InputDecoration(
+                                                      labelText:
+                                                          'City of Origin',
+                                                      labelStyle: GoogleFonts
+                                                          .montserrat(
+                                                        textStyle:
+                                                            const TextStyle(
+                                                          color:
+                                                              Color(0xFF225B7B),
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          letterSpacing: -0.4,
+                                                        ),
+                                                      ),
+                                                      enabledBorder:
+                                                          const UnderlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: Color(
+                                                                0xFF225B7B)), // Warna garis saat aktif/fokus
+                                                      ),
+                                                      focusedBorder:
+                                                          const UnderlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: Color(
+                                                                0xFF225B7B)), // Warna garis saat aktif/fokus
+                                                      ),
+                                                    ),
+                                                    validator: (value) {
+                                                      if (value!.isEmpty ||
+                                                          !RegExp(r'^[a-z A-Z]+$')
+                                                              .hasMatch(
+                                                                  value)) {
+                                                        return "Enter Correct username";
+                                                      } else {
+                                                        return null;
+                                                      }
+                                                    },
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 16,
+                                                  )
+                                                ],
                                               ),
-                                              validator: (value) {
-                                                if (value!.isEmpty ||
-                                                    !RegExp(r'^[a-z A-Z]+$')
-                                                        .hasMatch(value)) {
-                                                  return "Enter Correct username";
-                                                } else {
-                                                  return null;
-                                                }
-                                              },
                                             ),
-                                            const SizedBox(
-                                              height: 16,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
+                                          ),
                                   ],
                                 ),
                               ),
@@ -825,12 +862,12 @@ class _PaymentPageState extends State<PaymentPage> {
                                               ),
                                               activeColor:
                                                   const Color(0xFF225B7B),
-                                              value: paymentOption[0],
+                                              value: options[0],
                                               selected: false,
-                                              groupValue: paySelectedOption,
+                                              groupValue: selectedOption,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  paySelectedOption =
+                                                  selectedOption =
                                                       value.toString();
                                                 });
                                               },
@@ -852,11 +889,11 @@ class _PaymentPageState extends State<PaymentPage> {
                                               ),
                                               activeColor:
                                                   const Color(0xFF225B7B),
-                                              value: paymentOption[1],
-                                              groupValue: paySelectedOption,
+                                              value: options[1],
+                                              groupValue: selectedOption,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  paySelectedOption =
+                                                  selectedOption =
                                                       value.toString();
                                                 });
                                               },
@@ -957,7 +994,9 @@ class _PaymentPageState extends State<PaymentPage> {
     }
 
     if (_firstname != null) {
-      firstnameTrigger = true;
+      firstnameTrigger = false;
+      print(firstnameTrigger);
+      print(isLoading);
     }
   }
 }

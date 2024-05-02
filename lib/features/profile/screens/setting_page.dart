@@ -97,7 +97,7 @@ class _SettingPageState extends State<SettingPage> {
                                             1.0, // Mengatur aspect ratio menjadi 1:1 (persegi)
                                         child: Image(
                                           image: AssetImage(
-                                              'assets/images/profile.png'),
+                                              'assets/images/john.jpg'),
                                           fit: BoxFit
                                               .cover, // Atur agar gambar memenuhi ukuran persegi
                                         ),

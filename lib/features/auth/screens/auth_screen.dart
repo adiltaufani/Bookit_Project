@@ -248,8 +248,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Future<void> register() async {
-    var url =
-        Uri.parse("https://projekta.seculab.space/crudtaprojek/register.php");
+    var url = Uri.parse("http://$ipaddr/ta_projek/crudtaprojek/register.php");
     String firstName = _nameController.text;
     String lastName = _lastnameController.text;
     String email = _emailController.text;

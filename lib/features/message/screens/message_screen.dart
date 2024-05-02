@@ -87,7 +87,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
   Widget _buildUserList() {
     return StreamBuilder(
-        stream: _chatService.getUserStream(),
+        stream: _chatService.getChatRoomsStream(),
         builder: (context, snapshot) {
           //eror
           if (snapshot.hasError) {
@@ -100,7 +100,7 @@ class _MessageScreenState extends State<MessageScreen> {
           }
 
           //return listview
-          return Expanded(
+          return SingleChildScrollView(
             child: Container(
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
@@ -167,18 +167,19 @@ class _MessageScreenState extends State<MessageScreen> {
       Map<String, dynamic> userData, BuildContext context) {
     String senderUid = _authService.getCurrentUser()!.uid;
     //display all user
-    if (userData['email'] != _authService.getCurrentUser()!.email) {
+    if (userData['lastMessage']['senderEmail'] !=
+        _authService.getCurrentUser()!.email) {
       return UserTile(
-        email: userData['email'],
-        recieverUid: userData['uid'],
+        email: userData['lastMessage']['senderEmail'],
+        recieverUid: userData['lastMessage']['senderID'],
         senderUid: senderUid,
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => MessageInboxScreen(
-                receiverEmail: userData['email'],
-                receiverID: userData['uid'],
+                receiverEmail: userData['lastMessage']['senderEmail'],
+                receiverID: userData['lastMessage']['senderID'],
               ),
             ),
           );

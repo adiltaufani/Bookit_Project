@@ -20,7 +20,7 @@ class _AIChatPageState extends State<AIChatPage> {
 
   ChatUser currentUser = ChatUser(id: "0", firstName: "bian");
   ChatUser geminiUser = ChatUser(id: "1", firstName: "Gemini");
-
+  String kota = '';
   List<ChatMessage> messages = [];
 
   @override
@@ -75,7 +75,7 @@ class _AIChatPageState extends State<AIChatPage> {
     try {
       // Kirim pesan pengguna Bian ke endpoint /chat di localhost:3000
       final response = await http.post(
-        Uri.parse('http://$ipaddr:3000/chat'),
+        Uri.parse('https://projekta.seculab.space/node/chat'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -89,6 +89,7 @@ class _AIChatPageState extends State<AIChatPage> {
         if (responseData['response'].contains("=") ||
             responseData['response'].contains("&")) {
           String responseText2 = responseData['response'];
+          kota = responseText2;
           ChatMessage geminiMessage = ChatMessage(
             user: geminiUser,
             createdAt: DateTime.now(),
@@ -97,13 +98,7 @@ class _AIChatPageState extends State<AIChatPage> {
           setState(() {
             messages = [geminiMessage, ...messages];
           });
-          if (chatMessage.text == 'ya' || chatMessage.text == 'Ya') {
-            print('ini ya');
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => AINavigateScreen(
-                      namaKota: responseText2,
-                    )));
-          }
+          print(chatMessage.text);
         } else {
           String responseText = responseData['response'];
 
@@ -116,6 +111,13 @@ class _AIChatPageState extends State<AIChatPage> {
           setState(() {
             messages = [geminiMessage, ...messages];
           });
+        }
+        if (chatMessage.text == 'ya' || chatMessage.text == 'Ya') {
+          print('ini ya $chatMessage');
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => AINavigateScreen(
+                    namaKota: kota,
+                  )));
         }
       } else {
         // Jika gagal, tampilkan pesan kesalahan
