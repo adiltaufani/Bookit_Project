@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_project/features/appbar_global.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
 import 'package:flutter_project/features/notification/screens/notification_page.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
-import 'package:flutter_project/features/search/widgets/custom_search_text.dart';
 import 'package:flutter_project/features/auth/widgets/side_menu.dart';
-import 'package:flutter_project/features/profile/widgets/transaction_ongoing.dart';
+import 'package:flutter_project/features/payment/widgets/transaction_ongoing.dart';
+import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TransactionScreen extends StatefulWidget {
@@ -68,25 +69,41 @@ class _TransactionScreenState extends State<TransactionScreen> {
               color: Colors.blue,
             ),
           ),
-          leading: IconButton(
-            onPressed: () {
-              _scaffoldKey.currentState!.openDrawer();
+          title: GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, SearchPageWidget.routeName);
             },
-            icon: const Icon(
-              Icons.menu,
-              color: Colors.white,
-              size: 30.0,
-            ),
-          ),
-          title: Container(
-            width: double.infinity,
-            height: 40.0,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: const Center(
-              child: CustomSearchText(),
+            child: Container(
+              width: double.infinity,
+              height: 40.0,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Icon(
+                      Icons.search,
+                      color: Colors.black26,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Search..',
+                      style: GoogleFonts.montserrat(
+                        textStyle: const TextStyle(
+                          color: Colors.black26,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -0.6,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
           actions: [
@@ -99,105 +116,122 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 height: 34.0,
               ),
             ),
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, SettingPage.routeName);
-              },
-              icon: Image.asset(
-                'assets/images/profile.png',
-                height: 38.0,
-              ),
-            ),
+            FutureBuilder<String?>(
+                future: ProfileDataManager.getProfilePic(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error ${snapshot.error}');
+                  } else if (snapshot.hasData) {
+                    return IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, SettingPage.routeName);
+                      },
+                      icon: CircleAvatar(
+                        radius: 26,
+                        backgroundColor: Colors.white30,
+                        backgroundImage: NetworkImage(snapshot.data!),
+                      ),
+                    );
+                  } else {
+                    return Text('no data');
+                  }
+                }),
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFFD2E9FF), // Warna gradient awal
-                Color(0xFFFFFFFF), // Warna gradient akhir
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/bookit.png',
-                      height: 24,
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(16, 10, 20, 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      'assets/images/transaction.png',
-                      height: 30,
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      'Transaction',
-                      style: GoogleFonts.raleway(
-                        textStyle: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -0.6,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'On Going',
-                      style: GoogleFonts.raleway(
-                        textStyle: const TextStyle(
-                          color: Colors.black54,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -0.4,
-                        ),
-                      ),
-                    ),
-                    TransactionOngoing(),
-                    TransactionOngoing(),
-                    TransactionOngoing(),
-                    Text(
-                      'Recent',
-                      style: GoogleFonts.raleway(
-                        textStyle: const TextStyle(
-                          color: Colors.black54,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -0.4,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFFD2E9FF), // Warna gradient awal
+              Color(0xFFFFFFFF), // Warna gradient akhir
             ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/images/bookit.png',
+                        height: 24,
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(16, 10, 20, 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        'assets/images/transaction.png',
+                        height: 30,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Transaction',
+                        style: GoogleFonts.raleway(
+                          textStyle: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -0.6,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'On Going',
+                        style: GoogleFonts.raleway(
+                          textStyle: const TextStyle(
+                            color: Colors.black54,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -0.4,
+                          ),
+                        ),
+                      ),
+                      TransactionOngoing(),
+                      Text(
+                        'Recent',
+                        style: GoogleFonts.raleway(
+                          textStyle: const TextStyle(
+                            color: Colors.black54,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -0.4,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

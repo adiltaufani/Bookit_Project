@@ -1,12 +1,13 @@
-import 'dart:convert';
 import 'dart:async';
+import 'package:flutter_project/features/appbar_global.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
+import 'package:flutter_project/features/wishlist/database/db_helper.dart';
+import 'package:flutter_project/features/wishlist/model/wishlist_model.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/features/notification/screens/notification_page.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
-import 'package:flutter_project/features/search/widgets/custom_search_text.dart';
 import 'package:flutter_project/features/auth/widgets/side_menu.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,27 +20,22 @@ class WishlistScreen extends StatefulWidget {
 }
 
 class _WishlistScreenState extends State<WishlistScreen> {
-  List _Listdata = [];
+  List<WishlistModel> _wishlist = [];
+  bool isDataAvail = true;
 
-  Future _getdata() async {
-    try {
-      final response = await http.get(
-        Uri.parse('https://projekta.seculab.space/crudtaprojek/read.php'),
-      );
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        setState(() {
-          _Listdata = data;
-        });
-      }
-    } catch (e) {
-      rethrow;
+  Future<void> _fetchWishlist() async {
+    List<WishlistModel> wishlist = await WishlistDatabaseHelper.getWishlist();
+    setState(() {
+      _wishlist = wishlist;
+    });
+    if (_wishlist.isEmpty) {
+      isDataAvail = false;
     }
   }
 
   @override
   void initState() {
-    _getdata();
+    _fetchWishlist();
     super.initState();
   }
 
@@ -51,6 +47,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
   void _toggleImage() {
     setState(() {
       _isUp = !_isUp;
+      print(_isUp);
     });
   }
 
@@ -68,25 +65,41 @@ class _WishlistScreenState extends State<WishlistScreen> {
               color: Colors.blue,
             ),
           ),
-          leading: IconButton(
-            onPressed: () {
-              _scaffoldKey.currentState!.openDrawer();
+          title: GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, SearchPageWidget.routeName);
             },
-            icon: const Icon(
-              Icons.menu,
-              color: Colors.white,
-              size: 30.0,
-            ),
-          ),
-          title: Container(
-            width: double.infinity,
-            height: 40.0,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: const Center(
-              child: CustomSearchText(),
+            child: Container(
+              width: double.infinity,
+              height: 40.0,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Icon(
+                      Icons.search,
+                      color: Colors.black26,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Search..',
+                      style: GoogleFonts.montserrat(
+                        textStyle: const TextStyle(
+                          color: Colors.black26,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -0.6,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
           actions: [
@@ -99,15 +112,28 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 height: 34.0,
               ),
             ),
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, SettingPage.routeName);
-              },
-              icon: Image.asset(
-                'assets/images/profile.png',
-                height: 38.0,
-              ),
-            ),
+            FutureBuilder<String?>(
+                future: ProfileDataManager.getProfilePic(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error ${snapshot.error}');
+                  } else if (snapshot.hasData) {
+                    return IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, SettingPage.routeName);
+                      },
+                      icon: CircleAvatar(
+                        radius: 26,
+                        backgroundColor: Colors.white30,
+                        backgroundImage: NetworkImage(snapshot.data!),
+                      ),
+                    );
+                  } else {
+                    return Text('no data');
+                  }
+                }),
           ],
         ),
       ),
@@ -162,217 +188,168 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 ],
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _Listdata
-                    .length, // Ganti dengan jumlah item yang Anda inginkan
-                itemBuilder: (BuildContext context, int index) {
-                  _Listdata[index]['url_foto'].replaceAll('\\', '');
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 128,
-                    margin: const EdgeInsets.only(
-                      top: 15,
-                      left: 20,
-                      right: 20,
-                      bottom: 10,
-                    ), // Atur margin jika diperlukan
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 18, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          top: 20,
-                          right: 10,
-                          child: InkWell(
-                            onTap: _toggleImage,
-                            borderRadius: BorderRadius.circular(8),
-                            child: AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 300),
-                              child: _isUp
-                                  ? Icon(
-                                      Icons.bookmark_rounded,
-                                      color: Colors.black54,
-                                      size: 28,
-                                      key: UniqueKey(),
-                                    )
-                                  : Icon(
-                                      Icons.bookmark_outline_rounded,
-                                      color: Colors.black54,
-                                      size: 28,
-                                      key: UniqueKey(),
-                                    ),
-                            ),
+            isDataAvail
+                ? Expanded(
+                    child: ListView.builder(
+                      itemCount: _wishlist
+                          .length, // Ganti dengan jumlah item yang Anda inginkan
+                      itemBuilder: (BuildContext context, int index) {
+                        // _Listdata[index]['url_foto'].replaceAll('\\', '');
+                        String cleanedUrlFoto =
+                            _wishlist[index].url_foto.replaceAll('\\', '');
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 128,
+                          margin: const EdgeInsets.only(
+                            top: 15,
+                            left: 20,
+                            right: 20,
+                            bottom: 10,
+                          ), // Atur margin jika diperlukan
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 18, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              width: 80,
-                              height: 80,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                image: const DecorationImage(
-                                    image:
-                                        AssetImage('assets/images/contoh2.png'),
-                                    // image: NetworkImage(cleanedUrlFoto),
-                                    fit: BoxFit.cover),
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                top: 20,
+                                right: 10,
+                                child: InkWell(
+                                  onTap: () async {
+                                    int id = _wishlist[index].id!;
+                                    await WishlistDatabaseHelper.deleteWishlist(
+                                        id);
+                                    setState(() {
+                                      _fetchWishlist();
+                                    });
+                                  },
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                    size: 28,
+                                    key: UniqueKey(),
+                                  ),
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 13,
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              Row(
                                 children: [
-                                  Flexible(
-                                    child: Text(
-                                      'Eucalypt House',
-                                      // _Listdata[index]['nama_penginapan'],
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.montserrat(
-                                        textStyle: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: -0.5,
-                                        ),
-                                      ),
+                                  Container(
+                                    width: 80,
+                                    height: 80,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      image: DecorationImage(
+                                          // image:
+                                          // AssetImage('assets/images/contoh2.png'),
+                                          image: NetworkImage(cleanedUrlFoto),
+                                          fit: BoxFit.cover),
                                     ),
                                   ),
                                   const SizedBox(
-                                    height: 4,
+                                    width: 13,
                                   ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Rp.',
-                                        style: GoogleFonts.montserrat(
-                                          textStyle: const TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 8, 59, 134),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                            _wishlist[index].nama_penginapan,
+                                            // _Listdata[index]['nama_penginapan'],
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.montserrat(
+                                              textStyle: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.w600,
+                                                letterSpacing: -0.5,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        '20.000.000'
-                                        // formatInteger(_Listdata[index]['harga'].toString())
-                                        , // Mengonversi integer ke string sebelum memanggil formatInteger
-                                        style: GoogleFonts.montserrat(
-                                          textStyle: const TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 8, 59, 134),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400),
+                                        const SizedBox(
+                                          height: 4,
                                         ),
-                                      ),
-                                      Text(
-                                        ' / night',
-                                        style: GoogleFonts.montserrat(
-                                          textStyle: const TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 8, 59, 134),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Rp.',
+                                              style: GoogleFonts.montserrat(
+                                                textStyle: const TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 8, 59, 134),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                            ),
+                                            Text(
+                                              formatInteger(_wishlist[index]
+                                                  .harga
+                                                  .toString())
+                                              // formatInteger(_Listdata[index]['harga'].toString())
+                                              , // Mengonversi integer ke string sebelum memanggil formatInteger
+                                              style: GoogleFonts.montserrat(
+                                                textStyle: const TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 8, 59, 134),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                            ),
+                                            Text(
+                                              ' / night',
+                                              style: GoogleFonts.montserrat(
+                                                textStyle: const TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 8, 59, 134),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          _wishlist[index].address,
+                                          style: GoogleFonts.montserrat(
+                                            textStyle: const TextStyle(
+                                              color: Color(0xFF858585),
+                                              fontSize: 14.0,
+                                              fontWeight: FontWeight.w400,
+                                              letterSpacing: -0.6,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 8,
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Image.asset(
-                                        'assets/images/bedroom.png',
-                                        height: 24.0,
-                                      ),
-                                      const SizedBox(
-                                        width: 4,
-                                      ),
-                                      Text(
-                                        '2',
-                                        // _Listdata[index]['bedroom'],
-                                        style: GoogleFonts.montserrat(
-                                          textStyle: const TextStyle(
-                                            color: Color(0xFF858585),
-                                            fontSize: 14.0,
-                                            fontWeight: FontWeight.w400,
-                                            letterSpacing: -0.6,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 3.5,
-                                      ),
-                                      Text(
-                                        'Bedroom',
-                                        style: GoogleFonts.montserrat(
-                                          textStyle: const TextStyle(
-                                            color: Color(0xFF858585),
-                                            fontSize: 14.0,
-                                            fontWeight: FontWeight.w400,
-                                            letterSpacing: -0.6,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 8,
-                                      ),
-                                      Image.asset(
-                                        'assets/images/bathroom.png',
-                                        height: 24.0,
-                                      ),
-                                      const SizedBox(
-                                        width: 4,
-                                      ),
-                                      Text(
-                                        '3',
-                                        // _Listdata[index]['bathroom'],
-                                        style: GoogleFonts.montserrat(
-                                          textStyle: const TextStyle(
-                                            color: Color(0xFF858585),
-                                            fontSize: 14.0,
-                                            fontWeight: FontWeight.w400,
-                                            letterSpacing: -0.6,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 3.5,
-                                      ),
-                                      Text(
-                                        'Bathroom',
-                                        style: GoogleFonts.montserrat(
-                                          textStyle: const TextStyle(
-                                            color: Color(0xFF858585),
-                                            fontSize: 14.0,
-                                            fontWeight: FontWeight.w400,
-                                            letterSpacing: -0.6,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-            ),
+                  )
+                : Container(
+                    child: Text('Anda belum memiliki wishlist'),
+                  )
           ],
         ),
       ),

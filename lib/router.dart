@@ -9,6 +9,7 @@ import 'package:flutter_project/features/home/screens/near_from_you.dart';
 import 'package:flutter_project/features/landmark/screens/landmark_screen.dart';
 import 'package:flutter_project/features/message/screens/message_screen.dart';
 import 'package:flutter_project/features/notification/screens/notification_page.dart';
+import 'package:flutter_project/features/notification/screens/payment_success.dart';
 import 'package:flutter_project/features/payment/screens/payment_page.dart';
 import 'package:flutter_project/features/payment/screens/transaction_screen.dart';
 import 'package:flutter_project/features/profile/screens/profile_setting.dart';
@@ -51,6 +52,8 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           endDate: '',
           adultValue: 0,
           childValue: 0,
+          dbendDate: '',
+          dbstartDate: '',
         ),
       );
 
@@ -76,6 +79,17 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const NotificationPage(),
+      );
+    case PaymentSuccess.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => PaymentSuccess(
+          uid: '',
+          firstname: '',
+          nama_penginapan: '',
+          startDate: '',
+          endDate: '',
+        ),
       );
     case LandmarkScreen.routeName:
       return MaterialPageRoute(
