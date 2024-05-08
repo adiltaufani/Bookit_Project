@@ -13,6 +13,7 @@ import 'package:flutter_project/features/payment/screens/payment_page.dart';
 import 'package:flutter_project/features/payment/screens/transaction_screen.dart';
 import 'package:flutter_project/features/profile/screens/profile_setting.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
+import 'package:flutter_project/features/reschedule/screens/reschedule_page.dart';
 import 'package:flutter_project/features/search/screens/search_page.dart';
 import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
 import 'package:flutter_project/features/wishlist/screens/wishlist_screen.dart';
@@ -52,6 +53,23 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           adultValue: 0,
           childValue: 0,
         ),
+      );
+
+    case ReschedulePage.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => ReschedulePage(
+            // id: '',
+            // hotel_id: '',
+            // nama_penginapan: '',
+            // hargaTotal: '',
+            // lokasi: '',
+            // startDate: '',
+            // url_foto: '',
+            // endDate: '',
+            // adultValue: 0,
+            // childValue: 0,
+            ),
       );
 
     case SearchPageWidget.routeName:

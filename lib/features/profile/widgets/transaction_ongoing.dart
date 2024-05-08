@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_project/features/reschedule/screens/reschedule_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TransactionOngoing extends StatefulWidget {
@@ -337,7 +338,10 @@ class _TransactionOngoingState extends State<TransactionOngoing> {
                         child: Column(
                           children: [
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, ReschedulePage.routeName);
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xFF225B7B),
                                 elevation: 2,
