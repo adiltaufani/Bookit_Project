@@ -2,7 +2,6 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_project/features/chatAI/screens/ainavigate_screen.dart';
-import 'package:flutter_project/variables.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -20,7 +19,7 @@ class _AIChatPageState extends State<AIChatPage> {
 
   ChatUser currentUser = ChatUser(id: "0", firstName: "bian");
   ChatUser geminiUser = ChatUser(id: "1", firstName: "Gemini");
-
+  String kota = '';
   List<ChatMessage> messages = [];
 
   @override
@@ -75,7 +74,7 @@ class _AIChatPageState extends State<AIChatPage> {
     try {
       // Kirim pesan pengguna Bian ke endpoint /chat di localhost:3000
       final response = await http.post(
-        Uri.parse('http://$ipaddr:3000/chat'),
+        Uri.parse('http://172.26.0.1:3000/chat'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -89,6 +88,7 @@ class _AIChatPageState extends State<AIChatPage> {
         if (responseData['response'].contains("=") ||
             responseData['response'].contains("&")) {
           String responseText2 = responseData['response'];
+          kota = responseText2;
           ChatMessage geminiMessage = ChatMessage(
             user: geminiUser,
             createdAt: DateTime.now(),
@@ -97,13 +97,7 @@ class _AIChatPageState extends State<AIChatPage> {
           setState(() {
             messages = [geminiMessage, ...messages];
           });
-          if (chatMessage.text == 'ya' || chatMessage.text == 'Ya') {
-            print('ini ya');
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => AINavigateScreen(
-                      namaKota: responseText2,
-                    )));
-          }
+          print(chatMessage.text);
         } else {
           String responseText = responseData['response'];
 
@@ -116,6 +110,13 @@ class _AIChatPageState extends State<AIChatPage> {
           setState(() {
             messages = [geminiMessage, ...messages];
           });
+        }
+        if (chatMessage.text == 'ya' || chatMessage.text == 'Ya') {
+          print('ini ya $chatMessage');
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => AINavigateScreen(
+                    namaKota: kota,
+                  )));
         }
       } else {
         // Jika gagal, tampilkan pesan kesalahan

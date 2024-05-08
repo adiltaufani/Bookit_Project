@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
-import 'package:flutter_project/variables.dart';
+import 'package:flutter_project/features/profile/widgets/logout_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,8 @@ class _SettingPageState extends State<SettingPage> {
   String? firstname;
   String? lastname;
   String? email;
+  String pp = '';
+  bool isDataAvail = false;
   final GoogleAuthService authService = GoogleAuthService();
 
   @override
@@ -92,16 +96,18 @@ class _SettingPageState extends State<SettingPage> {
                                   children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(100),
-                                      child: const AspectRatio(
-                                        aspectRatio:
-                                            1.0, // Mengatur aspect ratio menjadi 1:1 (persegi)
-                                        child: Image(
-                                          image: AssetImage(
-                                              'assets/images/profile.png'),
-                                          fit: BoxFit
-                                              .cover, // Atur agar gambar memenuhi ukuran persegi
-                                        ),
-                                      ),
+                                      child: AspectRatio(
+                                          aspectRatio:
+                                              1.0, // Mengatur aspect ratio menjadi 1:1 (persegi)
+                                          child: isDataAvail
+                                              ? CircleAvatar(
+                                                  radius: 26,
+                                                  backgroundColor:
+                                                      Colors.white30,
+                                                  backgroundImage:
+                                                      NetworkImage(pp),
+                                                )
+                                              : CircularProgressIndicator()),
                                     ),
                                     Padding(
                                       padding:
@@ -518,7 +524,17 @@ class _SettingPageState extends State<SettingPage> {
                         padding: const EdgeInsets.only(left: 8.0, bottom: 12),
                         child: InkWell(
                           onTap: () {
-                            authService.signOut(context);
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return LogoutDialog(
+                                  onConfirmLogout: () {
+                                    // Panggil fungsi logout di sini
+                                    authService.signOut(context);
+                                  },
+                                );
+                              },
+                            );
                           },
                           child: Row(
                             children: [
@@ -527,16 +543,18 @@ class _SettingPageState extends State<SettingPage> {
                               Text(
                                 'Logout',
                                 style: GoogleFonts.montserrat(
-                                    textStyle: const TextStyle(
-                                  fontSize: 16,
-                                  color: Color(0xFF6B0B0B),
-                                  fontWeight: FontWeight.w700,
-                                )),
+                                  textStyle: const TextStyle(
+                                    fontSize: 16,
+                                    color: Color(0xFF6B0B0B),
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
                               ),
                               Expanded(
-                                  child: Container(
-                                color: Colors.white10,
-                              )),
+                                child: Container(
+                                  color: Colors.white10,
+                                ),
+                              ),
                               const Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 color: Colors.black45,
@@ -571,7 +589,7 @@ class _SettingPageState extends State<SettingPage> {
     }
 
     var url =
-        Uri.parse("https://projekta.seculab.space/crudtaprojek/view_data.php");
+        Uri.parse("http://172.26.0.1/ta_projek/crudtaprojek/view_data.php");
     String uid = user.uid;
 
     var response = await http.post(url, body: {
@@ -584,10 +602,32 @@ class _SettingPageState extends State<SettingPage> {
       firstname = data['firstname'];
       lastname = data['lastname'];
       email = data['email'];
+      pp = await getImageUrl('images/image_$uid.jpg');
       print('Firstname: $firstname, Lastname: $lastname');
       // Lakukan apapun yang Anda ingin lakukan dengan data ini
+      setState(() {
+        isDataAvail = true;
+      });
     } else {
       print("Gagal mendapatkan data pengguna");
+    }
+  }
+
+  Future<String> getImageUrl(String imagePath) async {
+    try {
+      // Buat referensi Firebase Storage untuk gambar yang diunggah
+      Reference ref = FirebaseStorage.instance.ref().child(imagePath);
+
+      // Dapatkan URL download gambar
+      String imageUrl = await ref.getDownloadURL();
+
+      // Kembalikan URL download gambar
+      return imageUrl;
+    } catch (error) {
+      // Tangkap error dan kembalikan URL gambar default jika terjadi kesalahan
+      print("Error: $error");
+      // Mengembalikan URL gambar default dari assets jika terjadi kesalahan
+      return "https://firebasestorage.googleapis.com/v0/b/loginsignupta-prototype.appspot.com/o/images%2Fdefault.webp?alt=media&token=0f99eb8a-be98-4f26-99b7-d71776562de9";
     }
   }
 }

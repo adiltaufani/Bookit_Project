@@ -19,18 +19,6 @@ class ChatService {
     });
   }
 
-  Stream<List<Map<String, dynamic>>> getChatRoomsStream() {
-    return FirebaseFirestore.instance
-        .collection('chat_rooms')
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        final chatRoom = doc.data();
-        return chatRoom;
-      }).toList();
-    });
-  }
-
   Future<void> sendMessage(String receiverID, String message) async {
     final String currentUserId = _auth.currentUser!.uid;
     final String currentUserEmail = _auth.currentUser!.email!;
@@ -80,23 +68,6 @@ class ChatService {
         .collection('messages')
         .orderBy("timestamp", descending: false)
         .snapshots();
-  }
-
-  Stream<List<Map<String, dynamic>>> getChatRooms(String userID, otherUserID) {
-    //construct a chatroom ID for 2 users
-    List<String> ids = [userID, otherUserID];
-    ids.sort();
-    String chatRoomId = ids.join("-");
-
-    return FirebaseFirestore.instance
-        .collection('chat_rooms')
-        .doc(chatRoomId)
-        .collection('messages')
-        .orderBy("timestamp", descending: false)
-        .snapshots()
-        .map((querySnapshot) {
-      return querySnapshot.docs.map((doc) => doc.data()).toList();
-    });
   }
 
   //get last message

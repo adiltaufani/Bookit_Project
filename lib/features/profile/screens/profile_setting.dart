@@ -1,10 +1,12 @@
 import 'dart:convert';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_project/variables.dart';
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_project/features/auth/services/auth/firebase_auth_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileSetting extends StatefulWidget {
   static const String routeName = '/profile-setting';
@@ -23,6 +25,9 @@ class _ProfileSettingState extends State<ProfileSetting> {
   String? address;
   String? email;
   bool firstnameTrigger = false;
+  String pp = '';
+  bool isDataAvail = false;
+  String uid = '';
 
   @override
   void initState() {
@@ -80,38 +85,46 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                 children: [
                                   Stack(
                                     children: [
-                                      GestureDetector(
-                                          onTap: () {},
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            child: const AspectRatio(
-                                              aspectRatio:
-                                                  1.0, // Mengatur aspect ratio menjadi 1:1 (persegi)
-                                              child: Image(
-                                                image: AssetImage(
-                                                    'assets/images/profile.png'),
-                                                fit: BoxFit
-                                                    .cover, // Atur agar gambar memenuhi ukuran persegi
-                                              ),
-                                            ),
-                                          )),
+                                      // Foto profil
+                                      ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: AspectRatio(
+                                          aspectRatio: 1.0,
+                                          child: isDataAvail
+                                              ? CircleAvatar(
+                                                  radius:
+                                                      40, // Menyesuaikan radius untuk memperbesar foto profil
+                                                  backgroundColor:
+                                                      Colors.white30,
+                                                  backgroundImage:
+                                                      NetworkImage(pp),
+                                                )
+                                              : const CircularProgressIndicator(),
+                                        ),
+                                      ),
+                                      // Tombol unggah di atas foto profil
                                       Positioned(
-                                          bottom: 1,
-                                          right: 1,
+                                        bottom: 0,
+                                        right: 0,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            uploadFile();
+                                          },
                                           child: Container(
-                                            padding: const EdgeInsets.all(4),
+                                            padding: EdgeInsets.all(4),
                                             decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                    color: Colors.black26),
-                                                color: Colors.white),
-                                            child: Icon(
-                                              Icons.edit,
-                                              size: 15,
-                                              color: Colors.black54,
+                                              shape: BoxShape.circle,
+                                              color: Colors.blue,
                                             ),
-                                          ))
+                                            child: Icon(
+                                              Icons.camera_alt,
+                                              color: Colors.white,
+                                              size: 20,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                   const SizedBox(width: 18),
@@ -295,8 +308,8 @@ class _ProfileSettingState extends State<ProfileSetting> {
     }
 
     var url =
-        Uri.parse("https://projekta.seculab.space/crudtaprojek/view_data.php");
-    String uid = user.uid;
+        Uri.parse("http://172.26.0.1/ta_projek/crudtaprojek/view_data.php");
+    uid = user.uid;
 
     var response = await http.post(url, body: {
       "uid": uid,
@@ -311,6 +324,11 @@ class _ProfileSettingState extends State<ProfileSetting> {
       birthdate = data['birthdate'];
       address = data['address'];
       email = data['email'];
+      pp = await getImageUrl('images/image_$uid.jpg');
+
+      setState(() {
+        isDataAvail = true;
+      });
       // Lakukan apapun yang Anda ingin lakukan dengan data ini
     } else {
       throw ("Gagal mendapatkan data pengguna");
@@ -318,6 +336,54 @@ class _ProfileSettingState extends State<ProfileSetting> {
 
     if (_firstname != null) {
       firstnameTrigger = true;
+    }
+  }
+
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  Future<void> uploadFile() async {
+    // Mengambil gambar dari galeri
+    ImagePicker picker = ImagePicker();
+    XFile? file = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+    // Atau dapatkan gambar dari kamera: ImageSource.camera
+
+    if (file != null) {
+      // Buat nama file yang unik dengan menambahkan timestamp
+      String fileName = 'image_${uid}.jpg';
+
+      // Buat referensi Firebase Storage dengan nama file baru
+      Reference ref = _storage.ref().child("images/$fileName");
+
+      // Mulai upload
+      UploadTask uploadTask = ref.putFile(File(file.path));
+
+      // Menangani status upload
+      uploadTask.then((res) {
+        // Upload selesai
+        print("File uploaded successfully!");
+      }).catchError((err) {
+        // Terjadi kesalahan
+        print("Error uploading file: $err");
+      });
+    }
+  }
+
+  Future<String> getImageUrl(String imagePath) async {
+    try {
+      // Buat referensi Firebase Storage untuk gambar yang diunggah
+      Reference ref = FirebaseStorage.instance.ref().child(imagePath);
+
+      // Dapatkan URL download gambar
+      String imageUrl = await ref.getDownloadURL();
+
+      // Kembalikan URL download gambar
+      return imageUrl;
+    } catch (error) {
+      // Tangkap error dan kembalikan URL gambar default jika terjadi kesalahan
+      print("Error: $error");
+      // Mengembalikan URL gambar default dari assets jika terjadi kesalahan
+      return "https://firebasestorage.googleapis.com/v0/b/loginsignupta-prototype.appspot.com/o/images%2Fdefault.webp?alt=media&token=0f99eb8a-be98-4f26-99b7-d71776562de9";
     }
   }
 }

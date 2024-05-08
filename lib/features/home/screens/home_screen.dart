@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'package:geocoding/geocoding.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_project/features/appbar_global.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
 import 'package:flutter_project/features/notification/screens/notification_page.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
@@ -9,6 +13,7 @@ import 'package:flutter_project/features/search/widgets/search_page_widget.dart'
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:geolocator/geolocator.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/home-screen';
@@ -19,9 +24,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  String firstname = '';
+  String lastname = '';
+  String email = '';
+  String pp = '';
+  bool isDataAvail = true;
+  double latitude = 0.0;
+  double longitude = 0.0;
+  String kota = '';
+  bool isData = false;
   @override
   void initState() {
+    fetchUserData();
     runPHPCodeOnHomeScreen();
+    getLocation();
     super.initState();
   }
 
@@ -91,26 +107,29 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 height: 34.0,
               ),
             ),
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, SettingPage.routeName);
-              },
-              icon: Image.asset(
-                'assets/images/profile.png',
-                height: 38.0,
-              ),
-            ),
+            FutureBuilder<String?>(
+                future: ProfileDataManager.getProfilePic(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error ${snapshot.error}');
+                  } else if (snapshot.hasData) {
+                    return IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, SettingPage.routeName);
+                      },
+                      icon: CircleAvatar(
+                        radius: 26,
+                        backgroundColor: Colors.white30,
+                        backgroundImage: NetworkImage(snapshot.data!),
+                      ),
+                    );
+                  } else {
+                    return Text('no data');
+                  }
+                }),
           ],
-          leading: IconButton(
-            onPressed: () {
-              _scaffoldKey.currentState!.openDrawer();
-            },
-            icon: const Icon(
-              Icons.menu,
-              color: Colors.white,
-              size: 30.0,
-            ),
-          ),
         ),
       ),
       body: Material(
@@ -148,16 +167,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             ),
                           ),
                         ),
-                        Text(
-                          'Jakarta',
-                          style: GoogleFonts.montserrat(
-                            textStyle: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
+                        isData
+                            ? Text(
+                                '${kota}',
+                                style: GoogleFonts.montserrat(
+                                  textStyle: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              )
+                            : CircularProgressIndicator()
                       ],
                     ),
                     Image.asset(
@@ -243,18 +264,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   children: [
                     HomeHouse(
                       tipe: 'readhouse.php',
+                      user_latitude: latitude,
+                      user_longitude: longitude,
                     ),
                     HomeHouse(
                       tipe: 'readapartement.php',
+                      user_latitude: latitude,
+                      user_longitude: longitude,
                     ),
                     HomeHouse(
                       tipe: 'readhotel.php',
+                      user_latitude: latitude,
+                      user_longitude: longitude,
                     ),
                     HomeHouse(
                       tipe: 'readvilla.php',
+                      user_latitude: latitude,
+                      user_longitude: longitude,
                     ),
                     HomeHouse(
                       tipe: 'readresort.php',
+                      user_latitude: latitude,
+                      user_longitude: longitude,
                     ),
                   ],
                 ),
@@ -275,9 +306,45 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return formatter.format(number);
   }
 
+  Future<void> fetchUserData() async {
+    var user = FirebaseAuth.instance.currentUser;
+
+    // Pastikan user sudah login
+    if (user == null) {
+      // Jika user belum login, tampilkan pesan
+      print("Silakan login terlebih dahulu");
+      return; // Keluar dari metode fetchUserData
+    }
+
+    var url =
+        Uri.parse("http://172.26.0.1/ta_projek/crudtaprojek/view_data.php");
+    String uid = user.uid;
+    var response = await http.post(url, body: {
+      "uid": uid,
+    });
+
+    var data = json.decode(response.body);
+    if (data != null) {
+      // Data berhasil diterima, tampilkan firstname dan lastname
+      firstname = data['firstname'];
+      lastname = data['lastname'];
+      email = data['email'];
+      String cleanedUrlFoto = data['profile_picture'].replaceAll('\\', '');
+      pp = cleanedUrlFoto;
+      print('Firstname: $firstname, Lastname: $lastname');
+      // Lakukan apapun yang Anda ingin lakukan dengan data ini
+      setState(() {
+        isDataAvail = false;
+        print(pp);
+      });
+    } else {
+      print("Gagal mendapatkan data pengguna");
+    }
+  }
+
   Future<void> runPHPCodeOnHomeScreen() async {
     final url =
-        'https://projekta.seculab.space/crudtaprojek/update_harga_termurah.php'; // Ganti dengan URL endpoint PHP Anda
+        'http://172.26.0.1/ta_projek/crudtaprojek//update_harga_termurah.php'; // Ganti dengan URL endpoint PHP Anda
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -289,6 +356,44 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       }
     } catch (e) {
       print('Error occurred while executing PHP code: $e');
+    }
+  }
+
+  Future<void> getLocation() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+
+    if (permission == LocationPermission.denied) {
+      // Handle denied permission
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    latitude = position.latitude;
+    longitude = position.longitude;
+    print(latitude);
+    print(longitude);
+    if (latitude != 0) {
+      getCityFromCoordinates(latitude, longitude);
+    }
+
+    // Gunakan latitude dan longitude sesuai kebutuhan Anda
+  }
+
+  void getCityFromCoordinates(double latitude, double longitude) async {
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(latitude, longitude);
+      Placemark place = placemarks[0];
+      print(place.locality);
+      kota = place.locality.toString(); // Ini adalah nama kota
+      setState(() {
+        isData = !isData;
+      });
+    } catch (e) {
+      print("Error: $e");
     }
   }
 }

@@ -28,11 +28,17 @@ class _UserTileState extends State<UserTile> {
 
   @override
   void initState() {
-    _lastMessageFuture = _chatService
-        .getLastMessage('${widget.recieverUid}-${widget.senderUid}');
-    _lastMessageTimeFuture = _chatService
-        .getLastMessageTime('${widget.recieverUid}-${widget.senderUid}');
+    getLastMessage();
     super.initState();
+  }
+
+  getLastMessage() {
+    List<String> ids = [widget.recieverUid, widget.senderUid];
+    ids.sort();
+    String chatRoomId = ids.join("-");
+    print(chatRoomId);
+    _lastMessageFuture = _chatService.getLastMessage(chatRoomId);
+    _lastMessageTimeFuture = _chatService.getLastMessageTime(chatRoomId);
   }
 
   @override
@@ -86,9 +92,8 @@ class _UserTileState extends State<UserTile> {
                                   } else {
                                     DateTime? lastMessageTime = snapshot.data;
                                     if (lastMessageTime != null) {
-                                      String formattedDate =
-                                          DateFormat('d MMMM')
-                                              .format(lastMessageTime);
+                                      DateFormat('d MMMM')
+                                          .format(lastMessageTime);
                                       String timeAgo =
                                           _getTimeAgo(lastMessageTime);
                                       return Text(
