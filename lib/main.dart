@@ -4,11 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
-import 'package:flutter_project/features/auth/screens/auth_screen.dart';
 import 'package:flutter_project/features/auth/screens/login_screen.dart';
 import 'package:flutter_project/features/home/screens/home_screen.dart';
 import 'package:flutter_project/features/chatAI/widgets/consts.dart';
-import 'package:flutter_project/features/message/screens/tes.dart';
+import 'package:flutter_project/features/profile/screens/profile_setting.dart';
 import 'package:flutter_project/firebase_options.dart';
 import 'package:flutter_project/router.dart';
 

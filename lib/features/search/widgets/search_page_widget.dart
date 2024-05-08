@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_project/common/widgets/custom_texfield.dart';
 import 'package:flutter_project/features/auth/widgets/side_menu.dart';
 import 'package:flutter_project/features/notification/screens/notification_page.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
 import 'package:flutter_project/features/search/screens/search_page.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class SearchPageWidget extends StatefulWidget {
   static const String routeName = '/search-page-widget';
@@ -21,8 +21,21 @@ class _SearchPageWidgetState extends State<SearchPageWidget> {
   final TextEditingController _tanggalawal = TextEditingController();
   final TextEditingController _tanggalakhir = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  String formattedStartDate = '';
+  String formattedEndDate = '';
+  String startdateNew = '';
+  String enddateNew = '';
   bool isTextFieldFocused = false;
+  String startDay = '';
+  String formattedTanggal = '';
+  String formattedTanggalbesok = '';
+  String endDay = '';
+  DateTimeRange selectedDates = DateTimeRange(
+    start: DateTime.now(),
+    end: DateTime.now(),
+  );
+  DateTime? startDate;
+  DateTime? endDate;
 
   final List<String> _listKota = [
     'Jakarta',
@@ -48,8 +61,18 @@ class _SearchPageWidgetState extends State<SearchPageWidget> {
   void initState() {
     _searchControllerr = TextEditingController();
     _foundKota = _listKota;
+    _formatSelectedDayDates();
     print(_foundKota);
     super.initState();
+  }
+
+  void _formatSelectedDates() {
+    formattedStartDate = selectedDates.start.toIso8601String().substring(0, 10);
+    formattedEndDate = selectedDates.end.toIso8601String().substring(0, 10);
+    DateTime date = DateTime.parse(formattedStartDate);
+    DateTime date2 = DateTime.parse(formattedEndDate);
+    startdateNew = DateFormat('dd MMMM yyyy').format(date);
+    enddateNew = DateFormat('dd MMMM yyyy').format(date2);
   }
 
   @override
@@ -74,6 +97,35 @@ class _SearchPageWidgetState extends State<SearchPageWidget> {
       _foundKota = results;
       print('ini found kota $_foundKota');
     });
+  }
+
+  void _formatSelectedDayDates() {
+    DateTime tanggal = DateTime.now();
+    DateTime tanggalbesok = tanggal.add(Duration(days: 1));
+    formattedTanggal = tanggal.toIso8601String().substring(0, 10);
+    formattedTanggalbesok = tanggalbesok.toIso8601String().substring(0, 10);
+    DateTime date = DateTime.parse(formattedTanggal);
+    DateTime date2 = DateTime.parse(formattedTanggalbesok);
+    startdateNew = DateFormat('dd MMMM yyyy').format(date);
+    enddateNew = DateFormat('dd MMMM yyyy').format(date2);
+
+    int startDayIndex = date.weekday - 1; // 0 untuk Senin
+    int endDayIndex = date2.weekday - 1; // 0 untuk Senin
+
+// Array untuk nama hari dalam bahasa Inggris
+    List<String> daysOfWeek = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday'
+    ];
+
+// Mendapatkan nama hari untuk tanggal mulai dan tanggal selesai
+    startDay = daysOfWeek[startDayIndex];
+    endDay = daysOfWeek[endDayIndex];
   }
 
   @override
@@ -167,13 +219,30 @@ class _SearchPageWidgetState extends State<SearchPageWidget> {
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () async {
+                      final DateTimeRange? dateTimeRange =
+                          await showDateRangePicker(
+                        context: context,
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(3000),
+                      );
+                      if (dateTimeRange != null) {
+                        setState(() {
+                          selectedDates = dateTimeRange;
+                          startDate = dateTimeRange.start;
+                          endDate = dateTimeRange.end;
+                          _formatSelectedDates();
+                          print('Tanggal Awal: $formattedStartDate');
+                          print('Tanggal Akhir: $formattedEndDate');
+                        });
+                      }
+                    },
                     child: Container(
                       padding: EdgeInsets.all(8),
                       child: Column(
                         children: [
                           Text(
-                            '30, Apr 2024',
+                            startdateNew,
                             style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(
                                 color: Color(0xFF225B7B),
@@ -184,7 +253,7 @@ class _SearchPageWidgetState extends State<SearchPageWidget> {
                             ),
                           ),
                           Text(
-                            'Tuesday',
+                            startDay,
                             style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(
                                 color: Colors.black54,
@@ -215,7 +284,7 @@ class _SearchPageWidgetState extends State<SearchPageWidget> {
                       child: Column(
                         children: [
                           Text(
-                            '01, May 2024',
+                            enddateNew,
                             style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(
                                 color: Color(0xFF225B7B),
@@ -226,7 +295,7 @@ class _SearchPageWidgetState extends State<SearchPageWidget> {
                             ),
                           ),
                           Text(
-                            'Wednesday',
+                            endDay,
                             style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(
                                 color: Colors.black54,
@@ -309,13 +378,25 @@ class _SearchPageWidgetState extends State<SearchPageWidget> {
                       onTap: () {
                         // Aksi yang akan dijalankan ketika item dipilih
                         print('Anda memilih kota: $kota');
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SearchPage(
-                                  namaKota: kota,
-                                  tanggal_checkin: _tanggalawal.text.toString(),
-                                  tanggal_checkout:
-                                      _tanggalakhir.text.toString(),
-                                )));
+                        if (startDate == null && endDate == null) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => SearchPage(
+                                    namaKota: kota,
+                                    tanggal_checkin:
+                                        formattedTanggal.toString(),
+                                    tanggal_checkout:
+                                        formattedTanggalbesok.toString(),
+                                  )));
+                        } else {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => SearchPage(
+                                    namaKota: kota,
+                                    tanggal_checkin:
+                                        formattedStartDate.toString(),
+                                    tanggal_checkout:
+                                        formattedEndDate.toString(),
+                                  )));
+                        }
                       },
                     );
                   },

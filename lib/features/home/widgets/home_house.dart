@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/features/booking/screens/booking_page.dart';
 import 'package:flutter_project/features/home/screens/near_from_you.dart';
-import 'package:flutter_project/variables.dart';
+import 'package:flutter_project/features/wishlist/database/db_helper.dart';
+import 'package:flutter_project/features/wishlist/model/wishlist_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -10,7 +11,14 @@ import 'package:intl/intl.dart';
 // ignore: must_be_immutable
 class HomeHouse extends StatefulWidget {
   String tipe;
-  HomeHouse({super.key, required this.tipe});
+  double user_latitude;
+  double user_longitude;
+  HomeHouse({
+    super.key,
+    required this.tipe,
+    required this.user_latitude,
+    required this.user_longitude,
+  });
 
   @override
   State<HomeHouse> createState() => _HomeHouseState();
@@ -23,7 +31,7 @@ class _HomeHouseState extends State<HomeHouse> {
   Future _getdata() async {
     try {
       final response = await http.get(
-        Uri.parse('https://projekta.seculab.space/crudtaprojek/${widget.tipe}'),
+        Uri.parse('http://172.26.0.1/ta_projek/crudtaprojek/${widget.tipe}'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -36,11 +44,39 @@ class _HomeHouseState extends State<HomeHouse> {
     }
   }
 
+  List _ListdataNear = [];
+
+  Future _getdataNear() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            'http://172.26.0.1/ta_projek/crudtaprojek/fetch_property_near.php?user_latitude=${widget.user_latitude}&user_longitude=${widget.user_longitude}&tipe=house'),
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          _ListdataNear = data;
+        });
+        print(_ListdataNear);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  void fetchData() async {
+    await _getdata();
+    await _getdataNear();
+  }
+
   @override
   void initState() {
-    _getdata();
+    fetchData();
     super.initState();
   }
+
+  List<bool> booleanList = List<bool>.filled(10, false);
+  List<bool> triggerList = List<bool>.filled(10, false);
 
   @override
   Widget build(BuildContext context) {
@@ -98,76 +134,155 @@ class _HomeHouseState extends State<HomeHouse> {
               height: 300,
               width: double.infinity,
               child: ListView.builder(
-                itemCount: _Listdata.length,
+                itemCount: _ListdataNear.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (BuildContext context, int index) {
                   String cleanedUrlFoto =
-                      _Listdata[index]['url_foto'].replaceAll('\\', '');
-                  return Stack(
-                    children: [
-                      Container(
-                        height: 275,
-                        width: 240,
-                        padding: const EdgeInsets.all(0),
-                        margin: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                          image: DecorationImage(
-                              image: NetworkImage(cleanedUrlFoto),
-                              fit: BoxFit.cover),
+                      _ListdataNear[index]['url_foto'].replaceAll('\\', '');
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BookingPage(
+                            locationName: _ListdataNear[index]
+                                ['nama_penginapan'],
+                            locationAddress: _ListdataNear[index]['alamat'],
+                            jumlah_reviewer: _ListdataNear[index]
+                                ['jumlah_reviewer'],
+                            url_foto: cleanedUrlFoto,
+                            hotel_id: _ListdataNear[index]['id'],
+                            latitude: _ListdataNear[index]['latitude'],
+                            longitude: _ListdataNear[index]['longitude'],
+                          ),
                         ),
-                      ),
-                      Container(
-                        width: 240,
-                        height: 275,
-                        padding: const EdgeInsets.all(0),
-                        margin: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                              20), // Adjust the radius as needed
-                          gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.center,
-                            colors: [
-                              Colors.black.withOpacity(
-                                  0.74), // Opacity untuk membuatnya lebih gelap
-                              Colors
-                                  .transparent, // Untuk memberikan transisi ke gambar
+                      );
+                    },
+                    child: Stack(
+                      children: [
+                        Container(
+                          height: 275,
+                          width: 240,
+                          padding: const EdgeInsets.all(0),
+                          margin: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                            image: DecorationImage(
+                                image: NetworkImage(cleanedUrlFoto),
+                                fit: BoxFit.cover),
+                          ),
+                        ),
+                        Container(
+                          width: 240,
+                          height: 275,
+                          padding: const EdgeInsets.all(0),
+                          margin: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                                20), // Adjust the radius as needed
+                            gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.center,
+                              colors: [
+                                Colors.black.withOpacity(
+                                    0.74), // Opacity untuk membuatnya lebih gelap
+                                Colors
+                                    .transparent, // Untuk memberikan transisi ke gambar
+                              ],
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 30,
+                          left: 20,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _ListdataNear[index]['nama_penginapan'],
+                                style: GoogleFonts.montserrat(
+                                  textStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                _ListdataNear[index]['alamat'],
+                                style: GoogleFonts.montserrat(
+                                  textStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                      ),
-                      Positioned(
-                        bottom: 30,
-                        left: 20,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _Listdata[index]['nama_penginapan'],
-                              style: GoogleFonts.montserrat(
-                                textStyle: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              _Listdata[index]['alamat'],
-                              style: GoogleFonts.montserrat(
-                                textStyle: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ],
+                        Positioned(
+                          top: 30,
+                          right: 20,
+                          child: GestureDetector(
+                            onTap: () {
+                              fetchData(); // Memulai pengambilan data
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // Membuat dialog
+                                  return FutureBuilder(
+                                    future: Future.delayed(Duration(
+                                        seconds:
+                                            2)), // Menunda dialog selama 2 detik
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<dynamic> snapshot) {
+                                      // Menampilkan pesan dialog
+                                      return AlertDialog(
+                                        title: Text("Data Berhasil Disimpan"),
+                                        content: Text(
+                                            "Property Dimasukan ke Wishlist"),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .pop(); // Menutup dialog
+                                            },
+                                            child: Text("OK"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                              setState(() {
+                                triggerList[index] = !triggerList[index];
+                                if (triggerList[index] == true) {
+                                  wishlistTap(index);
+                                }
+                              });
+                            },
+                            child: triggerList[index]
+                                ? Transform.scale(
+                                    scale: 1.5, // Besar ikon 1.5 kali lipat
+                                    child: Icon(
+                                      Icons.bookmark_rounded,
+                                      color: Colors.blueGrey,
+                                    ),
+                                  )
+                                : Transform.scale(
+                                    scale: 1.5, // Besar ikon 1.5 kali lipat
+                                    child: Icon(
+                                      Icons.bookmark_rounded,
+                                      color: Colors.black12,
+                                    ),
+                                  ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 },
               ),
@@ -358,6 +473,61 @@ class _HomeHouseState extends State<HomeHouse> {
                             ],
                           ),
                         ),
+                        GestureDetector(
+                          onTap: () {
+                            fetchData(); // Memulai pengambilan data
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                // Membuat dialog
+                                return FutureBuilder(
+                                  future: Future.delayed(Duration(
+                                      seconds:
+                                          2)), // Menunda dialog selama 2 detik
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<dynamic> snapshot) {
+                                    // Menampilkan pesan dialog
+                                    return AlertDialog(
+                                      title: Text("Data Berhasil Disimpan"),
+                                      content: Text(
+                                          "Property Dimasukan ke Wishlist"),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Menutup dialog
+                                          },
+                                          child: Text("OK"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                            setState(() {
+                              booleanList[index] = !booleanList[index];
+                              if (booleanList[index] == true) {
+                                wishlistTap(index);
+                              }
+                            });
+                          },
+                          child: booleanList[index]
+                              ? Transform.scale(
+                                  scale: 1.5, // Besar ikon 1.5 kali lipat
+                                  child: Icon(
+                                    Icons.bookmark_rounded,
+                                    color: Colors.blueGrey,
+                                  ),
+                                )
+                              : Transform.scale(
+                                  scale: 1.5, // Besar ikon 1.5 kali lipat
+                                  child: Icon(
+                                    Icons.bookmark_rounded,
+                                    color: Colors.black12,
+                                  ),
+                                ),
+                        ),
                       ],
                     ),
                   ),
@@ -368,6 +538,22 @@ class _HomeHouseState extends State<HomeHouse> {
         ),
       ),
     );
+  }
+
+  void wishlistTap(int index) {
+    String nama_penginapan = _Listdata[index]['nama_penginapan'];
+    String harga = _Listdata[index]['harga_termurah'];
+    String hotel_id = _Listdata[index]['id'];
+    String alamat = _Listdata[index]['alamat'];
+    String url_foto = _Listdata[index]['url_foto'];
+    WishlistModel wishlistModel = WishlistModel(
+        nama_penginapan: nama_penginapan,
+        harga: harga,
+        hotel_id: hotel_id,
+        address: alamat,
+        uid: 'uid',
+        url_foto: url_foto);
+    WishlistDatabaseHelper.insertWishlist(wishlistModel);
   }
 
   String formatInteger(String numberString) {

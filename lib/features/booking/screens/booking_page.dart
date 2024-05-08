@@ -5,7 +5,6 @@ import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:flutter_project/features/booking/widgets/futniture_widget.dart';
 import 'package:flutter_project/features/payment/screens/payment_page.dart';
 import 'package:flutter_project/features/auth/widgets/variables.dart';
-import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -48,6 +47,10 @@ class _BookingPageState extends State<BookingPage> {
   );
   double lat = -6.975003032183382;
   double long = 107.64594257899627;
+  String formattedTanggal = '';
+  String formattedTanggalbesok = '';
+  String tanggalAwal = '';
+  String tanggalAkhir = '';
   late Future<Map<String, bool>> futureFurnitureData;
 
   List _Listdata = [];
@@ -73,10 +76,14 @@ class _BookingPageState extends State<BookingPage> {
       try {
         DateTime tanggal = DateTime.now();
         DateTime tanggalbesok = tanggal.add(Duration(days: 1));
-        String formattedTanggal = tanggal.toIso8601String().substring(0, 10);
-        String formattedTanggalbesok =
-            tanggalbesok.toIso8601String().substring(0, 10);
-
+        formattedTanggal = tanggal.toIso8601String().substring(0, 10);
+        formattedTanggalbesok = tanggalbesok.toIso8601String().substring(0, 10);
+        DateTime date = DateTime.parse(formattedTanggal);
+        DateTime date2 = DateTime.parse(formattedTanggalbesok);
+        tanggalAwal = DateFormat('dd MMMM yyyy').format(date);
+        tanggalAkhir = DateFormat('dd MMMM yyyy').format(date2);
+        startdateNew = tanggalAwal;
+        enddateNew = tanggalAkhir;
         final response = await http.get(
           Uri.parse(
               'https://projekta.seculab.space/crudtaprojek/get_rooms_byid.php?uid=${widget.hotel_id}&tanggal_checkin=${formattedTanggal}&tanggal_checkout=${formattedTanggalbesok}'),
@@ -461,16 +468,16 @@ class _BookingPageState extends State<BookingPage> {
                                           children: [
                                             const Icon(
                                               Icons.calendar_month_rounded,
-                                              color: Colors.black45,
+                                              color: Color(0xFF0A8ED9),
                                             ),
                                             const SizedBox(width: 4),
                                             Text(
-                                              'Choose a date',
+                                              '${tanggalAwal} / ${tanggalAkhir}',
                                               style: GoogleFonts.montserrat(
                                                 textStyle: const TextStyle(
-                                                  color: Colors.black45,
+                                                  color: Colors.blue,
                                                   fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
+                                                  fontWeight: FontWeight.w700,
                                                 ),
                                               ),
                                             ),
@@ -500,7 +507,7 @@ class _BookingPageState extends State<BookingPage> {
                                               itemExtent: 30,
                                               scrollController:
                                                   FixedExtentScrollController(
-                                                initialItem: 1,
+                                                initialItem: 0,
                                               ),
                                               children: const [
                                                 Text('0 Adult'),
@@ -525,7 +532,7 @@ class _BookingPageState extends State<BookingPage> {
                                               itemExtent: 30,
                                               scrollController:
                                                   FixedExtentScrollController(
-                                                initialItem: 1,
+                                                initialItem: 0,
                                               ),
                                               children: const [
                                                 Text('0 Child'),
@@ -1008,10 +1015,7 @@ class _BookingPageState extends State<BookingPage> {
             left: 10,
             child: ElevatedButton(
               onPressed: () {
-                if (startDate == null ||
-                    endDate == null ||
-                    _selectedValueAdult == 0 ||
-                    totalHarga == 0) {
+                if (_selectedValueAdult == 0 || totalHarga == 0) {
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -1029,22 +1033,46 @@ class _BookingPageState extends State<BookingPage> {
                         );
                       });
                 } else {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => PaymentPage(
-                        id: roomsIds,
-                        hotel_id: widget.hotel_id,
-                        url_foto: widget.url_foto,
-                        nama_penginapan: widget.locationName,
-                        lokasi: widget.locationAddress,
-                        hargaTotal: hargaFix,
-                        startDate: startdateNew,
-                        endDate: enddateNew,
-                        adultValue: _selectedValueAdult,
-                        childValue: _selectedValueChild,
+                  if (widget.tanggalAwal == null &&
+                      widget.tanggalAkhir == null) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => PaymentPage(
+                          id: roomsIds,
+                          hotel_id: widget.hotel_id,
+                          url_foto: widget.url_foto,
+                          nama_penginapan: widget.locationName,
+                          lokasi: widget.locationAddress,
+                          hargaTotal: hargaFix,
+                          startDate: startdateNew,
+                          endDate: enddateNew,
+                          adultValue: _selectedValueAdult,
+                          childValue: _selectedValueChild,
+                          dbstartDate: formattedTanggal,
+                          dbendDate: formattedTanggalbesok,
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  } else {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => PaymentPage(
+                          id: roomsIds,
+                          hotel_id: widget.hotel_id,
+                          url_foto: widget.url_foto,
+                          nama_penginapan: widget.locationName,
+                          lokasi: widget.locationAddress,
+                          hargaTotal: hargaFix,
+                          startDate: startdateNew,
+                          endDate: enddateNew,
+                          adultValue: _selectedValueAdult,
+                          childValue: _selectedValueChild,
+                          dbstartDate: widget.tanggalAwal!,
+                          dbendDate: widget.tanggalAkhir!,
+                        ),
+                      ),
+                    );
+                  }
                 }
               },
               style: ElevatedButton.styleFrom(

@@ -92,9 +92,8 @@ class _UserTileState extends State<UserTile> {
                                   } else {
                                     DateTime? lastMessageTime = snapshot.data;
                                     if (lastMessageTime != null) {
-                                      String formattedDate =
-                                          DateFormat('d MMMM')
-                                              .format(lastMessageTime);
+                                      DateFormat('d MMMM')
+                                          .format(lastMessageTime);
                                       String timeAgo =
                                           _getTimeAgo(lastMessageTime);
                                       return Text(

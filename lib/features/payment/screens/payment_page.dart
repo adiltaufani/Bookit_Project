@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_project/variables.dart';
+import 'package:flutter_project/features/notification/screens/payment_success.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,21 +16,26 @@ class PaymentPage extends StatefulWidget {
   String hargaTotal;
   String startDate;
   String endDate;
+  String dbstartDate;
+  String dbendDate;
   int adultValue;
   int childValue;
   String url_foto;
 
-  PaymentPage(
-      {required this.id,
-      required this.hotel_id,
-      required this.nama_penginapan,
-      required this.lokasi,
-      required this.url_foto,
-      required this.hargaTotal,
-      required this.startDate,
-      required this.endDate,
-      required this.adultValue,
-      required this.childValue});
+  PaymentPage({
+    required this.id,
+    required this.hotel_id,
+    required this.nama_penginapan,
+    required this.lokasi,
+    required this.url_foto,
+    required this.hargaTotal,
+    required this.startDate,
+    required this.endDate,
+    required this.dbstartDate,
+    required this.dbendDate,
+    required this.adultValue,
+    required this.childValue,
+  });
 
   @override
   State<PaymentPage> createState() => _PaymentPageState();
@@ -49,6 +54,8 @@ class _PaymentPageState extends State<PaymentPage> {
   String? birthdate;
   String? address;
   String? email;
+  String? user_id;
+  String uid = '';
   bool firstnameTrigger = true;
   List _Listdata = [];
 
@@ -70,6 +77,28 @@ class _PaymentPageState extends State<PaymentPage> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void _addBookingIndicator() async {
+    setState(() {
+      isLoading = true;
+    });
+    await _addBooking();
+    await Future.delayed(Duration(seconds: 5));
+    setState(() {
+      isLoading = false;
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => PaymentSuccess(
+            uid: uid,
+            firstname: _firstname!,
+            nama_penginapan: widget.nama_penginapan,
+            startDate: widget.startDate,
+            endDate: widget.endDate,
+          ),
+        ),
+      );
+    });
   }
 
   @override
@@ -119,7 +148,7 @@ class _PaymentPageState extends State<PaymentPage> {
             ),
           )),
       body: isLoading
-          ? CircularProgressIndicator()
+          ? Center(child: CircularProgressIndicator())
           : _Listdata.isNotEmpty
               ? Stack(
                   children: [
@@ -909,7 +938,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                   left: 20, right: 20, bottom: 16),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  // Navigator.pushNamed(context, PaymentPage.routeName);
+                                  _addBookingIndicator();
                                 },
                                 style: ElevatedButton.styleFrom(
                                   fixedSize: const Size(double.infinity, 52),
@@ -960,6 +989,36 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
+  Future<void> _addBooking() async {
+    final String apiUrl =
+        'http://172.26.0.1/ta_projek/crudtaprojek/booking.php';
+    try {
+      Map<String, dynamic> data = {
+        'room_id': widget.id,
+        'user_id': user_id,
+        'tanggal_checkin': widget.dbstartDate,
+        'tanggal_checkout': widget.dbendDate
+      };
+      var response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(data),
+      );
+      if (response.statusCode == 200) {
+        print('Data berhasil ditambahkan');
+        // Tambahkan logika atau feedback sesuai kebutuhan
+      } else {
+        print('Gagal menambahkan data. Status code: ${response.statusCode}');
+        // Tambahkan logika atau feedback sesuai kebutuhan
+      }
+    } catch (err) {
+      print('Error: $err');
+      // Tambahkan logika atau feedback sesuai kebutuhan
+    }
+  }
+
   Future<void> fetchUserData() async {
     var user = FirebaseAuth.instance.currentUser;
 
@@ -971,8 +1030,8 @@ class _PaymentPageState extends State<PaymentPage> {
     }
 
     var url =
-        Uri.parse("https://projekta.seculab.space/crudtaprojek/view_data.php");
-    String uid = user.uid;
+        Uri.parse("http://172.26.0.1/ta_projek/crudtaprojek/view_data.php");
+    uid = user.uid;
 
     var response = await http.post(url, body: {
       "uid": uid,
@@ -981,13 +1040,14 @@ class _PaymentPageState extends State<PaymentPage> {
     var data = json.decode(response.body);
     if (data != null) {
       // Data berhasil diterima, tampilkan firstname dan lastname
+      user_id = data['id'];
       _firstname = data['firstname'];
       lastname = data['lastname'];
       number = data['number'];
       birthdate = data['birthdate'];
       address = data['address'];
       email = data['email'];
-      print('Firstname: $_firstname, Lastname: $lastname');
+      print('Firstname: $_firstname, Lastname: $lastname id : $user_id');
       // Lakukan apapun yang Anda ingin lakukan dengan data ini
     } else {
       print("Gagal mendapatkan data pengguna");

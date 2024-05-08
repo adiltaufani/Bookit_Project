@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project/features/appbar_global.dart';
 import 'package:flutter_project/features/message/screens/message_chat_screen.dart';
 import 'package:flutter_project/features/auth/services/auth/firebase_auth_service.dart';
-import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
 import 'package:flutter_project/features/message/services/chat_service.dart';
 import 'package:flutter_project/features/auth/widgets/side_menu.dart';
 import 'package:flutter_project/features/message/services/user_tile.dart';
 import 'package:flutter_project/features/notification/screens/notification_page.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
-import 'package:flutter_project/features/search/widgets/custom_search_text.dart';
+import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MessageScreen extends StatefulWidget {
@@ -19,7 +19,6 @@ class MessageScreen extends StatefulWidget {
 }
 
 class _MessageScreenState extends State<MessageScreen> {
-  final GoogleAuthService authService = GoogleAuthService();
   final FirebaseAuthService _authService = FirebaseAuthService();
   final ChatService _chatService = ChatService();
   bool isTextFieldFocused = false;
@@ -39,25 +38,41 @@ class _MessageScreenState extends State<MessageScreen> {
                 color: Colors.blue,
               ),
             ),
-            leading: IconButton(
-              onPressed: () {
-                _scaffoldKey.currentState!.openDrawer();
+            title: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, SearchPageWidget.routeName);
               },
-              icon: const Icon(
-                Icons.menu,
-                color: Colors.white,
-                size: 30.0,
-              ),
-            ),
-            title: Container(
-              width: double.infinity,
-              height: 40.0,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: const Center(
-                child: CustomSearchText(),
+              child: Container(
+                width: double.infinity,
+                height: 40.0,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const Icon(
+                        Icons.search,
+                        color: Colors.black26,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Search..',
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                            color: Colors.black26,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -0.6,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
             actions: [
@@ -70,15 +85,28 @@ class _MessageScreenState extends State<MessageScreen> {
                   height: 34.0,
                 ),
               ),
-              IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, SettingPage.routeName);
-                },
-                icon: Image.asset(
-                  'assets/images/profile.png',
-                  height: 38.0,
-                ),
-              ),
+              FutureBuilder<String?>(
+                  future: ProfileDataManager.getProfilePic(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error ${snapshot.error}');
+                    } else if (snapshot.hasData) {
+                      return IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, SettingPage.routeName);
+                        },
+                        icon: CircleAvatar(
+                          radius: 26,
+                          backgroundColor: Colors.white30,
+                          backgroundImage: NetworkImage(snapshot.data!),
+                        ),
+                      );
+                    } else {
+                      return Text('no data');
+                    }
+                  }),
             ],
           ),
         ),
@@ -151,7 +179,7 @@ class _MessageScreenState extends State<MessageScreen> {
                     ),
                     ListView(
                       shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
+                      physics: const ClampingScrollPhysics(),
                       children: snapshot.data!
                           .map<Widget>((userData) =>
                               _buildUserListItem(userData, context))

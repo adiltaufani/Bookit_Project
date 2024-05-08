@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/features/booking/screens/booking_page.dart';
-import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -94,7 +93,7 @@ class _SearchHouseState extends State<SearchHouse> {
     bool? resepsionis24Jam, // Properti baru untuk resepsionis 24 jam
   }) async {
     final url = Uri.parse(
-        'http://${ipaddr}/ta_projek/crudtaprojek/tes_filter_new.php?'); // Ganti dengan URL API Anda
+        'https://projekta.seculab.space/crudtaprojek/tes_filter_new.php?'); // Ganti dengan URL API Anda
 
     Map<String, dynamic> queryParams = {};
     if (table != null) queryParams['tipe'] = table.toString();

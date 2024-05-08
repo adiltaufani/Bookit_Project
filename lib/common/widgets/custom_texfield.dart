@@ -44,7 +44,8 @@ class CustomTextField extends StatelessWidget {
         ),
         fillColor: Color(0xFF0077B2).withOpacity(0.7),
         filled: true,
-        contentPadding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 10),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 14.0, horizontal: 10),
       ),
       validator: (val) {
         if (val == null || val.isEmpty) {

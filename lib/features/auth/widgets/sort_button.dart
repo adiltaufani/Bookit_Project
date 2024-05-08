@@ -53,7 +53,7 @@ class _SortButtonState extends State<SortButton> {
   String selectedOption = options[0];
   //ubah sesuai harga min dan max yang bisa ditampilkan disearch
   double _hargaMinValue = 0;
-  double _hargaMaxValue = 4000000;
+  double _hargaMaxValue = 1000000;
   //rating
   bool ratingselected = false;
   List<bool> booleanList = List<bool>.filled(10, false);
@@ -356,7 +356,7 @@ class _SortButtonState extends State<SortButton> {
                           RangeSlider(
                             values: RangeValues(_hargaMinValue, _hargaMaxValue),
                             min: 0,
-                            max: 4000000,
+                            max: 1000000,
                             divisions: 20,
                             onChanged: (values) {
                               setState(() {
