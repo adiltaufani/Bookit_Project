@@ -7,6 +7,7 @@ import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_project/features/auth/screens/login_screen.dart';
 import 'package:flutter_project/features/home/screens/home_screen.dart';
 import 'package:flutter_project/features/chatAI/widgets/consts.dart';
+import 'package:flutter_project/features/message/screens/message_screen.dart';
 import 'package:flutter_project/features/profile/screens/profile_setting.dart';
 import 'package:flutter_project/firebase_options.dart';
 import 'package:flutter_project/router.dart';
@@ -55,7 +56,7 @@ class MyApp extends StatelessWidget {
             return MaterialApp(
               debugShowCheckedModeBanner: false,
               onGenerateRoute: (settings) => generateRoute(settings),
-              home: HomeScreen(),
+              home: MessageScreen(),
             );
           }
         }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:flutter_project/features/booking/widgets/futniture_widget.dart';
+import 'package:flutter_project/features/message/screens/message_chat_screen.dart';
 import 'package:flutter_project/features/payment/screens/payment_page.dart';
 import 'package:flutter_project/features/auth/widgets/variables.dart';
 import 'package:flutter_project/features/wishlist/database/db_helper.dart';
@@ -329,14 +330,28 @@ class _BookingPageState extends State<BookingPage> {
                               color: Color(0xFF00A5EC),
                             ),
                             const SizedBox(width: 6),
-                            Text(
-                              widget.locationAddress,
-                              // _Listdata[index]['lokasi'],
-                              style: GoogleFonts.montserrat(
-                                textStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MessageInboxScreen(
+                                      receiverEmail: 'abynhfzhtq2@gmail.com',
+                                      receiverID:
+                                          'iFEQBzFy7RSgwZR1Jjp12sebp8C2',
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                widget.locationAddress,
+                                // _Listdata[index]['lokasi'],
+                                style: GoogleFonts.montserrat(
+                                  textStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500),
+                                ),
                               ),
                             ),
                           ],
