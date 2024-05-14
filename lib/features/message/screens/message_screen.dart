@@ -21,8 +21,14 @@ class MessageScreen extends StatefulWidget {
 class _MessageScreenState extends State<MessageScreen> {
   final FirebaseAuthService _authService = FirebaseAuthService();
   final ChatService _chatService = ChatService();
+  late Future<String?> _lastMessageFuture;
+
   bool isTextFieldFocused = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +121,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
   Widget _buildUserList() {
     return StreamBuilder(
-        stream: _chatService.getChatRoomsStream(),
+        stream: _chatService.getUserStream(),
         builder: (context, snapshot) {
           //eror
           if (snapshot.hasError) {
@@ -194,27 +200,46 @@ class _MessageScreenState extends State<MessageScreen> {
   Widget _buildUserListItem(
       Map<String, dynamic> userData, BuildContext context) {
     String senderUid = _authService.getCurrentUser()!.uid;
-    //display all user
-    if (userData['lastMessage']['senderEmail'] !=
-        _authService.getCurrentUser()!.email) {
-      return UserTile(
-        email: userData['lastMessage']['senderEmail'],
-        recieverUid: userData['lastMessage']['senderID'],
-        senderUid: senderUid,
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MessageInboxScreen(
-                receiverEmail: userData['lastMessage']['senderEmail'],
-                receiverID: userData['lastMessage']['senderID'],
-              ),
-            ),
-          );
-        },
-      );
-    } else {
-      return Container();
-    }
+    List<String> ids = [userData['uid'], senderUid];
+    ids.sort();
+    String chatRoomId = ids.join("-");
+
+    _lastMessageFuture = _chatService.getLastMessage(chatRoomId);
+    return FutureBuilder<String?>(
+      future: _lastMessageFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Tampilkan loading indicator jika data masih diambil
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          // Tampilkan pesan error jika terjadi kesalahan
+          return Text('Error: ${snapshot.error}');
+        } else {
+          // Tampilkan last message jika data berhasil diambil
+          String? lastMessage = snapshot.data;
+          if (lastMessage != null &&
+              userData['email'] != _authService.getCurrentUser()!.email) {
+            return UserTile(
+              email: userData['email'],
+              recieverUid: userData['uid'],
+              senderUid: senderUid,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MessageInboxScreen(
+                      receiverEmail: userData['email'],
+                      receiverID: userData['uid'],
+                    ),
+                  ),
+                );
+              },
+            );
+          } else {
+            return Container();
+          }
+        }
+      },
+    );
   }
 }
