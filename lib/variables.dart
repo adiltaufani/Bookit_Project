@@ -1,1 +1,1 @@
-String ipaddr = '192.168.1.14';
+String ipaddr = 'https://projekta.seculab.space';

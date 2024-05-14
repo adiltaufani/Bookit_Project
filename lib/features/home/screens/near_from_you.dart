@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_project/features/notification/screens/notification_page.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -23,7 +24,7 @@ class _NearFromYouState extends State<NearFromYou> {
   Future _getdata() async {
     try {
       final response = await http.get(
-        Uri.parse('https://projekta.seculab.space/crudtaprojek/read.php'),
+        Uri.parse('${ipaddr}/ta_projek/crudtaprojek/read.php'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

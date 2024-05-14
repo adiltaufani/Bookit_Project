@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
 import 'package:flutter_project/features/profile/widgets/logout_dialog.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -588,8 +589,7 @@ class _SettingPageState extends State<SettingPage> {
       return; // Keluar dari metode fetchUserData
     }
 
-    var url =
-        Uri.parse("http://172.26.0.1/ta_projek/crudtaprojek/view_data.php");
+    var url = Uri.parse("${ipaddr}/ta_projek/crudtaprojek/view_data.php");
     String uid = user.uid;
 
     var response = await http.post(url, body: {

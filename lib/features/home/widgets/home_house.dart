@@ -4,6 +4,7 @@ import 'package:flutter_project/features/booking/screens/booking_page.dart';
 import 'package:flutter_project/features/home/screens/near_from_you.dart';
 import 'package:flutter_project/features/wishlist/database/db_helper.dart';
 import 'package:flutter_project/features/wishlist/model/wishlist_model.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -31,7 +32,7 @@ class _HomeHouseState extends State<HomeHouse> {
   Future _getdata() async {
     try {
       final response = await http.get(
-        Uri.parse('http://172.26.0.1/ta_projek/crudtaprojek/${widget.tipe}'),
+        Uri.parse('${ipaddr}/ta_projek/crudtaprojek/${widget.tipe}'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -50,7 +51,7 @@ class _HomeHouseState extends State<HomeHouse> {
     try {
       final response = await http.get(
         Uri.parse(
-            'http://172.26.0.1/ta_projek/crudtaprojek/fetch_property_near.php?user_latitude=${widget.user_latitude}&user_longitude=${widget.user_longitude}&tipe=house'),
+            '${ipaddr}/ta_projek/crudtaprojek/fetch_property_near.php?user_latitude=${widget.user_latitude}&user_longitude=${widget.user_longitude}&tipe=house'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

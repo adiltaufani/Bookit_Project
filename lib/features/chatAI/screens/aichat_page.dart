@@ -2,6 +2,7 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_project/features/chatAI/screens/ainavigate_screen.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -74,7 +75,7 @@ class _AIChatPageState extends State<AIChatPage> {
     try {
       // Kirim pesan pengguna Bian ke endpoint /chat di localhost:3000
       final response = await http.post(
-        Uri.parse('http://172.26.0.1:3000/chat'),
+        Uri.parse('${ipaddr}/node/chat'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/features/notification/screens/payment_success.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
@@ -63,7 +64,7 @@ class _PaymentPageState extends State<PaymentPage> {
     try {
       final response = await http.get(
         Uri.parse(
-            'https://projekta.seculab.space/crudtaprojek/payment_rooms.php?uid=${widget.hotel_id}&id=${widget.id}'),
+            '${ipaddr}/ta_projek/crudtaprojek/payment_rooms.php?uid=${widget.hotel_id}&id=${widget.id}'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -990,8 +991,7 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Future<void> _addBooking() async {
-    final String apiUrl =
-        'http://172.26.0.1/ta_projek/crudtaprojek/booking.php';
+    final String apiUrl = '${ipaddr}/ta_projek/crudtaprojek/booking.php';
     try {
       Map<String, dynamic> data = {
         'room_id': widget.id,
@@ -1029,8 +1029,7 @@ class _PaymentPageState extends State<PaymentPage> {
       return; // Keluar dari metode fetchUserData
     }
 
-    var url =
-        Uri.parse("http://172.26.0.1/ta_projek/crudtaprojek/view_data.php");
+    var url = Uri.parse("${ipaddr}/ta_projek/crudtaprojek/view_data.php");
     uid = user.uid;
 
     var response = await http.post(url, body: {

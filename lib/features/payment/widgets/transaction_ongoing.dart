@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_project/features/reschedule/screens/reschedule_page.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
@@ -29,7 +31,7 @@ class _TransactionOngoingState extends State<TransactionOngoing> {
     try {
       final response = await http.get(
         Uri.parse(
-            'http://172.26.0.1/ta_projek/crudtaprojek/transaction_ongoing.php?user_id=$user_id'),
+            '${ipaddr}/ta_projek/crudtaprojek/transaction_ongoing.php?user_id=$user_id'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -53,8 +55,7 @@ class _TransactionOngoingState extends State<TransactionOngoing> {
       return; // Keluar dari metode fetchUserData
     }
 
-    var url =
-        Uri.parse("http://172.26.0.1/ta_projek/crudtaprojek/view_data.php");
+    var url = Uri.parse("${ipaddr}/ta_projek/crudtaprojek/view_data.php");
     String uid = user.uid;
 
     var response = await http.post(url, body: {
@@ -429,7 +430,29 @@ class _TransactionOngoingState extends State<TransactionOngoing> {
                             child: Column(
                               children: [
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => ReschedulePage(
+                                          id: _Listdata[index]['room_id'],
+                                          hotel_id: _Listdata[index]
+                                              ['hotel_id'],
+                                          url_foto: cleanedUrlFoto,
+                                          nama_penginapan: _Listdata[index]
+                                              ['nama_penginapan'],
+                                          lokasi: _Listdata[index]['alamat'],
+                                          hargaTotal: _Listdata[index]['harga'],
+                                          startDate: _Listdata[index]
+                                              ['tanggal_checkin'],
+                                          endDate: _Listdata[index]
+                                              ['tanggal_checkout'],
+                                          tipekamar: _Listdata[index]
+                                              ['tipe_kamar'],
+                                          booking_id: _Listdata[index]['id'],
+                                        ),
+                                      ),
+                                    );
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Color(0xFF225B7B),
                                     elevation: 2,

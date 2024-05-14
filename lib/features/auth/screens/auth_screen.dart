@@ -7,6 +7,7 @@ import 'package:flutter_project/features/auth/screens/login_screen.dart';
 import 'package:flutter_project/features/auth/services/auth/firebase_auth_service.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
 import 'package:flutter_project/features/home/screens/home_screen.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
@@ -246,8 +247,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Future<void> register() async {
-    var url =
-        Uri.parse("https://projekta.seculab.space/crudtaprojek/register.php");
+    var url = Uri.parse("${ipaddr}/ta_projek/crudtaprojek/register.php");
     String firstName = _nameController.text;
     String lastName = _lastnameController.text;
     String email = _emailController.text;
@@ -255,12 +255,19 @@ class _AuthScreenState extends State<AuthScreen> {
     User? user = FirebaseAuth.instance.currentUser;
     String uid = user!.uid;
 
-    var response = await http.post(url, body: {
-      "firstname": firstName,
-      "lastname": lastName,
-      "email": email,
-      "uid": uid,
-    });
+    final response = await http.post(
+      Uri.parse('${ipaddr}/ta_projek/crudtaprojek/register.php'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        'nama': firstName + lastName,
+        'firstname': firstName,
+        'lastname': lastName,
+        'email': email,
+        'uid': uid,
+      }),
+    );
 
     var data = json.decode(response.body);
     if (data == "Error") {

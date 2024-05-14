@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:http/http.dart' as http;
 
 class FurniturePage extends StatefulWidget {
@@ -22,7 +23,7 @@ class _FurniturePageState extends State<FurniturePage> {
 
   Future<Map<String, bool>> fetchFurnitureData() async {
     final url =
-        'https://projekta.seculab.space/crudtaprojek/get_furniture.php?id=${widget.id}';
+        '${ipaddr}/ta_projek/crudtaprojek/get_furniture.php?id=${widget.id}';
 
     final response = await http.get(Uri.parse(url));
 

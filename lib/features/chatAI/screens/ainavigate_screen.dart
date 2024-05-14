@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_project/features/home/screens/home_screen.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -545,7 +546,7 @@ class _AINavigateScreenState extends State<AINavigateScreen> {
     try {
       final response = await http.get(
         Uri.parse(
-            'https://projekta.seculab.space/crudtaprojek/ai_fetch.php?${widget.namaKota}'),
+            '${ipaddr}/ta_projek/crudtaprojek/ai_fetch.php?${widget.namaKota}'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
