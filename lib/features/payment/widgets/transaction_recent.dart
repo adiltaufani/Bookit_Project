@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class _TransactionRecentState extends State<TransactionRecent> {
   Future _getdata() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.100.10/ta_projek/crudtaprojek/read.php'),
+        Uri.parse('${ipaddr}/ta_projek/crudtaprojek/read.php'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

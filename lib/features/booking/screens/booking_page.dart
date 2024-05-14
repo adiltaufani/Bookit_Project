@@ -5,6 +5,7 @@ import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:flutter_project/features/booking/widgets/futniture_widget.dart';
 import 'package:flutter_project/features/payment/screens/payment_page.dart';
 import 'package:flutter_project/features/auth/widgets/variables.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -60,7 +61,7 @@ class _BookingPageState extends State<BookingPage> {
       try {
         final response = await http.get(
           Uri.parse(
-              'https://projekta.seculab.space/crudtaprojek/get_rooms_byid.php?uid=${widget.hotel_id}&tanggal_checkin=${widget.tanggalAwal}&tanggal_checkout=${widget.tanggalAkhir}'),
+              '${ipaddr}/ta_projek/crudtaprojek/get_rooms_byid.php?uid=${widget.hotel_id}&tanggal_checkin=${widget.tanggalAwal}&tanggal_checkout=${widget.tanggalAkhir}'),
         );
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body);
@@ -86,7 +87,7 @@ class _BookingPageState extends State<BookingPage> {
         enddateNew = tanggalAkhir;
         final response = await http.get(
           Uri.parse(
-              'https://projekta.seculab.space/crudtaprojek/get_rooms_byid.php?uid=${widget.hotel_id}&tanggal_checkin=${formattedTanggal}&tanggal_checkout=${formattedTanggalbesok}'),
+              '${ipaddr}/ta_projek/crudtaprojek/get_rooms_byid.php?uid=${widget.hotel_id}&tanggal_checkin=${formattedTanggal}&tanggal_checkout=${formattedTanggalbesok}'),
         );
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body);

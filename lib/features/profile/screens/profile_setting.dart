@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_project/features/auth/services/auth/firebase_auth_service.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,10 @@ class ProfileSetting extends StatefulWidget {
 }
 
 class _ProfileSettingState extends State<ProfileSetting> {
+  TextEditingController _name = TextEditingController();
+  TextEditingController _number = TextEditingController();
+  TextEditingController _birthdate = TextEditingController();
+  TextEditingController _address = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? _firstname;
   String? lastname;
@@ -28,6 +33,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
   String pp = '';
   bool isDataAvail = false;
   String uid = '';
+  String id = '';
 
   @override
   void initState() {
@@ -183,7 +189,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                     child: Column(
                                       children: <Widget>[
                                         TextFormField(
-                                          initialValue: _firstname,
+                                          controller: _name,
                                           decoration: const InputDecoration(
                                               labelText: "Name"),
                                           validator: (value) {
@@ -198,7 +204,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                           },
                                         ),
                                         TextFormField(
-                                          initialValue: number,
+                                          controller: _number,
                                           decoration: const InputDecoration(
                                             labelText: "Number",
                                           ),
@@ -215,7 +221,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                           },
                                         ),
                                         TextFormField(
-                                          initialValue: birthdate,
+                                          controller: _birthdate,
                                           decoration: const InputDecoration(
                                               labelText: "Birth Date"),
                                           validator: (value) {
@@ -230,7 +236,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                           },
                                         ),
                                         TextFormField(
-                                          initialValue: address,
+                                          controller: _address,
                                           decoration: const InputDecoration(
                                               labelText: "Address"),
                                           maxLines:
@@ -268,7 +274,13 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                                     ?.validate() ??
                                                 false) {
                                               _formKey.currentState?.save();
-                                              // Proses data formulir di sini
+                                              updateUserData(
+                                                  id,
+                                                  _name.text.toString(),
+                                                  _number.text.toString(),
+                                                  _birthdate.text.toString(),
+                                                  _address.text
+                                                      .toString()); // Proses data formulir di sini
                                             }
                                           },
                                           child: Text(
@@ -307,8 +319,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
       return; // Keluar dari metode fetchUserData
     }
 
-    var url =
-        Uri.parse("http://172.26.0.1/ta_projek/crudtaprojek/view_data.php");
+    var url = Uri.parse("${ipaddr}/ta_projek/crudtaprojek/view_data.php");
     uid = user.uid;
 
     var response = await http.post(url, body: {
@@ -324,18 +335,57 @@ class _ProfileSettingState extends State<ProfileSetting> {
       birthdate = data['birthdate'];
       address = data['address'];
       email = data['email'];
+      id = data['id'];
       pp = await getImageUrl('images/image_$uid.jpg');
+
+      _name.text = _firstname!;
+      _number.text = number!;
+      _birthdate.text = birthdate!;
+      _address.text = address!;
 
       setState(() {
         isDataAvail = true;
       });
       // Lakukan apapun yang Anda ingin lakukan dengan data ini
     } else {
-      throw ("Gagal mendapatkan data pengguna");
+      throw ("Gagal mendapatkan data penggunasdasda");
     }
 
     if (_firstname != null) {
       firstnameTrigger = true;
+    }
+  }
+
+  void updateUserData(String id, String name, String number, String birthdate,
+      String address) async {
+    var url = Uri.parse('${ipaddr}/ta_projek/crudtaprojek/updateusers.php');
+    var response = await http.post(url, body: {
+      'id': id,
+      'firstname': name,
+      'number': number,
+      'birthdate': birthdate,
+      'address': address,
+    });
+
+    if (response.statusCode == 200) {
+      print('Data berhasil diperbarui');
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Berhasil Melakukan Perubahan Data'),
+              content: Text('Dicek lagi ya datanya :)'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('ok'))
+              ],
+            );
+          });
+    } else {
+      print('Error: ${response.reasonPhrase}');
     }
   }
 

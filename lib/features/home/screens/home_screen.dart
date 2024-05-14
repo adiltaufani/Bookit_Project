@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'package:flutter_project/variables.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter_project/features/appbar_global.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
 import 'package:flutter_project/features/notification/screens/notification_page.dart';
@@ -38,6 +40,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     fetchUserData();
     runPHPCodeOnHomeScreen();
     getLocation();
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
     super.initState();
   }
 
@@ -126,7 +133,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       ),
                     );
                   } else {
-                    return Text('no data');
+                    return IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, SettingPage.routeName);
+                      },
+                      icon: CircleAvatar(
+                        radius: 26,
+                        backgroundColor: Colors.white30,
+                        backgroundImage: NetworkImage(
+                            'https://th.bing.com/th/id/OIP.QjynegEfQVPq5kIEuX9fWQHaFj?rs=1&pid=ImgDetMain'),
+                      ),
+                    );
                   }
                 }),
           ],
@@ -316,8 +333,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       return; // Keluar dari metode fetchUserData
     }
 
-    var url =
-        Uri.parse("http://172.26.0.1/ta_projek/crudtaprojek/view_data.php");
+    var url = Uri.parse("${ipaddr}/ta_projek/crudtaprojek/view_data.php");
     String uid = user.uid;
     var response = await http.post(url, body: {
       "uid": uid,
@@ -344,7 +360,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Future<void> runPHPCodeOnHomeScreen() async {
     final url =
-        'http://172.26.0.1/ta_projek/crudtaprojek//update_harga_termurah.php'; // Ganti dengan URL endpoint PHP Anda
+        '${ipaddr}/ta_projek/crudtaprojek/update_harga_termurah.php'; // Ganti dengan URL endpoint PHP Anda
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {

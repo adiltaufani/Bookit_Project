@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/features/auth/widgets/variables.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
@@ -34,7 +35,7 @@ class _RoomTypeState extends State<RoomType> {
     try {
       final response = await http.get(
         Uri.parse(
-            'https://projekta.seculab.space/crudtaprojek/get_rooms_byid.php?uid=${widget.id}'),
+            '${ipaddr}/ta_projek/crudtaprojek/get_rooms_byid.php?uid=${widget.id}'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

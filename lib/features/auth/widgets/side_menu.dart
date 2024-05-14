@@ -14,6 +14,7 @@ import 'package:flutter_project/features/notification/screens/notification_page.
 import 'package:flutter_project/features/payment/screens/transaction_screen.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
 import 'package:flutter_project/features/wishlist/screens/wishlist_screen.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
@@ -393,8 +394,7 @@ class _SideMenuState extends State<SideMenu> {
       return; // Keluar dari metode fetchUserData
     }
 
-    var url =
-        Uri.parse("http://172.26.0.1/ta_projek//crudtaprojek/view_data.php");
+    var url = Uri.parse("${ipaddr}/ta_projek/crudtaprojek/view_data.php");
     String uid = user.uid;
     var response = await http.post(url, body: {
       "uid": uid,

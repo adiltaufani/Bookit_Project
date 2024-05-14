@@ -62,17 +62,17 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => ReschedulePage(
-            // id: '',
-            // hotel_id: '',
-            // nama_penginapan: '',
-            // hargaTotal: '',
-            // lokasi: '',
-            // startDate: '',
-            // url_foto: '',
-            // endDate: '',
-            // adultValue: 0,
-            // childValue: 0,
-            ),
+          id: '',
+          hotel_id: '',
+          nama_penginapan: '',
+          hargaTotal: '',
+          lokasi: '',
+          startDate: '',
+          url_foto: '',
+          endDate: '',
+          tipekamar: '',
+          booking_id: '',
+        ),
       );
 
     case SearchPageWidget.routeName:

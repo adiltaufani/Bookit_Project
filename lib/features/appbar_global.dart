@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:http/http.dart' as http;
 
 class ProfileDataManager {
@@ -14,8 +15,7 @@ class ProfileDataManager {
       return null;
     }
 
-    var url =
-        Uri.parse("http://172.26.0.1/ta_projek/crudtaprojek/view_data.php");
+    var url = Uri.parse("${ipaddr}/ta_projek/crudtaprojek/view_data.php");
     String uid = user.uid;
     var response = await http.post(url, body: {
       "uid": uid,
