@@ -18,7 +18,7 @@ class _LandmarkBtnState extends State<LandmarkBtn> {
   Widget build(BuildContext context) {
     return InkWell(
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -27,9 +27,10 @@ class _LandmarkBtnState extends State<LandmarkBtn> {
               elevation: 5,
               borderRadius: BorderRadius.circular(15),
               child: Container(
-                width: 150,
-                height: 150,
+                width: 100,
+                height: 100,
                 decoration: BoxDecoration(
+                  color: Colors.black45,
                   borderRadius: BorderRadius.circular(25),
                   image: DecorationImage(
                       image: NetworkImage(widget.imagePath), fit: BoxFit.cover),

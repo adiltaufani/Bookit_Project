@@ -203,6 +203,7 @@ class _SettingPageState extends State<SettingPage> {
                               const Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 color: Colors.black45,
+                                size: 18,
                               ),
                             ],
                           ),
@@ -235,6 +236,7 @@ class _SettingPageState extends State<SettingPage> {
                               const Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 color: Colors.black45,
+                                size: 18,
                               ),
                             ],
                           ),
@@ -267,6 +269,7 @@ class _SettingPageState extends State<SettingPage> {
                               const Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 color: Colors.black45,
+                                size: 18,
                               ),
                             ],
                           ),
@@ -300,6 +303,7 @@ class _SettingPageState extends State<SettingPage> {
                               const Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 color: Colors.black45,
+                                size: 18,
                               ),
                             ],
                           ),
@@ -333,6 +337,7 @@ class _SettingPageState extends State<SettingPage> {
                               const Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 color: Colors.black45,
+                                size: 18,
                               ),
                             ],
                           ),
@@ -386,6 +391,7 @@ class _SettingPageState extends State<SettingPage> {
                               const Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 color: Colors.black45,
+                                size: 18,
                               ),
                             ],
                           ),
@@ -418,6 +424,7 @@ class _SettingPageState extends State<SettingPage> {
                               const Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 color: Colors.black45,
+                                size: 18,
                               ),
                             ],
                           ),
@@ -471,6 +478,7 @@ class _SettingPageState extends State<SettingPage> {
                               const Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 color: Colors.black45,
+                                size: 18,
                               ),
                             ],
                           ),
@@ -503,6 +511,7 @@ class _SettingPageState extends State<SettingPage> {
                               const Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 color: Colors.black45,
+                                size: 18,
                               ),
                             ],
                           ),
@@ -559,6 +568,7 @@ class _SettingPageState extends State<SettingPage> {
                               const Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 color: Colors.black45,
+                                size: 18,
                               ),
                             ],
                           ),

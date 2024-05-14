@@ -106,6 +106,16 @@ class _TransactionScreenState extends State<TransactionScreen> {
               ),
             ),
           ),
+          leading: IconButton(
+            onPressed: () {
+              _scaffoldKey.currentState!.openDrawer();
+            },
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.white,
+              size: 30.0,
+            ),
+          ),
           actions: [
             IconButton(
               onPressed: () {

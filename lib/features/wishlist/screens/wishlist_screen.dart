@@ -102,6 +102,16 @@ class _WishlistScreenState extends State<WishlistScreen> {
               ),
             ),
           ),
+          leading: IconButton(
+            onPressed: () {
+              _scaffoldKey.currentState!.openDrawer();
+            },
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.white,
+              size: 30.0,
+            ),
+          ),
           actions: [
             IconButton(
               onPressed: () {
@@ -277,47 +287,6 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                         ),
                                         const SizedBox(
                                           height: 4,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              'Rp.',
-                                              style: GoogleFonts.montserrat(
-                                                textStyle: const TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 8, 59, 134),
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                            ),
-                                            Text(
-                                              formatInteger(_wishlist[index]
-                                                  .harga
-                                                  .toString())
-                                              // formatInteger(_Listdata[index]['harga'].toString())
-                                              , // Mengonversi integer ke string sebelum memanggil formatInteger
-                                              style: GoogleFonts.montserrat(
-                                                textStyle: const TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 8, 59, 134),
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                            ),
-                                            Text(
-                                              ' / night',
-                                              style: GoogleFonts.montserrat(
-                                                textStyle: const TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 8, 59, 134),
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                            ),
-                                          ],
                                         ),
                                         const SizedBox(
                                           height: 5,

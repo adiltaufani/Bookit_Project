@@ -217,26 +217,19 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
                   //         imagePath: cleanedUrlFoto);
                   //   },
                   // ),
-                  const Wrap(
-                runSpacing: 10,
+                  Wrap(
+                spacing: 8.0, // Spacing between items
+                runSpacing: 8.0, // Spacing between lines
                 children: [
-                  //for 6x
-                  LandmarkBtn(
-                    imagePath: '',
-                    //display_list[i].landmark_url!.replaceAll('//', ''),
-                    placeName: 'bandung',
-                  ),
-                  //buat liat contoh doang
-                  LandmarkBtn(
-                    imagePath: '',
-                    //display_list[i].landmark_url!.replaceAll('//', ''),
-                    placeName: 'bandung',
-                  ),
-                  LandmarkBtn(
-                    imagePath: '',
-                    //display_list[i].landmark_url!.replaceAll('//', ''),
-                    placeName: 'bandung',
-                  ),
+                  for (int i = 0; i < 6; i++)
+                    LandmarkBtn(
+                      placeName: i < display_list.length
+                          ? display_list[i].landmark_name!
+                          : 'Placeholder Name', // or some default name
+                      imagePath: i < display_list.length
+                          ? display_list[i].landmark_url!.replaceAll('\\', '')
+                          : 'assets/images/contoh2.png', // or some default image path
+                    ),
                 ],
               ),
             ),
