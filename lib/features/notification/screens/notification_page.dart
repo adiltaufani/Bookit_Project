@@ -146,6 +146,16 @@ class _NotificationPageState extends State<NotificationPage> {
               ),
             ),
           ),
+          leading: IconButton(
+            onPressed: () {
+              _scaffoldKey.currentState!.openDrawer();
+            },
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.white,
+              size: 30.0,
+            ),
+          ),
           actions: [
             IconButton(
               onPressed: () {
@@ -271,7 +281,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                 children: [
                                   AnimatedContainer(
                                     duration: const Duration(milliseconds: 200),
-                                    height: isConstScrolled[index] ? 260 : 112,
+                                    height: isConstScrolled[index] ? 208 : 106,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: Colors.white,

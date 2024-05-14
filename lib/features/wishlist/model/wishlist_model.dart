@@ -1,7 +1,6 @@
 class WishlistModel {
   final int? id;
   final String nama_penginapan;
-  final String harga;
   final String hotel_id;
   final String address;
   final String uid;
@@ -10,7 +9,6 @@ class WishlistModel {
   WishlistModel(
       {this.id,
       required this.nama_penginapan,
-      required this.harga,
       required this.hotel_id,
       required this.address,
       required this.uid,
@@ -20,7 +18,6 @@ class WishlistModel {
     return {
       'id': id,
       'nama_penginapan': nama_penginapan,
-      'harga': harga,
       'hotel_id': hotel_id,
       'address': address,
       'uid': uid,
@@ -32,7 +29,6 @@ class WishlistModel {
     return WishlistModel(
       id: map['id'],
       nama_penginapan: map['nama_penginapan'],
-      harga: map['harga'],
       hotel_id: map['hotel_id'],
       address: map['address'],
       uid: map['uid'],

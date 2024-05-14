@@ -543,13 +543,11 @@ class _HomeHouseState extends State<HomeHouse> {
 
   void wishlistTap(int index) {
     String nama_penginapan = _Listdata[index]['nama_penginapan'];
-    String harga = _Listdata[index]['harga_termurah'];
     String hotel_id = _Listdata[index]['id'];
     String alamat = _Listdata[index]['alamat'];
     String url_foto = _Listdata[index]['url_foto'];
     WishlistModel wishlistModel = WishlistModel(
         nama_penginapan: nama_penginapan,
-        harga: harga,
         hotel_id: hotel_id,
         address: alamat,
         uid: 'uid',

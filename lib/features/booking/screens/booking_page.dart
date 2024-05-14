@@ -7,6 +7,8 @@ import 'package:flutter_project/features/booking/widgets/futniture_widget.dart';
 import 'package:flutter_project/features/message/screens/message_chat_screen.dart';
 import 'package:flutter_project/features/payment/screens/payment_page.dart';
 import 'package:flutter_project/features/auth/widgets/variables.dart';
+import 'package:flutter_project/features/wishlist/database/db_helper.dart';
+import 'package:flutter_project/features/wishlist/model/wishlist_model.dart';
 import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -104,7 +106,13 @@ class _BookingPageState extends State<BookingPage> {
     }
   }
 
+  void fetchData() async {
+    await _getdata();
+  }
+
   List<bool> booleanList = List<bool>.filled(10, true);
+
+  bool _triggerList = false;
   bool _isdatechoosed = false;
   bool _ispersonchoosed = false;
   String hargaa = '';
@@ -227,15 +235,75 @@ class _BookingPageState extends State<BookingPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 2),
-                        Text(
-                          widget.locationName,
-                          // _Listdata[index]['jumlah_reviewer'],
-                          style: GoogleFonts.montserrat(
-                            textStyle: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 22,
-                                fontWeight: FontWeight.w600),
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              widget.locationName,
+                              // _Listdata[index]['jumlah_reviewer'],
+                              style: GoogleFonts.montserrat(
+                                textStyle: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                fetchData(); // Memulai pengambilan data
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    // Membuat dialog
+                                    return FutureBuilder(
+                                      future: Future.delayed(Duration(
+                                          seconds:
+                                              2)), // Menunda dialog selama 2 detik
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<dynamic> snapshot) {
+                                        // Menampilkan pesan dialog
+                                        return AlertDialog(
+                                          title: Text("Data Berhasil Disimpan"),
+                                          content: Text(
+                                              "Property Dimasukan ke Wishlist"),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(); // Menutup dialog
+                                              },
+                                              child: Text("OK"),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                                setState(() {
+                                  _triggerList = !_triggerList;
+                                  if (_triggerList == true) {
+                                    wishlistTap();
+                                  }
+                                });
+                              },
+                              child: _triggerList
+                                  ? Transform.scale(
+                                      scale: 1.5, // Besar ikon 1.5 kali lipat
+                                      child: Icon(
+                                        Icons.bookmark_rounded,
+                                        color: Colors.blueGrey,
+                                      ),
+                                    )
+                                  : Transform.scale(
+                                      scale: 1.5, // Besar ikon 1.5 kali lipat
+                                      child: Icon(
+                                        Icons.bookmark_rounded,
+                                        color: Colors.black12,
+                                      ),
+                                    ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 5),
                         Row(
@@ -288,16 +356,89 @@ class _BookingPageState extends State<BookingPage> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 10),
+                        Divider(),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  CircleAvatar(),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Hosted by',
+                                        style: GoogleFonts.montserrat(
+                                          textStyle: const TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        'Nama Penyewa',
+                                        style: GoogleFonts.montserrat(
+                                          textStyle: const TextStyle(
+                                            color: Colors.black87,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                              GestureDetector(
+                                onTap: () {},
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.messenger_rounded,
+                                    color: Colors.blue.withOpacity(0.4),
+                                    size: 26,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Divider(),
+                        SizedBox(
+                          height: 8,
+                        ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 6.0),
+                          padding: const EdgeInsets.only(left: 4),
                           child: Text(
-                            '${id} Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
+                            'Description',
+                            style: GoogleFonts.montserrat(
+                              textStyle: const TextStyle(
+                                color: Colors.black87,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 6,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: Text(
+                            '${id}Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam',
                             // _Listdata[index]['lokasi'],
                             style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(
                                 color: Colors.black87,
-                                fontSize: 15,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -1140,6 +1281,20 @@ class _BookingPageState extends State<BookingPage> {
     await canLaunchUrlString(googleURL)
         ? await launchUrlString(googleURL)
         : throw 'Could not launch $googleURL';
+  }
+
+  void wishlistTap() {
+    String nama_penginapan = widget.locationName;
+    String hotel_id = widget.hotel_id;
+    String alamat = widget.locationAddress;
+    String url_foto = widget.url_foto;
+    WishlistModel wishlistModel = WishlistModel(
+        nama_penginapan: nama_penginapan,
+        hotel_id: hotel_id,
+        address: alamat,
+        uid: 'uid',
+        url_foto: url_foto);
+    WishlistDatabaseHelper.insertWishlist(wishlistModel);
   }
 
   // void _launchMapUrl() async {
