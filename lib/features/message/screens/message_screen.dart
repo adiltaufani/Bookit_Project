@@ -105,7 +105,7 @@ class _MessageScreenState extends State<MessageScreen> {
                   future: ProfileDataManager.getProfilePic(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return Container();
                     } else if (snapshot.hasError) {
                       return Text('Error ${snapshot.error}');
                     } else if (snapshot.hasData) {
@@ -144,8 +144,9 @@ class _MessageScreenState extends State<MessageScreen> {
           }
 
           //return listview
-          return SingleChildScrollView(
-            child: Container(
+          return Stack(
+            children: [
+              Container(
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -156,6 +157,8 @@ class _MessageScreenState extends State<MessageScreen> {
                     end: Alignment.bottomRight,
                   ),
                 ),
+              ),
+              SingleChildScrollView(
                 child: Column(
                   children: [
                     Padding(
@@ -202,7 +205,9 @@ class _MessageScreenState extends State<MessageScreen> {
                           .toList(),
                     ),
                   ],
-                )),
+                ),
+              ),
+            ],
           );
         });
   }
@@ -220,7 +225,7 @@ class _MessageScreenState extends State<MessageScreen> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Tampilkan loading indicator jika data masih diambil
-          return const CircularProgressIndicator();
+          return Container();
         } else if (snapshot.hasError) {
           // Tampilkan pesan error jika terjadi kesalahan
           return Text('Error: ${snapshot.error}');
