@@ -174,6 +174,11 @@ class _SearchHouseState extends State<SearchHouse> {
                                     longitude: hotels[index].longitude,
                                     tanggalAwal: widget.tanggal_checkin,
                                     tanggalAkhir: widget.tanggal_checkout,
+                                    sellersEmail: 'tes',
+                                    sellersFoto:
+                                        'https://th.bing.com/th/id/OIP.QjynegEfQVPq5kIEuX9fWQHaFj?w=263&h=197&c=7&r=0&o=5&pid=1.7',
+                                    sellersName: 'tes',
+                                    sellersUid: 'tes',
                                   )));
                     },
                     child: Container(

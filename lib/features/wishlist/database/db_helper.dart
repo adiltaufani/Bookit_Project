@@ -37,9 +37,13 @@ class WishlistDatabaseHelper {
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  static Future<List<WishlistModel>> getWishlist() async {
+  static Future<List<WishlistModel>> getWishlist(String currentUserUid) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(_tableName);
+    final List<Map<String, dynamic>> maps = await db.query(
+      _tableName,
+      where: 'uid = ?',
+      whereArgs: [currentUserUid],
+    );
     return List.generate(maps.length, (i) {
       return WishlistModel.fromMap(maps[i]);
     });

@@ -35,9 +35,14 @@ class NotificationDatabaseHelper {
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  static Future<List<NotifModel>> getNotifications() async {
+  static Future<List<NotifModel>> getNotifications(
+      String currentUserUid) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(_tableName);
+    final List<Map<String, dynamic>> maps = await db.query(
+      _tableName,
+      where: 'uid = ?',
+      whereArgs: [currentUserUid],
+    );
     return List.generate(maps.length, (i) {
       return NotifModel.fromMap(maps[i]);
     });

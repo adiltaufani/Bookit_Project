@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/features/auth/screens/auth_screen.dart';
 import 'package:flutter_project/features/auth/screens/login_screen.dart';
+import 'package:flutter_project/features/landmark/screens/landmarkresult.dart';
 import 'package:flutter_project/features/message/screens/message_chat_screen.dart';
 import 'package:flutter_project/features/booking/screens/booking_page.dart';
 import 'package:flutter_project/features/chatAI/screens/aichat_page.dart';
@@ -37,6 +38,10 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           hotel_id: '',
           latitude: '',
           longitude: '',
+          sellersEmail: '',
+          sellersFoto: '',
+          sellersName: '',
+          sellersUid: '',
         ),
       );
     case PaymentPage.routeName:
@@ -87,6 +92,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           namaKota: '',
         ),
       );
+    // case LandmarkResult.routeName:
+    //   return MaterialPageRoute(
+    //     settings: routeSettings,
+    //     builder: (_) => LandmarkResult(),
+    //   );
     case AIChatPage.routeName:
       return MaterialPageRoute(
         settings: routeSettings,

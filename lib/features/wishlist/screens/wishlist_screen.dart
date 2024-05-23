@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_project/features/appbar_global.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
 import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
@@ -24,7 +25,14 @@ class _WishlistScreenState extends State<WishlistScreen> {
   bool isDataAvail = true;
 
   Future<void> _fetchWishlist() async {
-    List<WishlistModel> wishlist = await WishlistDatabaseHelper.getWishlist();
+    var user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      // Jika user belum login, tampilkan pesan
+      return; // Keluar dari metode fetchUserData
+    }
+    String user_id = user.uid;
+    List<WishlistModel> wishlist =
+        await WishlistDatabaseHelper.getWishlist(user_id);
     setState(() {
       _wishlist = wishlist;
     });

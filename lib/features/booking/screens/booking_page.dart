@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -27,6 +28,10 @@ class BookingPage extends StatefulWidget {
     required this.hotel_id,
     required this.latitude,
     required this.longitude,
+    required this.sellersName,
+    required this.sellersEmail,
+    required this.sellersFoto,
+    required this.sellersUid,
     this.tanggalAwal,
     this.tanggalAkhir,
   }) : super(key: key);
@@ -40,6 +45,10 @@ class BookingPage extends StatefulWidget {
   final String longitude;
   String? tanggalAwal;
   String? tanggalAkhir;
+  final String sellersName;
+  final String sellersUid;
+  final String sellersFoto;
+  final String sellersEmail;
 
   @override
   State<BookingPage> createState() => _BookingPageState();
@@ -331,18 +340,7 @@ class _BookingPageState extends State<BookingPage> {
                             ),
                             const SizedBox(width: 6),
                             GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MessageInboxScreen(
-                                      receiverEmail: 'abynhfzhtq2@gmail.com',
-                                      receiverID:
-                                          'iFEQBzFy7RSgwZR1Jjp12sebp8C2',
-                                    ),
-                                  ),
-                                );
-                              },
+                              onTap: () {},
                               child: Text(
                                 widget.locationAddress,
                                 // _Listdata[index]['lokasi'],
@@ -364,7 +362,11 @@ class _BookingPageState extends State<BookingPage> {
                             children: [
                               Row(
                                 children: [
-                                  CircleAvatar(),
+                                  CircleAvatar(
+                                    radius: 25.0,
+                                    backgroundImage:
+                                        NetworkImage(widget.sellersFoto),
+                                  ),
                                   SizedBox(
                                     width: 10,
                                   ),
@@ -383,7 +385,7 @@ class _BookingPageState extends State<BookingPage> {
                                         ),
                                       ),
                                       Text(
-                                        'Nama Penyewa',
+                                        widget.sellersName,
                                         style: GoogleFonts.montserrat(
                                           textStyle: const TextStyle(
                                             color: Colors.black87,
@@ -397,7 +399,17 @@ class _BookingPageState extends State<BookingPage> {
                                 ],
                               ),
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MessageInboxScreen(
+                                        receiverEmail: widget.sellersEmail,
+                                        receiverID: widget.sellersUid,
+                                      ),
+                                    ),
+                                  );
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Icon(
@@ -1284,6 +1296,12 @@ class _BookingPageState extends State<BookingPage> {
   }
 
   void wishlistTap() {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      // Jika user belum login, tampilkan pesan
+      return; // Keluar dari metode fetchUserData
+    }
+    String user_id = user.uid;
     String nama_penginapan = widget.locationName;
     String hotel_id = widget.hotel_id;
     String alamat = widget.locationAddress;
@@ -1292,7 +1310,7 @@ class _BookingPageState extends State<BookingPage> {
         nama_penginapan: nama_penginapan,
         hotel_id: hotel_id,
         address: alamat,
-        uid: 'uid',
+        uid: user_id,
         url_foto: url_foto);
     WishlistDatabaseHelper.insertWishlist(wishlistModel);
   }
