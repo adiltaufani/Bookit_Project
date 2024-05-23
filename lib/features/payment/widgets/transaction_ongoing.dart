@@ -100,7 +100,7 @@ class _TransactionOngoingState extends State<TransactionOngoing> {
               ClipRect(
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  height: isConstScrolled[index] ? 338 : 172,
+                  height: isConstScrolled[index] ? 264 : 172,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white,

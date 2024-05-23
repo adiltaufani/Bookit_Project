@@ -1,10 +1,7 @@
 import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
 import 'package:flutter_project/features/chatAI/screens/aichat_page.dart';
 import 'package:flutter_project/features/home/screens/home_screen.dart';
@@ -42,6 +39,8 @@ class _SideMenuState extends State<SideMenu> {
 
   @override
   Widget build(BuildContext context) {
+    String currentRoute = ModalRoute.of(context)?.settings.name ?? '';
+
     return Drawer(
       backgroundColor: const Color(0xFF0A8ED9),
       child: SafeArea(
@@ -119,53 +118,19 @@ class _SideMenuState extends State<SideMenu> {
             SingleChildScrollView(
               child: Column(
                 children: [
-                  ListTile(
-                    onTap: () {
-                      Navigator.pushNamed(context, HomeScreen.routeName);
-                    },
-                    leading: const SizedBox(
-                      height: 36,
-                      width: 36,
-                      child: Icon(
-                        Icons.home_filled,
-                        color: Colors.white,
-                      ),
-                    ),
-                    title: Text(
-                      'Home',
-                      style: GoogleFonts.raleway(
-                        textStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ),
+                  _buildListTile(
+                    context,
+                    title: 'Home',
+                    routeName: HomeScreen.routeName,
+                    icon: Icons.home_filled,
+                    currentRoute: currentRoute,
                   ),
-                  ListTile(
-                    onTap: () {
-                      Navigator.pushNamed(context, LandmarkScreen.routeName);
-                    },
-                    leading: const SizedBox(
-                      height: 36,
-                      width: 36,
-                      child: Icon(
-                        Icons.location_on_rounded,
-                        color: Colors.white,
-                      ),
-                    ),
-                    title: Text(
-                      'Landmark',
-                      style: GoogleFonts.raleway(
-                        textStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ),
+                  _buildListTile(
+                    context,
+                    title: 'Landmark',
+                    routeName: LandmarkScreen.routeName,
+                    icon: Icons.location_on_rounded,
+                    currentRoute: currentRoute,
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -173,101 +138,33 @@ class _SideMenuState extends State<SideMenu> {
                       color: Colors.white24,
                     ),
                   ),
-                  ListTile(
-                    onTap: () {
-                      Navigator.pushNamed(context, WishlistScreen.routeName);
-                    },
-                    leading: const SizedBox(
-                      height: 36,
-                      width: 36,
-                      child: Icon(
-                        Icons.bookmark_rounded,
-                        color: Colors.white,
-                      ),
-                    ),
-                    title: Text(
-                      'Wishlist',
-                      style: GoogleFonts.raleway(
-                        textStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ),
+                  _buildListTile(
+                    context,
+                    title: 'Wishlist',
+                    routeName: WishlistScreen.routeName,
+                    icon: Icons.bookmark_rounded,
+                    currentRoute: currentRoute,
                   ),
-                  ListTile(
-                    onTap: () {
-                      Navigator.pushNamed(context, NotificationPage.routeName);
-                    },
-                    leading: const SizedBox(
-                      height: 36,
-                      width: 36,
-                      child: Icon(
-                        Icons.notifications_rounded,
-                        color: Colors.white,
-                      ),
-                    ),
-                    title: Text(
-                      'Notification',
-                      style: GoogleFonts.raleway(
-                        textStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ),
+                  _buildListTile(
+                    context,
+                    title: 'Notification',
+                    routeName: NotificationPage.routeName,
+                    icon: Icons.notifications_rounded,
+                    currentRoute: currentRoute,
                   ),
-                  ListTile(
-                    onTap: () {
-                      Navigator.pushNamed(context, TransactionScreen.routeName);
-                    },
-                    leading: const SizedBox(
-                      height: 36,
-                      width: 36,
-                      child: Icon(
-                        Icons.notes_rounded,
-                        color: Colors.white,
-                      ),
-                    ),
-                    title: Text(
-                      'Transaction',
-                      style: GoogleFonts.raleway(
-                        textStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ),
+                  _buildListTile(
+                    context,
+                    title: 'Transaction',
+                    routeName: TransactionScreen.routeName,
+                    icon: Icons.notes_rounded,
+                    currentRoute: currentRoute,
                   ),
-                  ListTile(
-                    onTap: () {
-                      Navigator.pushNamed(context, MessageScreen.routeName);
-                    },
-                    leading: const SizedBox(
-                      height: 36,
-                      width: 36,
-                      child: Icon(
-                        Icons.message_rounded,
-                        color: Colors.white,
-                      ),
-                    ),
-                    title: Text(
-                      'Message',
-                      style: GoogleFonts.raleway(
-                        textStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ),
+                  _buildListTile(
+                    context,
+                    title: 'Message',
+                    routeName: MessageScreen.routeName,
+                    icon: Icons.message_rounded,
+                    currentRoute: currentRoute,
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -275,29 +172,13 @@ class _SideMenuState extends State<SideMenu> {
                       color: Colors.white24,
                     ),
                   ),
-                  ListTile(
-                    onTap: () {
-                      Navigator.pushNamed(context, AIChatPage.routeName);
-                    },
-                    leading: SizedBox(
-                      height: 36,
-                      width: 36,
-                      child: Image.asset(
-                        'assets/images/chatai.png',
-                        scale: 2.4,
-                      ),
-                    ),
-                    title: Text(
-                      'AI Support',
-                      style: GoogleFonts.raleway(
-                        textStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ),
+                  _buildListTile(
+                    context,
+                    title: 'AI Support',
+                    routeName: AIChatPage.routeName,
+                    icon: null,
+                    iconAsset: 'assets/images/chatai.png',
+                    currentRoute: currentRoute,
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -305,80 +186,78 @@ class _SideMenuState extends State<SideMenu> {
                       color: Colors.white24,
                     ),
                   ),
-                  ListTile(
-                    onTap: () {
-                      Navigator.pushNamed(context, SettingPage.routeName);
-                    },
-                    leading: const SizedBox(
-                      height: 36,
-                      width: 36,
-                      child: Icon(
-                        Icons.settings_rounded,
-                        color: Colors.white,
-                      ),
-                    ),
-                    title: Text(
-                      'Setting',
-                      style: GoogleFonts.raleway(
-                        textStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ),
+                  _buildListTile(
+                    context,
+                    title: 'Setting',
+                    routeName: SettingPage.routeName,
+                    icon: Icons.settings_rounded,
+                    currentRoute: currentRoute,
                   ),
-                  ListTile(
-                    onTap: () {},
-                    leading: const SizedBox(
-                      height: 36,
-                      width: 36,
-                      child: Icon(
-                        Icons.help_outline_rounded,
-                        color: Colors.white,
-                      ),
-                    ),
-                    title: Text(
-                      'Help',
-                      style: GoogleFonts.raleway(
-                        textStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ),
+                  _buildListTile(
+                    context,
+                    title: 'Help',
+                    routeName: '',
+                    icon: Icons.help_outline_rounded,
+                    currentRoute: currentRoute,
                   ),
-                  ListTile(
+                  _buildListTile(
+                    context,
+                    title: 'Logout',
+                    routeName: '',
+                    icon: Icons.login_rounded,
+                    currentRoute: currentRoute,
                     onTap: () {
                       authService.signOut(context);
                     },
-                    leading: const SizedBox(
-                      height: 36,
-                      width: 36,
-                      child: Icon(
-                        Icons.login_rounded,
-                        color: Colors.white,
-                      ),
-                    ),
-                    title: Text(
-                      'Logout',
-                      style: GoogleFonts.raleway(
-                        textStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ),
                   ),
                 ],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildListTile(BuildContext context,
+      {required String title,
+      required String routeName,
+      IconData? icon,
+      String? iconAsset,
+      required String currentRoute,
+      VoidCallback? onTap}) {
+    bool isSelected = currentRoute == routeName;
+    return ListTile(
+      onTap: onTap ??
+          () {
+            Navigator.pushNamed(context, routeName);
+          },
+      leading: icon != null
+          ? SizedBox(
+              height: 36,
+              width: 36,
+              child: Icon(
+                icon,
+                color: Colors.white,
+              ),
+            )
+          : SizedBox(
+              height: 36,
+              width: 36,
+              child: Image.asset(
+                iconAsset!,
+                scale: 2.4,
+              ),
+            ),
+      title: Text(
+        title,
+        style: GoogleFonts.raleway(
+          textStyle: TextStyle(
+            color: isSelected ? Colors.white : Colors.white.withAlpha(960),
+            fontSize: isSelected ? 20 : 18,
+            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
+            letterSpacing: 0.2,
+          ),
         ),
       ),
     );
@@ -431,7 +310,7 @@ class _SideMenuState extends State<SideMenu> {
     } catch (error) {
       // Tangkap error dan kembalikan URL gambar default jika terjadi kesalahan
       print("Error: $error");
-      // Mengembalikan URL gambar default dari assets jika terjadi kesalahan
+      // Mengembalikan URL gambar default dari
       return "https://firebasestorage.googleapis.com/v0/b/loginsignupta-prototype.appspot.com/o/images%2Fdefault.webp?alt=media&token=0f99eb8a-be98-4f26-99b7-d71776562de9";
     }
   }
