@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/features/booking/screens/booking_page.dart';
 import 'package:flutter_project/features/home/screens/near_from_you.dart';
@@ -155,6 +156,11 @@ class _HomeHouseState extends State<HomeHouse> {
                             hotel_id: _ListdataNear[index]['id'],
                             latitude: _ListdataNear[index]['latitude'],
                             longitude: _ListdataNear[index]['longitude'],
+                            sellersEmail: 'tes',
+                            sellersFoto:
+                                'https://th.bing.com/th/id/OIP.QjynegEfQVPq5kIEuX9fWQHaFj?w=263&h=197&c=7&r=0&o=5&pid=1.7',
+                            sellersName: 'tes',
+                            sellersUid: 'tes',
                           ),
                         ),
                       );
@@ -331,6 +337,8 @@ class _HomeHouseState extends State<HomeHouse> {
               itemBuilder: (BuildContext context, int index) {
                 String cleanedUrlFoto =
                     _Listdata[index]['url_foto'].replaceAll('\\', '');
+                String cleanedUrlFotoSellers =
+                    _Listdata[index]['sellers_foto'].replaceAll('\\', '');
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -346,6 +354,10 @@ class _HomeHouseState extends State<HomeHouse> {
                                   hotel_id: _Listdata[index]['id'],
                                   latitude: _Listdata[index]['latitude'],
                                   longitude: _Listdata[index]['longitude'],
+                                  sellersName: _Listdata[index]['nama'],
+                                  sellersEmail: _Listdata[index]['email'],
+                                  sellersFoto: cleanedUrlFotoSellers,
+                                  sellersUid: _Listdata[index]['uid'],
                                 )));
                   },
                   child: Container(
@@ -542,6 +554,12 @@ class _HomeHouseState extends State<HomeHouse> {
   }
 
   void wishlistTap(int index) {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      // Jika user belum login, tampilkan pesan
+      return; // Keluar dari metode fetchUserData
+    }
+    String user_id = user.uid;
     String nama_penginapan = _Listdata[index]['nama_penginapan'];
     String hotel_id = _Listdata[index]['id'];
     String alamat = _Listdata[index]['alamat'];
@@ -550,7 +568,7 @@ class _HomeHouseState extends State<HomeHouse> {
         nama_penginapan: nama_penginapan,
         hotel_id: hotel_id,
         address: alamat,
-        uid: 'uid',
+        uid: user_id,
         url_foto: url_foto);
     WishlistDatabaseHelper.insertWishlist(wishlistModel);
   }

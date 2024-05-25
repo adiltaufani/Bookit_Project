@@ -236,15 +236,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     tabs: [
                       Tab(
                         child: Text(
-                          'House',
-                          style: GoogleFonts.montserrat(
-                            textStyle: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w700),
-                          ),
-                        ),
-                      ),
-                      Tab(
-                        child: Text(
                           'Apartement',
                           style: GoogleFonts.montserrat(
                             textStyle: const TextStyle(
@@ -270,15 +261,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      Tab(
-                        child: Text(
-                          'Resort',
-                          style: GoogleFonts.montserrat(
-                            textStyle: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w700),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -289,11 +271,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 child: TabBarView(
                   controller: _tabController,
                   children: [
-                    HomeHouse(
-                      tipe: 'readhouse.php',
-                      user_latitude: latitude,
-                      user_longitude: longitude,
-                    ),
                     HomeHouse(
                       tipe: 'readapartement.php',
                       user_latitude: latitude,
@@ -306,11 +283,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     ),
                     HomeHouse(
                       tipe: 'readvilla.php',
-                      user_latitude: latitude,
-                      user_longitude: longitude,
-                    ),
-                    HomeHouse(
-                      tipe: 'readresort.php',
                       user_latitude: latitude,
                       user_longitude: longitude,
                     ),

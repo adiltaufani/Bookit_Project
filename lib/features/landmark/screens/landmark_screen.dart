@@ -4,11 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_project/features/landmark/model/landmark_model.dart';
+import 'package:flutter_project/features/landmark/screens/landmarkresult.dart';
 import 'package:flutter_project/features/notification/screens/notification_page.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
 import 'package:flutter_project/features/search/widgets/custom_search_text.dart';
 import 'package:flutter_project/features/landmark/widgets/landmark_btn.dart';
 import 'package:flutter_project/features/auth/widgets/side_menu.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
@@ -28,8 +30,7 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
   Future<void> _getData() async {
     try {
       final response = await http.get(
-        Uri.parse(
-            'https://projekta.seculab.space/crudtaprojek/read_landmark.php'),
+        Uri.parse('${ipaddr}/ta_projek/crudtaprojek/read_landmark.php'),
       );
       if (response.statusCode == 200) {
         List<dynamic> jsonData = jsonDecode(response.body);
@@ -205,34 +206,34 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
               height: 20,
             ),
             Container(
-              child:
-                  // ListView.builder(
-                  //   padding: EdgeInsets.all(8), // Tambahkan padding di sini
-                  //   itemCount: display_list.length,
-                  //   itemBuilder: (context, index) {
-                  //     String cleanedUrlFoto =
-                  //         display_list[index].landmark_url!.replaceAll('\\', '');
-                  //     return LandmarkBtn(
-                  //         placeName: display_list[index].landmark_name!,
-                  //         imagePath: cleanedUrlFoto);
-                  //   },
-                  // ),
-                  Wrap(
-                spacing: 8.0, // Spacing between items
-                runSpacing: 8.0, // Spacing between lines
-                children: [
-                  for (int i = 0; i < 6; i++)
-                    LandmarkBtn(
-                      placeName: i < display_list.length
-                          ? display_list[i].landmark_name!
-                          : 'Placeholder Name', // or some default name
-                      imagePath: i < display_list.length
-                          ? display_list[i].landmark_url!.replaceAll('\\', '')
-                          : 'assets/images/contoh2.png', // or some default image path
-                    ),
-                ],
+              child: SingleChildScrollView(
+                child: Wrap(
+                  spacing: 8.0, // Spacing between items
+                  runSpacing: 8.0, // Spacing between lines
+                  children: [
+                    for (int i = 0; i < 6; i++)
+                      GestureDetector(
+                        onTap: () {
+                          // Navigator.pushNamed(
+                          //     context,
+                          //     LandmarkResult
+                          //         .routeName); // Print the placeName or placeholder name
+                        },
+                        child: LandmarkBtn(
+                          placeName: i < display_list.length
+                              ? display_list[i].landmark_name!
+                              : 'Placeholder Name', // or some default name
+                          imagePath: i < display_list.length
+                              ? display_list[i]
+                                  .landmark_url!
+                                  .replaceAll('\\', '')
+                              : 'assets/images/bookit.png', // or some default image path
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
+            )
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -67,8 +68,16 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   Future<void> _fetchNotifications() async {
+    var user = FirebaseAuth.instance.currentUser;
+
+    // Pastikan user sudah login
+    if (user == null) {
+      // Jika user belum login, tampilkan pesan
+      return; // Keluar dari metode fetchUserData
+    }
+    String user_uid = user.uid;
     List<NotifModel> notifications =
-        await NotificationDatabaseHelper.getNotifications();
+        await NotificationDatabaseHelper.getNotifications(user_uid);
     setState(() {
       _notifications = notifications;
     });

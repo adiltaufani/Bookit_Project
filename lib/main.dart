@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
             return MaterialApp(
               debugShowCheckedModeBanner: false,
               onGenerateRoute: (settings) => generateRoute(settings),
-              home: MessageScreen(),
+              home: HomeScreen(),
             );
           }
         }
