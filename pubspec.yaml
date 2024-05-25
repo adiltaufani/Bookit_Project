@@ -36,7 +36,11 @@ dependencies:
   geolocator: ^11.0.0
   geocoding: ^3.0.0
   flutter_rating_bar: ^4.0.1
-  
+  equatable: ^2.0.5
+  dartz: ^0.10.1
+  flutter_dotenv: ^5.1.0
+  midtrans_sdk: ^0.4.0
+    
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -54,6 +58,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icon/app_icon.png
+    - .env
 
   fonts:
     - family: Montserrat

@@ -11,24 +11,32 @@ import 'package:flutter_project/features/message/screens/message_screen.dart';
 import 'package:flutter_project/features/profile/screens/profile_setting.dart';
 import 'package:flutter_project/firebase_options.dart';
 import 'package:flutter_project/router.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as dot_env;
 
-// import 'package:firebase_analytics/firebase_analytics.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(_firebasePushHandler);
+
+  // Memuat variabel lingkungan dari file .env
+  await dot_env.dotenv.load(fileName: ".env");
+
+  // Inisialisasi notifikasi
   AwesomeNotifications().initialize(
     null,
     [
       NotificationChannel(
-        channelKey: 'basic channel',
-        channelName: 'basic notif',
-        channelDescription: 'apa aja lah desk nya',
+        channelKey: 'basic_channel',
+        channelName: 'Basic Notifications',
+        channelDescription: 'Notifications for basic updates',
       ),
     ],
     debug: true,
   );
-  Gemini.init(apiKey: GEMINI_API_KEY);
+
+  // Inisialisasi Gemini
+  Gemini.init(apiKey: dot_env.dotenv.env['GEMINI_API_KEY'] ?? '');
+
   runApp(const MyApp());
 }
 
@@ -37,28 +45,27 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      // Check if user is logged in
-      future: FirebaseAuth.instance.authStateChanges().first,
-      builder: (context, AsyncSnapshot<User?> snapshot) {
+    return StreamBuilder<User?>(
+      // Listen to auth state changes
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Show loading indicator while checking user authentication state
+          return const MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child:
+                    CircularProgressIndicator(), // Show loading indicator while checking user authentication state
+              ),
+            ),
+          );
         } else {
-          // If user is not logged in, redirect to AuthScreen
-          if (snapshot.data == null) {
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              onGenerateRoute: (settings) => generateRoute(settings),
-              home: LoginScreen(),
-            );
-          } else {
-            // If user is logged in, redirect to HomeScreen
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              onGenerateRoute: (settings) => generateRoute(settings),
-              home: HomeScreen(),
-            );
-          }
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            onGenerateRoute: (settings) => generateRoute(settings),
+            home: snapshot.data == null
+                ? LoginScreen()
+                : HomeScreen(), // Redirect to appropriate screen based on auth state
+          );
         }
       },
     );

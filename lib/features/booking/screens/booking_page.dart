@@ -32,6 +32,7 @@ class BookingPage extends StatefulWidget {
     required this.sellersEmail,
     required this.sellersFoto,
     required this.sellersUid,
+    required this.sellersid,
     this.tanggalAwal,
     this.tanggalAkhir,
   }) : super(key: key);
@@ -45,6 +46,7 @@ class BookingPage extends StatefulWidget {
   final String longitude;
   String? tanggalAwal;
   String? tanggalAkhir;
+  final String sellersid;
   final String sellersName;
   final String sellersUid;
   final String sellersFoto;
@@ -126,7 +128,7 @@ class _BookingPageState extends State<BookingPage> {
   bool _ispersonchoosed = false;
   String hargaa = '';
   double totalHarga = 0;
-  String hargaFix = 'Rp.0';
+  String hargaFix = '0';
   DateTime? startDate;
   DateTime? endDate;
   String formattedStartDate = '';
@@ -1070,7 +1072,7 @@ class _BookingPageState extends State<BookingPage> {
                                                             hargaa);
                                                         totalHarga += harga;
                                                         hargaFix =
-                                                            'Rp. $totalHarga';
+                                                            '$totalHarga';
                                                         selectedRoomIds.add(
                                                             _Listdata[index]
                                                                 ['id']);
@@ -1121,7 +1123,7 @@ class _BookingPageState extends State<BookingPage> {
                                                             hargaa);
                                                         totalHarga -= harga;
                                                         hargaFix =
-                                                            'Rp. $totalHarga';
+                                                            '$totalHarga';
                                                         selectedRoomIds.remove(
                                                             _Listdata[index]
                                                                 ['id']);
@@ -1220,6 +1222,7 @@ class _BookingPageState extends State<BookingPage> {
                           childValue: _selectedValueChild,
                           dbstartDate: formattedTanggal,
                           dbendDate: formattedTanggalbesok,
+                          sellersid: widget.sellersid,
                         ),
                       ),
                     );
@@ -1239,6 +1242,7 @@ class _BookingPageState extends State<BookingPage> {
                           childValue: _selectedValueChild,
                           dbstartDate: widget.tanggalAwal!,
                           dbendDate: widget.tanggalAkhir!,
+                          sellersid: widget.sellersid,
                         ),
                       ),
                     );
@@ -1257,7 +1261,7 @@ class _BookingPageState extends State<BookingPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    hargaFix,
+                    'Rp.${hargaFix}',
                     style: GoogleFonts.montserrat(
                       textStyle: const TextStyle(
                         color: Colors.white,

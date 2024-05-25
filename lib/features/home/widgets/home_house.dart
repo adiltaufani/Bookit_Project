@@ -161,6 +161,7 @@ class _HomeHouseState extends State<HomeHouse> {
                                 'https://th.bing.com/th/id/OIP.QjynegEfQVPq5kIEuX9fWQHaFj?w=263&h=197&c=7&r=0&o=5&pid=1.7',
                             sellersName: 'tes',
                             sellersUid: 'tes',
+                            sellersid: '4',
                           ),
                         ),
                       );
@@ -354,6 +355,7 @@ class _HomeHouseState extends State<HomeHouse> {
                                   hotel_id: _Listdata[index]['id'],
                                   latitude: _Listdata[index]['latitude'],
                                   longitude: _Listdata[index]['longitude'],
+                                  sellersid: _Listdata[index]['sellers_id'],
                                   sellersName: _Listdata[index]['nama'],
                                   sellersEmail: _Listdata[index]['email'],
                                   sellersFoto: cleanedUrlFotoSellers,

@@ -1,1 +1,1 @@
-String ipaddr = 'http://172.23.144.1';
+String ipaddr = 'http://192.168.48.1';
