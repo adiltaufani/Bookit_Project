@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    TabController _tabController = TabController(length: 5, vsync: this);
+    TabController _tabController = TabController(length: 3, vsync: this);
     return Scaffold(
       key: _scaffoldKey,
       drawer: SideMenu(),

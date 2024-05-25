@@ -13,6 +13,7 @@ import 'package:flutter_project/features/notification/screens/notification_page.
 import 'package:flutter_project/features/notification/screens/payment_success.dart';
 import 'package:flutter_project/features/payment/screens/payment_page.dart';
 import 'package:flutter_project/features/payment/screens/transaction_screen.dart';
+import 'package:flutter_project/features/paymentgateway/ui/payment_ui.dart';
 import 'package:flutter_project/features/profile/screens/profile_setting.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
 import 'package:flutter_project/features/reschedule/screens/reschedule_page.dart';
@@ -42,6 +43,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           sellersFoto: '',
           sellersName: '',
           sellersUid: '',
+          sellersid: '',
         ),
       );
     case PaymentPage.routeName:
@@ -58,6 +60,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           endDate: '',
           adultValue: 0,
           childValue: 0,
+          sellersid: '',
           dbendDate: '',
           dbstartDate: '',
         ),
@@ -102,7 +105,20 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => AIChatPage(),
       );
-
+    case PaymentUi.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => PaymentUi(
+          uid: '',
+          productName: '',
+          hargaTotal: '',
+          customerAddress: '',
+          customerName: '',
+          customerPhone: '',
+          startDate: '',
+          endDate: '',
+        ),
+      );
     case NotificationPage.routeName:
       return MaterialPageRoute(
         settings: routeSettings,

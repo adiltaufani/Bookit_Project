@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/features/notification/screens/payment_success.dart';
+import 'package:flutter_project/features/paymentgateway/ui/payment_ui.dart';
 import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -19,6 +20,7 @@ class PaymentPage extends StatefulWidget {
   String endDate;
   String dbstartDate;
   String dbendDate;
+  String sellersid;
   int adultValue;
   int childValue;
   String url_foto;
@@ -33,6 +35,7 @@ class PaymentPage extends StatefulWidget {
     required this.startDate,
     required this.endDate,
     required this.dbstartDate,
+    required this.sellersid,
     required this.dbendDate,
     required this.adultValue,
     required this.childValue,
@@ -90,10 +93,13 @@ class _PaymentPageState extends State<PaymentPage> {
       isLoading = false;
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => PaymentSuccess(
+          builder: (context) => PaymentUi(
             uid: uid,
-            firstname: _firstname!,
-            nama_penginapan: widget.nama_penginapan,
+            productName: widget.nama_penginapan,
+            hargaTotal: widget.hargaTotal,
+            customerName: '${_firstname} ${lastname}',
+            customerPhone: number!,
+            customerAddress: address!,
             startDate: widget.startDate,
             endDate: widget.endDate,
           ),
@@ -996,6 +1002,7 @@ class _PaymentPageState extends State<PaymentPage> {
       Map<String, dynamic> data = {
         'room_id': widget.id,
         'user_id': user_id,
+        'sellers_id': widget.sellersid,
         'tanggal_checkin': widget.dbstartDate,
         'tanggal_checkout': widget.dbendDate
       };
