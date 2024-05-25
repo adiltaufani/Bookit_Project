@@ -281,7 +281,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                 children: [
                                   AnimatedContainer(
                                     duration: const Duration(milliseconds: 200),
-                                    height: isConstScrolled[index] ? 208 : 106,
+                                    height: isConstScrolled[index] ? 216 : 106,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: Colors.white,
