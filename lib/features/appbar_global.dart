@@ -28,8 +28,14 @@ class ProfileDataManager {
       return cleanedUrlFoto;
     } else {
       print("Gagal mendapatkan data pengguna");
-      return null;
+      return "https://firebasestorage.googleapis.com/v0/b/loginsignupta-prototype.appspot.com/o/images%2Fdefault.webp?alt=media&token=0f99eb8a-be98-4f26-99b7-d71776562de9";
     }
+  }
+
+  static Future<String?> getImageChat(String user_uid) async {
+    String cleanedUrlFoto =
+        await await getImageUrl("images/image_$user_uid.jpg");
+    return cleanedUrlFoto;
   }
 
   static Future<String> getImageUrl(String imagePath) async {

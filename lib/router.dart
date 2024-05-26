@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/features/auth/screens/auth_screen.dart';
 import 'package:flutter_project/features/auth/screens/login_screen.dart';
-import 'package:flutter_project/features/landmark/screens/landmarkresult.dart';
+import 'package:flutter_project/features/landmark/screens/landmark_nav.dart';
 import 'package:flutter_project/features/message/screens/message_chat_screen.dart';
 import 'package:flutter_project/features/booking/screens/booking_page.dart';
 import 'package:flutter_project/features/chatAI/screens/aichat_page.dart';
@@ -27,6 +27,15 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const AuthScreen(),
+      );
+    case LandmarkNav.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => LandmarkNav(
+          lmName: '',
+          latitude: '',
+          longitude: '',
+        ),
       );
     case BookingPage.routeName:
       return MaterialPageRoute(

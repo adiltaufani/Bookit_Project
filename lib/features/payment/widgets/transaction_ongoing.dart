@@ -471,7 +471,7 @@ class _TransactionOngoingState extends State<TransactionOngoing> {
                                       ),
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),

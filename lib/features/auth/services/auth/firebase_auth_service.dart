@@ -51,7 +51,7 @@ class FirebaseAuthService {
 
       return credential.user;
     } catch (e) {
-      print('Some error occured');
+      print('Some error occurred: $e');
     }
 
     return null;

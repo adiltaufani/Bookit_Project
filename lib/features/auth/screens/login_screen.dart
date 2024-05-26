@@ -8,6 +8,7 @@ import 'package:flutter_project/features/auth/screens/forgot_password_screen.dar
 import 'package:flutter_project/features/home/screens/home_screen.dart';
 import 'package:flutter_project/features/auth/services/auth/firebase_auth_service.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -231,10 +232,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
     User? user = await _auth.signInWithEmailAndPassword(email, password);
     if (user != null) {
-      print("Succesfully created");
+      print("Successfully signed in");
       Navigator.pushNamed(context, HomeScreen.routeName);
     } else {
-      print('some error occured');
+      print('Some error occurred');
+      Fluttertoast.showToast(
+        msg: "Incorrect email or password",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     }
   }
 }

@@ -142,7 +142,8 @@ class _BookingPageState extends State<BookingPage> {
 
   @override
   void initState() {
-    _getdata();
+    fetchData();
+    print('hotel id ==== ${widget.hotel_id}');
     super.initState();
   }
 

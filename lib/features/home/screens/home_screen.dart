@@ -3,7 +3,6 @@ import 'package:flutter_project/variables.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter_project/features/appbar_global.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
@@ -16,6 +15,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/home-screen';
@@ -128,20 +128,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 future: ProfileDataManager.getProfilePic(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error ${snapshot.error}');
-                  } else if (snapshot.hasData) {
-                    return IconButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, SettingPage.routeName);
-                      },
-                      icon: CircleAvatar(
-                        radius: 26,
-                        backgroundColor: Colors.white30,
-                        backgroundImage: NetworkImage(snapshot.data!),
+                    return Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width:
+                            40, // Lebar dan tinggi yang sama untuk membuatnya bulat
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
                       ),
                     );
+                  } else if (snapshot.hasError) {
+                    return Text('Error ${snapshot.error}');
                   } else {
                     return IconButton(
                       onPressed: () {
@@ -150,8 +151,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       icon: CircleAvatar(
                         radius: 26,
                         backgroundColor: Colors.white30,
-                        backgroundImage: NetworkImage(
-                            'https://th.bing.com/th/id/OIP.QjynegEfQVPq5kIEuX9fWQHaFj?rs=1&pid=ImgDetMain'),
+                        backgroundImage: NetworkImage(snapshot.data!),
                       ),
                     );
                   }
@@ -205,7 +205,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   ),
                                 ),
                               )
-                            : CircularProgressIndicator()
+                            : Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  width: 150,
+                                  height: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
                       ],
                     ),
                     Image.asset(
@@ -266,8 +274,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
               Expanded(
-                // height: MediaQuery.of(context).size.height * 1,
-                // width: double.maxFinite,
                 child: TabBarView(
                   controller: _tabController,
                   children: [
@@ -388,7 +394,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       print(place.locality);
       kota = place.locality.toString(); // Ini adalah nama kota
       setState(() {
-        isData = !isData;
+        isData = true;
       });
     } catch (e) {
       print("Error: $e");
@@ -406,7 +412,6 @@ class CircleTabIndicator extends Decoration {
   });
   @override
   BoxPainter createBoxPainter([VoidCallback? onChanged]) {
-    // TODO: implement createBoxPainter
     return _CirclePainter(color: color, radius: radius);
   }
 }
