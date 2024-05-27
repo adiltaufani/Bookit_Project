@@ -1,123 +1,260 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_project/features/message/services/message.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_project/features/appbar_global.dart';
+import 'package:flutter_project/features/message/screens/message_chat_screen.dart';
+import 'package:flutter_project/features/auth/services/auth/firebase_auth_service.dart';
+import 'package:flutter_project/features/message/services/chat_service.dart';
+import 'package:flutter_project/features/auth/widgets/side_menu.dart';
+import 'package:flutter_project/features/message/services/user_tile.dart';
+import 'package:flutter_project/features/notification/screens/notification_page.dart';
+import 'package:flutter_project/features/profile/screens/setting_page.dart';
+import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class ChatService {
-  //get instance of firestore & auth
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+class MessageScreen extends StatefulWidget {
+  static const String routeName = '/message-screen';
+  const MessageScreen({super.key});
 
-  //get user stream
+  @override
+  State<MessageScreen> createState() => _MessageScreenState();
+}
 
-  Stream<List<Map<String, dynamic>>> getUserStream() {
-    return _firestore.collection('Users').snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        final user = doc.data();
+class _MessageScreenState extends State<MessageScreen> {
+  final FirebaseAuthService _authService = FirebaseAuthService();
+  final ChatService _chatService = ChatService();
+  late Future<String?> _lastMessageFuture;
 
-        return user;
-      }).toList();
-    });
+  bool isTextFieldFocused = false;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  @override
+  void initState() {
+    super.initState();
   }
 
-  Future<void> sendMessage(String receiverID, String message) async {
-    final String currentUserId = _auth.currentUser!.uid;
-    final String currentUserEmail = _auth.currentUser!.email!;
-    final Timestamp timestamp = Timestamp.now();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        key: _scaffoldKey,
+        drawer: SideMenu(),
+        drawerScrimColor: Colors.black38,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(60),
+          child: AppBar(
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                color: Colors.blue,
+              ),
+            ),
+            title: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, SearchPageWidget.routeName);
+              },
+              child: Container(
+                width: double.infinity,
+                height: 40.0,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const Icon(
+                        Icons.search,
+                        color: Colors.black26,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Search..',
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                            color: Colors.black26,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -0.6,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            leading: IconButton(
+              onPressed: () {
+                _scaffoldKey.currentState!.openDrawer();
+              },
+              icon: const Icon(
+                Icons.menu,
+                color: Colors.white,
+                size: 30.0,
+              ),
+            ),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, NotificationPage.routeName);
+                },
+                icon: Image.asset(
+                  'assets/images/notification.png',
+                  height: 34.0,
+                ),
+              ),
+              FutureBuilder<String?>(
+                  future: ProfileDataManager.getProfilePic(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container();
+                    } else if (snapshot.hasError) {
+                      return Text('Error ${snapshot.error}');
+                    } else if (snapshot.hasData) {
+                      return IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, SettingPage.routeName);
+                        },
+                        icon: CircleAvatar(
+                          radius: 26,
+                          backgroundColor: Colors.white30,
+                          backgroundImage: NetworkImage(snapshot.data!),
+                        ),
+                      );
+                    } else {
+                      return Text('no data');
+                    }
+                  }),
+            ],
+          ),
+        ),
+        body: _buildUserList());
+  }
 
-    Message newMessage = Message(
-      senderID: currentUserId,
-      senderEmail: currentUserEmail,
-      receiverID: receiverID,
-      message: message,
-      timestamp: timestamp,
-    );
+  Widget _buildUserList() {
+    return StreamBuilder(
+        stream: _chatService.getUserStream(),
+        builder: (context, snapshot) {
+          //eror
+          if (snapshot.hasError) {
+            return const Text('error');
+          }
 
-    // Construct chat room ID for the two users
-    List<String> ids = [currentUserId, receiverID];
+          //loading
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Text('loading');
+          }
+
+          //return listview
+          return Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFFD2E9FF), // Warna gradient awal
+                      Color(0xFFFFFFFF), // Warna gradient akhir
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ),
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/bookit.png',
+                            height: 24,
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(16, 10, 20, 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Image.asset(
+                            'assets/images/inbox.png',
+                            height: 30,
+                          ),
+                          Text(
+                            'Message',
+                            style: GoogleFonts.raleway(
+                              textStyle: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: -0.6,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ListView(
+                      shrinkWrap: true,
+                      physics: const ClampingScrollPhysics(),
+                      children: snapshot.data!
+                          .map<Widget>((userData) =>
+                              _buildUserListItem(userData, context))
+                          .toList(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
+  Widget _buildUserListItem(
+      Map<String, dynamic> userData, BuildContext context) {
+    String senderUid = _authService.getCurrentUser()!.uid;
+    List<String> ids = [userData['uid'], senderUid];
     ids.sort();
     String chatRoomId = ids.join("-");
 
-    // Add new message to database
-    await _firestore
-        .collection('chat_rooms')
-        .doc(chatRoomId)
-        .collection('messages')
-        .add(newMessage.toMap());
-
-    // Update last message in the chat room
-    await _firestore.collection('chat_rooms').doc(chatRoomId).set({
-      'lastMessage': {
-        'senderID': currentUserId,
-        'senderEmail': currentUserEmail,
-        'message': message,
-        'timestamp': timestamp,
+    _lastMessageFuture = _chatService.getLastMessage(chatRoomId);
+    return FutureBuilder<String?>(
+      future: _lastMessageFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Tampilkan loading indicator jika data masih diambil
+          return Container();
+        } else if (snapshot.hasError) {
+          // Tampilkan pesan error jika terjadi kesalahan
+          return Text('Error: ${snapshot.error}');
+        } else {
+          // Tampilkan last message jika data berhasil diambil
+          String? lastMessage = snapshot.data;
+          if (lastMessage != null &&
+              userData['email'] != _authService.getCurrentUser()!.email) {
+            return UserTile(
+              email: userData['email'],
+              recieverUid: userData['uid'],
+              senderUid: senderUid,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MessageInboxScreen(
+                      receiverEmail: userData['email'],
+                      receiverID: userData['uid'],
+                    ),
+                  ),
+                );
+              },
+            );
+          } else {
+            return Container();
+          }
+        }
       },
-    }, SetOptions(merge: true));
-  }
-
-  //get message
-  Stream<QuerySnapshot> getMessages(String userID, otherUserID) {
-    //construct a chatroom ID for 2 users
-    List<String> ids = [userID, otherUserID];
-    ids.sort();
-    String chatRoomId = ids.join("-");
-
-    return _firestore
-        .collection('chat_rooms')
-        .doc(chatRoomId)
-        .collection('messages')
-        .orderBy("timestamp", descending: false)
-        .snapshots();
-  }
-
-  //get last message
-  Future<String?> getLastMessage(String chatRoomId) async {
-    try {
-      // Retrieve the last message in the chat room
-      QuerySnapshot querySnapshot = await _firestore
-          .collection('chat_rooms')
-          .doc(chatRoomId)
-          .collection('messages')
-          .orderBy("timestamp", descending: true)
-          .limit(1)
-          .get();
-
-      // Check if there are any messages
-      if (querySnapshot.docs.isNotEmpty) {
-        // Extract the text from the last message
-        String lastMessage = querySnapshot.docs.first.get("message");
-        return lastMessage;
-      } else {
-        // No messages found
-        return null;
-      }
-    } catch (error) {
-      // Handle any errors
-      print('Error getting last message: $error');
-      return null;
-    }
-  }
-
-  Future<DateTime?> getLastMessageTime(String chatRoomId) async {
-    try {
-      QuerySnapshot querySnapshot = await _firestore
-          .collection('chat_rooms')
-          .doc(chatRoomId)
-          .collection('messages')
-          .orderBy("timestamp", descending: true)
-          .limit(1)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        // Ambil waktu dari dokumen pertama
-        Timestamp timestamp = querySnapshot.docs.first.get('timestamp');
-        return timestamp.toDate(); // Konversi Timestamp ke DateTime
-      } else {
-        return null;
-      }
-    } catch (error) {
-      print('Error getting last message time: $error');
-      return null;
-    }
+    );
   }
 }

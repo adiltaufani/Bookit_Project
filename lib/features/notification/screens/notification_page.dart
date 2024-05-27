@@ -12,6 +12,7 @@ import 'package:flutter_project/features/auth/widgets/side_menu.dart';
 import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 class NotificationPage extends StatefulWidget {
   static const String routeName = '/notification-page';
@@ -26,6 +27,7 @@ class _NotificationPageState extends State<NotificationPage> {
   List<NotifModel> _notifications = [];
   bool isTextFieldFocused = false;
   bool _isDataAvail = false;
+  bool isLoading = true;
   List<bool> booleanList = List<bool>.filled(10, false);
   List<bool> isUp = List<bool>.filled(10, false);
   List<bool> isConstScrolled = List<bool>.filled(10, false);
@@ -78,32 +80,16 @@ class _NotificationPageState extends State<NotificationPage> {
     String user_uid = user.uid;
     List<NotifModel> notifications =
         await NotificationDatabaseHelper.getNotifications(user_uid);
+    await Future.delayed(Duration(seconds: 2));
     setState(() {
       _notifications = notifications;
+      isLoading = false;
     });
     if (_notifications.isNotEmpty) {
       _isDataAvail = true;
     }
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       title: Text('Notifications'),
-  //     ),
-  //     body: ListView.builder(
-  //       itemCount: _notifications.length,
-  //       itemBuilder: (context, index) {
-  //         return ListTile(
-  //           title: Text(_notifications[index].title),
-  //           subtitle: Text(_notifications[index].body),
-  //           trailing: Text(_notifications[index].time.toString()),
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -259,159 +245,250 @@ class _NotificationPageState extends State<NotificationPage> {
                       color: Colors.red,
                       size: 28,
                     ),
-                    onPressed: () async {
-                      await NotificationDatabaseHelper.deleteAllNotifications();
-                      setState(() {
-                        _isDataAvail = false;
-                      });
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Konfirmasi Delete"),
+                            content: Text(
+                                "Apakah kamu yakin ingin menghapus semua notifikasi?"),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text("Yes"),
+                                onPressed: () async {
+                                  await NotificationDatabaseHelper
+                                      .deleteAllNotifications();
+                                  setState(() {
+                                    _isDataAvail = false;
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: Text("No"),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                   ),
                 ],
               ),
             ),
-            _isDataAvail
+            isLoading
                 ? Expanded(
                     child: ListView.builder(
-                      itemCount: _notifications.length,
+                      itemCount: 6, // Jumlah item shimmer
                       itemBuilder: (BuildContext context, int index) {
-                        String formattedDate = _notifications[index]
-                            .time
-                            .toIso8601String()
-                            .substring(0, 10);
-                        DateTime date = DateTime.parse(formattedDate);
-                        String realDate =
-                            DateFormat('dd MMMM yyyy').format(date);
-                        return Container(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          child: Column(
-                            children: [
-                              Stack(
+                        return Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 106,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin:
+                                      const EdgeInsets.fromLTRB(20, 20, 10, 10),
+                                  width: 60,
+                                  height: 60,
+                                  color: Colors.grey[300],
+                                ),
+                                Container(
+                                  margin:
+                                      const EdgeInsets.fromLTRB(3, 20, 8, 10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: 220,
+                                        height: 14,
+                                        color: Colors.grey[300],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Container(
+                                        width: 180,
+                                        height: 12,
+                                        color: Colors.grey[300],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Container(
+                                        width: 100,
+                                        height: 12,
+                                        color: Colors.grey[300],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                : _isDataAvail
+                    ? Expanded(
+                        child: ListView.builder(
+                          itemCount: _notifications.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            String formattedDate = _notifications[index]
+                                .time
+                                .toIso8601String()
+                                .substring(0, 10);
+                            DateTime date = DateTime.parse(formattedDate);
+                            String realDate =
+                                DateFormat('dd MMMM yyyy').format(date);
+                            return Container(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              child: Column(
                                 children: [
-                                  AnimatedContainer(
-                                    duration: const Duration(milliseconds: 200),
-                                    height: isConstScrolled[index] ? 216 : 106,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: 1,
-                                          blurRadius: 2,
-                                          offset: const Offset(0, 3),
+                                  Stack(
+                                    children: [
+                                      AnimatedContainer(
+                                        duration:
+                                            const Duration(milliseconds: 200),
+                                        height:
+                                            isConstScrolled[index] ? 216 : 106,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.grey.withOpacity(0.5),
+                                              spreadRadius: 1,
+                                              blurRadius: 2,
+                                              offset: const Offset(0, 3),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                            margin: const EdgeInsets.fromLTRB(
-                                                20, 20, 10, 10),
-                                            child: Image.asset(
-                                                'assets/images/mail.png')),
-                                        Container(
-                                          margin: const EdgeInsets.fromLTRB(
-                                              3, 20, 8, 10),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Row(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                                margin:
+                                                    const EdgeInsets.fromLTRB(
+                                                        20, 20, 10, 10),
+                                                child: Image.asset(
+                                                    'assets/images/mail.png')),
+                                            Container(
+                                              margin: const EdgeInsets.fromLTRB(
+                                                  3, 20, 8, 10),
+                                              child: Column(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                    CrossAxisAlignment.end,
                                                 children: [
-                                                  Column(
+                                                  Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment.start,
+                                                        MainAxisAlignment
+                                                            .center,
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      booleanList[index]
-                                                          ? Container(
-                                                              constraints:
-                                                                  const BoxConstraints(
-                                                                      maxWidth:
-                                                                          220),
-                                                              child: Text(
-                                                                _notifications[
-                                                                        index]
-                                                                    .title,
-                                                                style: GoogleFonts
-                                                                    .montserrat(
-                                                                  textStyle:
-                                                                      const TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    letterSpacing:
-                                                                        -0.6,
+                                                      Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          booleanList[index]
+                                                              ? Container(
+                                                                  constraints:
+                                                                      const BoxConstraints(
+                                                                          maxWidth:
+                                                                              220),
+                                                                  child: Text(
+                                                                    _notifications[
+                                                                            index]
+                                                                        .title,
+                                                                    style: GoogleFonts
+                                                                        .montserrat(
+                                                                      textStyle:
+                                                                          const TextStyle(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                        letterSpacing:
+                                                                            -0.6,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              : Container(
+                                                                  constraints:
+                                                                      const BoxConstraints(
+                                                                          maxWidth:
+                                                                              220),
+                                                                  child: Text(
+                                                                    _notifications[
+                                                                            index]
+                                                                        .title,
+                                                                    style: GoogleFonts
+                                                                        .montserrat(
+                                                                      textStyle:
+                                                                          const TextStyle(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                        letterSpacing:
+                                                                            -0.6,
+                                                                      ),
+                                                                    ),
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
                                                                   ),
                                                                 ),
-                                                              ),
-                                                            )
-                                                          : Container(
-                                                              constraints:
-                                                                  const BoxConstraints(
-                                                                      maxWidth:
-                                                                          220),
-                                                              child: Text(
-                                                                _notifications[
-                                                                        index]
-                                                                    .title,
-                                                                style: GoogleFonts
-                                                                    .montserrat(
-                                                                  textStyle:
-                                                                      const TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    letterSpacing:
-                                                                        -0.6,
-                                                                  ),
-                                                                ),
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                              ),
-                                                            ),
-                                                      InkWell(
-                                                        onTap: () {
-                                                          setState(() {});
-                                                        },
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8),
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  vertical:
-                                                                      8.0),
-                                                          child:
-                                                              AnimatedSwitcher(
-                                                                  duration: const Duration(
-                                                                      milliseconds:
-                                                                          300),
-                                                                  child: booleanList[
-                                                                          index]
+                                                          InkWell(
+                                                            onTap: () {
+                                                              setState(() {});
+                                                            },
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      vertical:
+                                                                          8.0),
+                                                              child: AnimatedSwitcher(
+                                                                  duration: const Duration(milliseconds: 300),
+                                                                  child: booleanList[index]
                                                                       ? Container(
                                                                           constraints:
                                                                               const BoxConstraints(maxWidth: 220),
@@ -431,99 +508,102 @@ class _NotificationPageState extends State<NotificationPage> {
                                                                         )
                                                                       : const SizedBox() // or use a Container with a very small height
                                                                   ),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        margin: const EdgeInsets
-                                                            .only(top: 2),
-                                                        constraints:
-                                                            const BoxConstraints(
-                                                                maxWidth: 240),
-                                                        child: Text(
-                                                          "Booking ID ${_notifications[index].id}",
-                                                          style: GoogleFonts
-                                                              .montserrat(
-                                                            textStyle:
-                                                                const TextStyle(
-                                                              color: Colors
-                                                                  .black54,
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              letterSpacing:
-                                                                  -0.6,
                                                             ),
                                                           ),
-                                                        ),
+                                                          Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    top: 2),
+                                                            constraints:
+                                                                const BoxConstraints(
+                                                                    maxWidth:
+                                                                        240),
+                                                            child: Text(
+                                                              "Booking ID ${_notifications[index].id}",
+                                                              style: GoogleFonts
+                                                                  .montserrat(
+                                                                textStyle:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .black54,
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  letterSpacing:
+                                                                      -0.6,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
+                                                      const SizedBox(width: 20),
                                                     ],
                                                   ),
-                                                  const SizedBox(width: 20),
                                                 ],
                                               ),
-                                            ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Positioned(
+                                        right: 12,
+                                        bottom: 8,
+                                        child: Text(
+                                          '${realDate}',
+                                          style: GoogleFonts.montserrat(
+                                            textStyle: const TextStyle(
+                                              color: Colors.black54,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              letterSpacing: -0.6,
+                                            ),
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 12,
-                                    bottom: 8,
-                                    child: Text(
-                                      '${realDate}',
-                                      style: GoogleFonts.montserrat(
-                                        textStyle: const TextStyle(
-                                          color: Colors.black54,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          letterSpacing: -0.6,
-                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 12,
-                                    top: 20,
-                                    child: InkWell(
-                                      onTap: () {
-                                        _toggleImage(index);
-                                      },
-                                      borderRadius: BorderRadius.circular(
-                                          8), // Adjust the border radius as needed
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(
-                                            8.0), // Adjust the padding as needed
-                                        child: AnimatedSwitcher(
-                                          duration:
-                                              const Duration(milliseconds: 300),
-                                          child: isUp[index]
-                                              ? Image.asset(
-                                                  'assets/images/arrow_up.png',
-                                                  height: 10,
-                                                  key: UniqueKey(),
-                                                )
-                                              : Image.asset(
-                                                  'assets/images/arrow_down.png',
-                                                  height: 10,
-                                                  key: UniqueKey(),
-                                                ),
+                                      Positioned(
+                                        right: 12,
+                                        top: 20,
+                                        child: InkWell(
+                                          onTap: () {
+                                            _toggleImage(index);
+                                          },
+                                          borderRadius: BorderRadius.circular(
+                                              8), // Adjust the border radius as needed
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(
+                                                8.0), // Adjust the padding as needed
+                                            child: AnimatedSwitcher(
+                                              duration: const Duration(
+                                                  milliseconds: 300),
+                                              child: isUp[index]
+                                                  ? Image.asset(
+                                                      'assets/images/arrow_up.png',
+                                                      height: 10,
+                                                      key: UniqueKey(),
+                                                    )
+                                                  : Image.asset(
+                                                      'assets/images/arrow_down.png',
+                                                      height: 10,
+                                                      key: UniqueKey(),
+                                                    ),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  )
+                                      )
+                                    ],
+                                  ),
                                 ],
                               ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  )
-                : Container(
-                    child: Text('kamu belum memiliki pesan'),
-                  ),
+                            );
+                          },
+                        ),
+                      )
+                    : Center(
+                        child: Text('kamu belum memiliki pesan'),
+                      ),
           ],
         ),
       ),

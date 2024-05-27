@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project/features/appbar_global.dart';
 import 'package:flutter_project/features/message/services/chat_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 class UserTile extends StatefulWidget {
   final String email;
@@ -56,11 +58,30 @@ class _UserTileState extends State<UserTile> {
               children: [
                 Row(
                   children: [
-                    const CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.white30,
-                      backgroundImage: AssetImage('assets/images/profile.png'),
-                    ),
+                    FutureBuilder<String?>(
+                        future:
+                            ProfileDataManager.getImageChat(widget.recieverUid),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: CircleAvatar(
+                                radius: 26,
+                                backgroundColor: Colors.white,
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text('Error ${snapshot.error}');
+                          } else {
+                            return CircleAvatar(
+                              radius: 26,
+                              backgroundColor: Colors.white30,
+                              backgroundImage: NetworkImage(snapshot.data!),
+                            );
+                          }
+                        }),
                     const SizedBox(width: 14),
                     Expanded(
                       child: Column(
@@ -86,7 +107,15 @@ class _UserTileState extends State<UserTile> {
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return const CircularProgressIndicator();
+                                    return Shimmer.fromColors(
+                                      baseColor: Colors.grey[300]!,
+                                      highlightColor: Colors.grey[100]!,
+                                      child: Container(
+                                        width: 50,
+                                        height: 10,
+                                        color: Colors.white,
+                                      ),
+                                    );
                                   } else if (snapshot.hasError) {
                                     return Text('Error: ${snapshot.error}');
                                   } else {
@@ -125,7 +154,15 @@ class _UserTileState extends State<UserTile> {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
                                   // Tampilkan loading indicator jika data masih diambil
-                                  return const CircularProgressIndicator();
+                                  return Shimmer.fromColors(
+                                    baseColor: Colors.grey[300]!,
+                                    highlightColor: Colors.grey[100]!,
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: 20,
+                                      color: Colors.white,
+                                    ),
+                                  );
                                 } else if (snapshot.hasError) {
                                   // Tampilkan pesan error jika terjadi kesalahan
                                   return Text('Error: ${snapshot.error}');

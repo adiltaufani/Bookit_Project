@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LandmarkBtn extends StatefulWidget {
@@ -19,8 +21,7 @@ class _LandmarkBtnState extends State<LandmarkBtn> {
     return InkWell(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-        child: Stack(
-          alignment: Alignment.center,
+        child: Column(
           children: [
             // Background Image with Rounded Corners
             Material(
@@ -38,22 +39,21 @@ class _LandmarkBtnState extends State<LandmarkBtn> {
               ),
             ),
             // Shadow Overlay
-
+            SizedBox(
+              height: 20,
+            ),
             // Text Overlay
-            Positioned(
-              bottom: 12,
-              left: 10,
+            Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    constraints: const BoxConstraints(maxWidth: 100),
+                  Center(
                     child: Text(
                       widget
                           .placeName, // Menggunakan widget.placeName dari State
                       style: GoogleFonts.montserrat(
                         textStyle: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 14.0,
                           fontWeight: FontWeight.w600,
                           letterSpacing: -0.6,

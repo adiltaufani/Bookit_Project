@@ -3,16 +3,19 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_project/features/appbar_global.dart';
 import 'package:flutter_project/features/landmark/model/landmark_model.dart';
-import 'package:flutter_project/features/landmark/screens/landmarkresult.dart';
+import 'package:flutter_project/features/landmark/screens/landmark_nav.dart';
 import 'package:flutter_project/features/notification/screens/notification_page.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
 import 'package:flutter_project/features/search/widgets/custom_search_text.dart';
 import 'package:flutter_project/features/landmark/widgets/landmark_btn.dart';
 import 'package:flutter_project/features/auth/widgets/side_menu.dart';
+import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
 import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:shimmer/shimmer.dart';
 
 class LandmarkScreen extends StatefulWidget {
   static const String routeName = '/landmark-screen';
@@ -26,6 +29,7 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
   static List<LandmarkModel> main_landmark_list = [];
   List<LandmarkModel> display_list = [];
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _isLoading = true;
 
   Future<void> _getData() async {
     try {
@@ -35,13 +39,18 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
       if (response.statusCode == 200) {
         List<dynamic> jsonData = jsonDecode(response.body);
         List<LandmarkModel> landmarkList = jsonData.map((data) {
-          return LandmarkModel(data['landmark_url'], data['landmark_name']);
+          return LandmarkModel(
+            data['landmark_url'],
+            data['landmark_name'],
+            data['latitude'],
+            data['longitude'],
+          );
         }).toList();
 
         setState(() {
           main_landmark_list = landmarkList;
           display_list = List.from(main_landmark_list);
-          print(main_landmark_list[0].landmark_name);
+          _isLoading = false; // Set loading to false after data is fetched
         });
       }
     } catch (e) {
@@ -69,6 +78,43 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
               color: Colors.blue,
             ),
           ),
+          title: GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, SearchPageWidget.routeName);
+            },
+            child: Container(
+              width: double.infinity,
+              height: 40.0,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Icon(
+                      Icons.search,
+                      color: Colors.black26,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Search..',
+                      style: GoogleFonts.montserrat(
+                        textStyle: const TextStyle(
+                          color: Colors.black26,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -0.6,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
           leading: IconButton(
             onPressed: () {
               _scaffoldKey.currentState!.openDrawer();
@@ -77,17 +123,6 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
               Icons.menu,
               color: Colors.white,
               size: 30.0,
-            ),
-          ),
-          title: Container(
-            width: double.infinity,
-            height: 40.0,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: const Center(
-              child: CustomSearchText(),
             ),
           ),
           actions: [
@@ -100,15 +135,40 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
                 height: 34.0,
               ),
             ),
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, SettingPage.routeName);
-              },
-              icon: Image.asset(
-                'assets/images/profile.png',
-                height: 38.0,
-              ),
-            ),
+            FutureBuilder<String?>(
+                future: ProfileDataManager.getProfilePic(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width:
+                            40, // Lebar dan tinggi yang sama untuk membuatnya bulat
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('Error ${snapshot.error}');
+                  } else if (snapshot.hasData) {
+                    return IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, SettingPage.routeName);
+                      },
+                      icon: CircleAvatar(
+                        radius: 26,
+                        backgroundColor: Colors.white30,
+                        backgroundImage: NetworkImage(snapshot.data!),
+                      ),
+                    );
+                  } else {
+                    return Text('no data');
+                  }
+                }),
           ],
         ),
       ),
@@ -170,7 +230,7 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
                       borderSide: BorderSide.none,
                     ),
                     hintText: 'Search for Landmark',
-                    hintFadeDuration: Durations.short3,
+                    hintFadeDuration: Duration(milliseconds: 300),
                     hintStyle: GoogleFonts.montserrat(
                       textStyle: const TextStyle(
                         fontSize: 12,
@@ -205,35 +265,67 @@ class _LandmarkScreenState extends State<LandmarkScreen> {
             SizedBox(
               height: 20,
             ),
-            Container(
-              child: SingleChildScrollView(
-                child: Wrap(
-                  spacing: 8.0, // Spacing between items
-                  runSpacing: 8.0, // Spacing between lines
-                  children: [
-                    for (int i = 0; i < 6; i++)
-                      GestureDetector(
-                        onTap: () {
-                          // Navigator.pushNamed(
-                          //     context,
-                          //     LandmarkResult
-                          //         .routeName); // Print the placeName or placeholder name
-                        },
-                        child: LandmarkBtn(
-                          placeName: i < display_list.length
-                              ? display_list[i].landmark_name!
-                              : 'Placeholder Name', // or some default name
-                          imagePath: i < display_list.length
-                              ? display_list[i]
-                                  .landmark_url!
-                                  .replaceAll('\\', '')
-                              : 'assets/images/bookit.png', // or some default image path
-                        ),
+            _isLoading
+                ? Expanded(
+                    child: GridView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      itemCount: 6,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 8.0,
+                        mainAxisSpacing: 8.0,
                       ),
-                  ],
-                ),
-              ),
-            )
+                      itemBuilder: (context, index) {
+                        return Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                : Expanded(
+                    child: GridView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      itemCount: display_list.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 8.0,
+                        mainAxisSpacing: 8.0,
+                      ),
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LandmarkNav(
+                                  lmName: display_list[index].landmark_name!,
+                                  latitude: display_list[index].latitude!,
+                                  longitude: display_list[index].longitude!,
+                                ),
+                              ),
+                            );
+                          },
+                          child: LandmarkBtn(
+                            placeName: display_list[index].landmark_name!,
+                            imagePath: display_list[index]
+                                .landmark_url!
+                                .replaceAll('\\', ''),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
           ],
         ),
       ),

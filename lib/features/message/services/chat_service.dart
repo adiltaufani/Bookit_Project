@@ -149,4 +149,32 @@ class ChatService {
       return null;
     }
   }
+
+  Future<Map<String, dynamic>?> getLastMessageWithTime(
+      String chatRoomId) async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('chat_rooms')
+          .doc(chatRoomId)
+          .collection('messages')
+          .orderBy("timestamp", descending: true)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // Ambil pesan dan waktu dari dokumen pertama
+        Map<String, dynamic> messageData =
+            querySnapshot.docs.first.data() as Map<String, dynamic>;
+        return {
+          'message': messageData['message'],
+          'timestamp': messageData['timestamp'],
+        };
+      } else {
+        return null;
+      }
+    } catch (error) {
+      print('Error getting last message time: $error');
+      return null;
+    }
+  }
 }

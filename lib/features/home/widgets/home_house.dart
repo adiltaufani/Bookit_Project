@@ -9,6 +9,7 @@ import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 // ignore: must_be_immutable
 class HomeHouse extends StatefulWidget {
@@ -29,6 +30,8 @@ class HomeHouse extends StatefulWidget {
 class _HomeHouseState extends State<HomeHouse> {
   // ignore: non_constant_identifier_names
   List _Listdata = [];
+  List _ListdataNear = [];
+  bool _isLoading = true;
 
   Future _getdata() async {
     try {
@@ -45,8 +48,6 @@ class _HomeHouseState extends State<HomeHouse> {
       rethrow;
     }
   }
-
-  List _ListdataNear = [];
 
   Future _getdataNear() async {
     try {
@@ -67,8 +68,12 @@ class _HomeHouseState extends State<HomeHouse> {
   }
 
   void fetchData() async {
+    await Future.delayed(Duration(seconds: 2)); // Menambahkan delay 2 detik
     await _getdata();
     await _getdataNear();
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -77,8 +82,8 @@ class _HomeHouseState extends State<HomeHouse> {
     super.initState();
   }
 
-  List<bool> booleanList = List<bool>.filled(10, false);
-  List<bool> triggerList = List<bool>.filled(10, false);
+  List<bool> booleanList = List<bool>.filled(20, false);
+  List<bool> triggerList = List<bool>.filled(20, false);
 
   @override
   Widget build(BuildContext context) {
@@ -135,165 +140,189 @@ class _HomeHouseState extends State<HomeHouse> {
             SizedBox(
               height: 300,
               width: double.infinity,
-              child: ListView.builder(
-                itemCount: _ListdataNear.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (BuildContext context, int index) {
-                  String cleanedUrlFoto =
-                      _ListdataNear[index]['url_foto'].replaceAll('\\', '');
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BookingPage(
-                            locationName: _ListdataNear[index]
-                                ['nama_penginapan'],
-                            locationAddress: _ListdataNear[index]['alamat'],
-                            jumlah_reviewer: _ListdataNear[index]
-                                ['jumlah_reviewer'],
-                            url_foto: cleanedUrlFoto,
-                            hotel_id: _ListdataNear[index]['id'],
-                            latitude: _ListdataNear[index]['latitude'],
-                            longitude: _ListdataNear[index]['longitude'],
-                            sellersEmail: 'tes',
-                            sellersFoto:
-                                'https://th.bing.com/th/id/OIP.QjynegEfQVPq5kIEuX9fWQHaFj?w=263&h=197&c=7&r=0&o=5&pid=1.7',
-                            sellersName: 'tes',
-                            sellersUid: 'tes',
-                            sellersid: '4',
-                          ),
-                        ),
-                      );
-                    },
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: 275,
-                          width: 240,
-                          padding: const EdgeInsets.all(0),
-                          margin: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.white,
-                            image: DecorationImage(
-                                image: NetworkImage(cleanedUrlFoto),
-                                fit: BoxFit.cover),
-                          ),
-                        ),
-                        Container(
-                          width: 240,
-                          height: 275,
-                          padding: const EdgeInsets.all(0),
-                          margin: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                                20), // Adjust the radius as needed
-                            gradient: LinearGradient(
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.center,
-                              colors: [
-                                Colors.black.withOpacity(
-                                    0.74), // Opacity untuk membuatnya lebih gelap
-                                Colors
-                                    .transparent, // Untuk memberikan transisi ke gambar
-                              ],
+              child: _isLoading
+                  ? ListView.builder(
+                      itemCount: 5,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(
+                            height: 275,
+                            width: 240,
+                            margin: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white,
                             ),
                           ),
-                        ),
-                        Positioned(
-                          bottom: 30,
-                          left: 20,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        );
+                      },
+                    )
+                  : ListView.builder(
+                      itemCount: _ListdataNear.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (BuildContext context, int index) {
+                        String cleanedUrlFoto = _ListdataNear[index]['url_foto']
+                            .replaceAll('\\', '');
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BookingPage(
+                                  locationName: _ListdataNear[index]
+                                      ['nama_penginapan'],
+                                  locationAddress: _ListdataNear[index]
+                                      ['alamat'],
+                                  jumlah_reviewer: _ListdataNear[index]
+                                      ['jumlah_reviewer'],
+                                  url_foto: cleanedUrlFoto,
+                                  hotel_id: _ListdataNear[index]['id'],
+                                  latitude: _ListdataNear[index]['latitude'],
+                                  longitude: _ListdataNear[index]['longitude'],
+                                  sellersEmail: 'tes',
+                                  sellersFoto:
+                                      'https://th.bing.com/th/id/OIP.QjynegEfQVPq5kIEuX9fWQHaFj?w=263&h=197&c=7&r=0&o=5&pid=1.7',
+                                  sellersName: 'tes',
+                                  sellersUid: 'tes',
+                                  sellersid: '4',
+                                ),
+                              ),
+                            );
+                          },
+                          child: Stack(
                             children: [
-                              Text(
-                                _ListdataNear[index]['nama_penginapan'],
-                                style: GoogleFonts.montserrat(
-                                  textStyle: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
+                              Container(
+                                height: 275,
+                                width: 240,
+                                padding: const EdgeInsets.all(0),
+                                margin: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.white,
+                                  image: DecorationImage(
+                                      image: NetworkImage(cleanedUrlFoto),
+                                      fit: BoxFit.cover),
+                                ),
+                              ),
+                              Container(
+                                width: 240,
+                                height: 275,
+                                padding: const EdgeInsets.all(0),
+                                margin: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      20), // Adjust the radius as needed
+                                  gradient: LinearGradient(
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.center,
+                                    colors: [
+                                      Colors.black.withOpacity(
+                                          0.74), // Opacity untuk membuatnya lebih gelap
+                                      Colors
+                                          .transparent, // Untuk memberikan transisi ke gambar
+                                    ],
                                   ),
                                 ),
                               ),
-                              Text(
-                                _ListdataNear[index]['alamat'],
-                                style: GoogleFonts.montserrat(
-                                  textStyle: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                              Positioned(
+                                bottom: 30,
+                                left: 20,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _ListdataNear[index]['nama_penginapan'],
+                                      style: GoogleFonts.montserrat(
+                                        textStyle: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      _ListdataNear[index]['alamat'],
+                                      style: GoogleFonts.montserrat(
+                                        textStyle: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                top: 30,
+                                right: 20,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    fetchData(); // Memulai pengambilan data
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        // Membuat dialog
+                                        return FutureBuilder(
+                                          future: Future.delayed(Duration(
+                                              seconds:
+                                                  2)), // Menunda dialog selama 2 detik
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<dynamic> snapshot) {
+                                            // Menampilkan pesan dialog
+                                            return AlertDialog(
+                                              title: Text(
+                                                  "Data Berhasil Disimpan"),
+                                              content: Text(
+                                                  "Property Dimasukan ke Wishlist"),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context)
+                                                        .pop(); // Menutup dialog
+                                                  },
+                                                  child: Text("OK"),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                    );
+                                    setState(() {
+                                      triggerList[index] = !triggerList[index];
+                                      if (triggerList[index] == true) {
+                                        wishlistTap(index);
+                                      }
+                                    });
+                                  },
+                                  child: triggerList[index]
+                                      ? Transform.scale(
+                                          scale:
+                                              1.5, // Besar ikon 1.5 kali lipat
+                                          child: Icon(
+                                            Icons.bookmark_rounded,
+                                            color: Colors.blueGrey,
+                                          ),
+                                        )
+                                      : Transform.scale(
+                                          scale:
+                                              1.5, // Besar ikon 1.5 kali lipat
+                                          child: Icon(
+                                            Icons.bookmark_rounded,
+                                            color: Colors.black12,
+                                          ),
+                                        ),
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                        Positioned(
-                          top: 30,
-                          right: 20,
-                          child: GestureDetector(
-                            onTap: () {
-                              fetchData(); // Memulai pengambilan data
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  // Membuat dialog
-                                  return FutureBuilder(
-                                    future: Future.delayed(Duration(
-                                        seconds:
-                                            2)), // Menunda dialog selama 2 detik
-                                    builder: (BuildContext context,
-                                        AsyncSnapshot<dynamic> snapshot) {
-                                      // Menampilkan pesan dialog
-                                      return AlertDialog(
-                                        title: Text("Data Berhasil Disimpan"),
-                                        content: Text(
-                                            "Property Dimasukan ke Wishlist"),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context)
-                                                  .pop(); // Menutup dialog
-                                            },
-                                            child: Text("OK"),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                              );
-                              setState(() {
-                                triggerList[index] = !triggerList[index];
-                                if (triggerList[index] == true) {
-                                  wishlistTap(index);
-                                }
-                              });
-                            },
-                            child: triggerList[index]
-                                ? Transform.scale(
-                                    scale: 1.5, // Besar ikon 1.5 kali lipat
-                                    child: Icon(
-                                      Icons.bookmark_rounded,
-                                      color: Colors.blueGrey,
-                                    ),
-                                  )
-                                : Transform.scale(
-                                    scale: 1.5, // Besar ikon 1.5 kali lipat
-                                    child: Icon(
-                                      Icons.bookmark_rounded,
-                                      color: Colors.black12,
-                                    ),
-                                  ),
-                          ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
             const SizedBox(
               height: 5,
@@ -334,219 +363,240 @@ class _HomeHouseState extends State<HomeHouse> {
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: _Listdata.length,
+              itemCount: _isLoading ? 5 : _Listdata.length,
               itemBuilder: (BuildContext context, int index) {
-                String cleanedUrlFoto =
-                    _Listdata[index]['url_foto'].replaceAll('\\', '');
-                String cleanedUrlFotoSellers =
-                    _Listdata[index]['sellers_foto'].replaceAll('\\', '');
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => BookingPage(
-                                  locationName: _Listdata[index]
-                                      ['nama_penginapan'],
-                                  locationAddress: _Listdata[index]['alamat'],
-                                  jumlah_reviewer: _Listdata[index]
-                                      ['jumlah_reviewer'],
-                                  url_foto: cleanedUrlFoto,
-                                  hotel_id: _Listdata[index]['id'],
-                                  latitude: _Listdata[index]['latitude'],
-                                  longitude: _Listdata[index]['longitude'],
-                                  sellersid: _Listdata[index]['sellers_id'],
-                                  sellersName: _Listdata[index]['nama'],
-                                  sellersEmail: _Listdata[index]['email'],
-                                  sellersFoto: cleanedUrlFotoSellers,
-                                  sellersUid: _Listdata[index]['uid'],
-                                )));
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 80,
-                    margin: const EdgeInsets.only(
-                      top: 15,
-                      left: 20,
-                      right: 20,
-                      bottom: 10,
-                    ), // Atur margin jika diperlukan
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            image: DecorationImage(
-                                image: NetworkImage(cleanedUrlFoto),
-                                fit: BoxFit.cover),
+                if (_isLoading) {
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 80,
+                      margin: const EdgeInsets.only(
+                        top: 15,
+                        left: 20,
+                        right: 20,
+                        bottom: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                } else {
+                  String cleanedUrlFoto =
+                      _Listdata[index]['url_foto'].replaceAll('\\', '');
+                  String cleanedUrlFotoSellers =
+                      _Listdata[index]['sellers_foto'].replaceAll('\\', '');
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BookingPage(
+                                    locationName: _Listdata[index]
+                                        ['nama_penginapan'],
+                                    locationAddress: _Listdata[index]['alamat'],
+                                    jumlah_reviewer: _Listdata[index]
+                                        ['jumlah_reviewer'],
+                                    url_foto: cleanedUrlFoto,
+                                    hotel_id: _Listdata[index]['id'],
+                                    latitude: _Listdata[index]['latitude'],
+                                    longitude: _Listdata[index]['longitude'],
+                                    sellersid: _Listdata[index]['sellers_id'],
+                                    sellersName: _Listdata[index]['nama'],
+                                    sellersEmail: _Listdata[index]['email'],
+                                    sellersFoto: cleanedUrlFotoSellers,
+                                    sellersUid: _Listdata[index]['uid'],
+                                  )));
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 80,
+                      margin: const EdgeInsets.only(
+                        top: 15,
+                        left: 20,
+                        right: 20,
+                        bottom: 10,
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              image: DecorationImage(
+                                  image: NetworkImage(cleanedUrlFoto),
+                                  fit: BoxFit.cover),
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 13,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  _Listdata[index]['nama_penginapan'],
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.montserrat(
-                                    textStyle: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: -0.5,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 4,
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    'Rp.',
+                          const SizedBox(
+                            width: 13,
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    _Listdata[index]['nama_penginapan'],
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.montserrat(
                                       textStyle: const TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 8, 59, 134),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                  ),
-                                  Text(
-                                    formatInteger(_Listdata[index]
-                                            ['harga_termurah']
-                                        .toString()), // Mengonversi integer ke string sebelum memanggil formatInteger
-                                    style: GoogleFonts.montserrat(
-                                      textStyle: const TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 8, 59, 134),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                  ),
-                                  Text(
-                                    ' / night',
-                                    style: GoogleFonts.montserrat(
-                                      textStyle: const TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 8, 59, 134),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Row(
-                                children: [
-                                  Image.asset(
-                                    'assets/images/bedroom.png',
-                                    height: 24.0,
-                                  ),
-                                  const SizedBox(
-                                    width: 4,
-                                  ),
-                                  const SizedBox(
-                                    width: 3.5,
-                                  ),
-                                  const SizedBox(
-                                    width: 8,
-                                  ),
-                                  Image.asset(
-                                    'assets/images/bathroom.png',
-                                    height: 24.0,
-                                  ),
-                                  const SizedBox(
-                                    width: 4,
-                                  ),
-                                  const SizedBox(
-                                    width: 3.5,
-                                  ),
-                                  Text(
-                                    'Bathroom',
-                                    style: GoogleFonts.montserrat(
-                                      textStyle: const TextStyle(
-                                        color: Color(0xFF858585),
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w400,
-                                        letterSpacing: -0.6,
+                                        color: Colors.black,
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: -0.5,
                                       ),
                                     ),
                                   ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            fetchData(); // Memulai pengambilan data
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                // Membuat dialog
-                                return FutureBuilder(
-                                  future: Future.delayed(Duration(
-                                      seconds:
-                                          2)), // Menunda dialog selama 2 detik
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<dynamic> snapshot) {
-                                    // Menampilkan pesan dialog
-                                    return AlertDialog(
-                                      title: Text("Data Berhasil Disimpan"),
-                                      content: Text(
-                                          "Property Dimasukan ke Wishlist"),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Menutup dialog
-                                          },
-                                          child: Text("OK"),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                            setState(() {
-                              booleanList[index] = !booleanList[index];
-                              if (booleanList[index] == true) {
-                                wishlistTap(index);
-                              }
-                            });
-                          },
-                          child: booleanList[index]
-                              ? Transform.scale(
-                                  scale: 1.5, // Besar ikon 1.5 kali lipat
-                                  child: Icon(
-                                    Icons.bookmark_rounded,
-                                    color: Colors.blueGrey,
-                                  ),
-                                )
-                              : Transform.scale(
-                                  scale: 1.5, // Besar ikon 1.5 kali lipat
-                                  child: Icon(
-                                    Icons.bookmark_rounded,
-                                    color: Colors.black12,
-                                  ),
                                 ),
-                        ),
-                      ],
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Rp.',
+                                      style: GoogleFonts.montserrat(
+                                        textStyle: const TextStyle(
+                                            color:
+                                                Color.fromARGB(255, 8, 59, 134),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ),
+                                    Text(
+                                      formatInteger(_Listdata[index]
+                                              ['harga_termurah']
+                                          .toString()), // Mengonversi integer ke string sebelum memanggil formatInteger
+                                      style: GoogleFonts.montserrat(
+                                        textStyle: const TextStyle(
+                                            color:
+                                                Color.fromARGB(255, 8, 59, 134),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ),
+                                    Text(
+                                      ' / night',
+                                      style: GoogleFonts.montserrat(
+                                        textStyle: const TextStyle(
+                                            color:
+                                                Color.fromARGB(255, 8, 59, 134),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/bedroom.png',
+                                      height: 24.0,
+                                    ),
+                                    const SizedBox(
+                                      width: 4,
+                                    ),
+                                    const SizedBox(
+                                      width: 3.5,
+                                    ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    Image.asset(
+                                      'assets/images/bathroom.png',
+                                      height: 24.0,
+                                    ),
+                                    const SizedBox(
+                                      width: 4,
+                                    ),
+                                    const SizedBox(
+                                      width: 3.5,
+                                    ),
+                                    Text(
+                                      'Bathroom',
+                                      style: GoogleFonts.montserrat(
+                                        textStyle: const TextStyle(
+                                          color: Color(0xFF858585),
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w400,
+                                          letterSpacing: -0.6,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              fetchData(); // Memulai pengambilan data
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // Membuat dialog
+                                  return FutureBuilder(
+                                    future: Future.delayed(Duration(
+                                        seconds:
+                                            2)), // Menunda dialog selama 2 detik
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<dynamic> snapshot) {
+                                      // Menampilkan pesan dialog
+                                      return AlertDialog(
+                                        title: Text("Data Berhasil Disimpan"),
+                                        content: Text(
+                                            "Property Dimasukan ke Wishlist"),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .pop(); // Menutup dialog
+                                            },
+                                            child: Text("OK"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                              setState(() {
+                                booleanList[index] = !booleanList[index];
+                                if (booleanList[index] == true) {
+                                  wishlistTap(index);
+                                }
+                              });
+                            },
+                            child: booleanList[index]
+                                ? Transform.scale(
+                                    scale: 1.5, // Besar ikon 1.5 kali lipat
+                                    child: Icon(
+                                      Icons.bookmark_rounded,
+                                      color: Colors.blueGrey,
+                                    ),
+                                  )
+                                : Transform.scale(
+                                    scale: 1.5, // Besar ikon 1.5 kali lipat
+                                    child: Icon(
+                                      Icons.bookmark_rounded,
+                                      color: Colors.black12,
+                                    ),
+                                  ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
+                  );
+                }
               },
             ),
           ],

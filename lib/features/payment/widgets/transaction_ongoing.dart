@@ -6,6 +6,7 @@ import 'package:flutter_project/features/reschedule/screens/reschedule_page.dart
 import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:shimmer/shimmer.dart';
 
 class TransactionOngoing extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class TransactionOngoing extends StatefulWidget {
 }
 
 class _TransactionOngoingState extends State<TransactionOngoing> {
+  bool isLoading = true;
   bool isTextFieldFocused = false;
   String? user_id;
   List _Listdata = [];
@@ -35,8 +37,10 @@ class _TransactionOngoingState extends State<TransactionOngoing> {
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        await Future.delayed(Duration(seconds: 2));
         setState(() {
           _Listdata = data;
+          isLoading = false;
           print(_Listdata);
         });
       }
@@ -48,11 +52,9 @@ class _TransactionOngoingState extends State<TransactionOngoing> {
   Future<void> fetchUserData() async {
     var user = FirebaseAuth.instance.currentUser;
 
-    // Pastikan user sudah login
     if (user == null) {
-      // Jika user belum login, tampilkan pesan
       print("Silakan login terlebih dahulu");
-      return; // Keluar dari metode fetchUserData
+      return;
     }
 
     var url = Uri.parse("${ipaddr}/ta_projek/crudtaprojek/view_data.php");
@@ -64,10 +66,8 @@ class _TransactionOngoingState extends State<TransactionOngoing> {
 
     var data = json.decode(response.body);
     if (data != null) {
-      // Data berhasil diterima, tampilkan firstname dan lastname
       user_id = data['id'];
       _getdata();
-      // Lakukan apapun yang Anda ingin lakukan dengan data ini
     } else {
       print("Gagal mendapatkan data pengguna");
     }
@@ -75,6 +75,64 @@ class _TransactionOngoingState extends State<TransactionOngoing> {
 
   @override
   Widget build(BuildContext context) {
+    return isLoading ? buildShimmer() : buildListView();
+  }
+
+  Widget buildShimmer() {
+    return SizedBox(
+      height: 440,
+      child: ListView.builder(
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 80,
+                      height: 88,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      width: double.infinity,
+                      height: 16,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      width: double.infinity,
+                      height: 16,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      width: 100,
+                      height: 16,
+                      color: Colors.grey,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget buildListView() {
     return ListView.builder(
       itemCount: _Listdata.length,
       shrinkWrap: true,
@@ -356,9 +414,6 @@ class _TransactionOngoingState extends State<TransactionOngoing> {
                                             ),
                                           ],
                                         ),
-                                        // const SizedBox(
-                                        //   width: 42,
-                                        // ),
                                       ],
                                     ),
                                   ],
@@ -371,8 +426,7 @@ class _TransactionOngoingState extends State<TransactionOngoing> {
                               _toggleDetail(index);
                             },
                             child: Padding(
-                              padding: const EdgeInsets.all(
-                                  20.0), // Adjust the padding as needed
+                              padding: const EdgeInsets.all(20.0),
                               child: AnimatedSwitcher(
                                 duration: Duration(milliseconds: 300),
                                 child: isUp[index]
@@ -471,7 +525,7 @@ class _TransactionOngoingState extends State<TransactionOngoing> {
                                       ),
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),
