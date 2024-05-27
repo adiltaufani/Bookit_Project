@@ -7,6 +7,7 @@ import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:shimmer/shimmer.dart';
 
 class TransactionRecent extends StatefulWidget {
   @override
@@ -15,7 +16,7 @@ class TransactionRecent extends StatefulWidget {
 
 class _TransactionRecentState extends State<TransactionRecent> {
   double _rating = 0;
-  bool isTextFieldFocused = false;
+  bool isLoading = true;
   String? user_id;
   List _Listdata = [];
   List<bool> booleanList = List<bool>.filled(10, false);
@@ -37,8 +38,10 @@ class _TransactionRecentState extends State<TransactionRecent> {
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        await Future.delayed(Duration(seconds: 2));
         setState(() {
           _Listdata = data;
+          isLoading = false;
           print(_Listdata);
         });
       }
@@ -50,11 +53,9 @@ class _TransactionRecentState extends State<TransactionRecent> {
   Future<void> fetchUserData() async {
     var user = FirebaseAuth.instance.currentUser;
 
-    // Pastikan user sudah login
     if (user == null) {
-      // Jika user belum login, tampilkan pesan
       print("Silakan login terlebih dahulu");
-      return; // Keluar dari metode fetchUserData
+      return;
     }
 
     var url = Uri.parse("${ipaddr}/ta_projek/crudtaprojek/view_data.php");
@@ -66,10 +67,8 @@ class _TransactionRecentState extends State<TransactionRecent> {
 
     var data = json.decode(response.body);
     if (data != null) {
-      // Data berhasil diterima, tampilkan firstname dan lastname
       user_id = data['id'];
       _getdata();
-      // Lakukan apapun yang Anda ingin lakukan dengan data ini
     } else {
       print("Gagal mendapatkan data pengguna");
     }
@@ -77,6 +76,64 @@ class _TransactionRecentState extends State<TransactionRecent> {
 
   @override
   Widget build(BuildContext context) {
+    return isLoading ? buildShimmer() : buildListView();
+  }
+
+  Widget buildShimmer() {
+    return SizedBox(
+      height: 400,
+      child: ListView.builder(
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 80,
+                      height: 88,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      width: double.infinity,
+                      height: 16,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      width: double.infinity,
+                      height: 16,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      width: 100,
+                      height: 16,
+                      color: Colors.grey,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget buildListView() {
     return ListView.builder(
       itemCount: _Listdata.length,
       shrinkWrap: true,
@@ -358,9 +415,6 @@ class _TransactionRecentState extends State<TransactionRecent> {
                                             ),
                                           ],
                                         ),
-                                        // const SizedBox(
-                                        //   width: 42,
-                                        // ),
                                       ],
                                     ),
                                   ],
@@ -373,8 +427,7 @@ class _TransactionRecentState extends State<TransactionRecent> {
                               _toggleDetail(index);
                             },
                             child: Padding(
-                              padding: const EdgeInsets.all(
-                                  20.0), // Adjust the padding as needed
+                              padding: const EdgeInsets.all(20.0),
                               child: AnimatedSwitcher(
                                 duration: Duration(milliseconds: 300),
                                 child: isUp[index]
@@ -526,14 +579,13 @@ class _TransactionRecentState extends State<TransactionRecent> {
 
   Future<void> _submitRating(double rating, String id) async {
     final response = await http.post(
-      Uri.parse(
-          '${ipaddr}/ta_projek/crudtaprojek/add_rating.php'), // ganti dengan URL server Anda
+      Uri.parse('${ipaddr}/ta_projek/crudtaprojek/add_rating.php'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
         'rating': rating,
-        'house_id': id, // ganti dengan ID house yang sesuai
+        'house_id': id,
       }),
     );
 
