@@ -249,71 +249,79 @@ class _BookingPageState extends State<BookingPage> {
                         const SizedBox(height: 2),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              widget.locationName,
-                              // _Listdata[index]['jumlah_reviewer'],
-                              style: GoogleFonts.montserrat(
-                                textStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w600),
+                            Container(
+                              constraints: const BoxConstraints(maxWidth: 332),
+                              child: Text(
+                                widget.locationName,
+                                // _Listdata[index]['jumlah_reviewer'],
+                                style: GoogleFonts.montserrat(
+                                  textStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w600),
+                                ),
                               ),
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                fetchData(); // Memulai pengambilan data
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    // Membuat dialog
-                                    return FutureBuilder(
-                                      future: Future.delayed(Duration(
-                                          seconds:
-                                              2)), // Menunda dialog selama 2 detik
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot<dynamic> snapshot) {
-                                        // Menampilkan pesan dialog
-                                        return AlertDialog(
-                                          title: Text("Data Berhasil Disimpan"),
-                                          content: Text(
-                                              "Property Dimasukan ke Wishlist"),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context)
-                                                    .pop(); // Menutup dialog
-                                              },
-                                              child: Text("OK"),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                );
-                                setState(() {
-                                  _triggerList = !_triggerList;
-                                  if (_triggerList == true) {
-                                    wishlistTap();
-                                  }
-                                });
-                              },
-                              child: _triggerList
-                                  ? Transform.scale(
-                                      scale: 1.5, // Besar ikon 1.5 kali lipat
-                                      child: Icon(
-                                        Icons.bookmark_rounded,
-                                        color: Colors.blueGrey,
+                            Padding(
+                              padding: const EdgeInsets.only(top: 6.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  fetchData(); // Memulai pengambilan data
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      // Membuat dialog
+                                      return FutureBuilder(
+                                        future: Future.delayed(Duration(
+                                            seconds:
+                                                2)), // Menunda dialog selama 2 detik
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<dynamic> snapshot) {
+                                          // Menampilkan pesan dialog
+                                          return AlertDialog(
+                                            title:
+                                                Text("Data Berhasil Disimpan"),
+                                            content: Text(
+                                                "Property Dimasukan ke Wishlist"),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(); // Menutup dialog
+                                                },
+                                                child: Text("OK"),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                  );
+                                  setState(() {
+                                    _triggerList = !_triggerList;
+                                    if (_triggerList == true) {
+                                      wishlistTap();
+                                    }
+                                  });
+                                },
+                                child: _triggerList
+                                    ? Transform.scale(
+                                        scale: 1.5, // Besar ikon 1.5 kali lipat
+                                        child: Icon(
+                                          Icons.bookmark_rounded,
+                                          color: Colors.blueGrey,
+                                        ),
+                                      )
+                                    : Transform.scale(
+                                        scale: 1.5, // Besar ikon 1.5 kali lipat
+                                        child: Icon(
+                                          Icons.bookmark_rounded,
+                                          color: Colors.black12,
+                                        ),
                                       ),
-                                    )
-                                  : Transform.scale(
-                                      scale: 1.5, // Besar ikon 1.5 kali lipat
-                                      child: Icon(
-                                        Icons.bookmark_rounded,
-                                        color: Colors.black12,
-                                      ),
-                                    ),
+                              ),
                             ),
                           ],
                         ),
@@ -344,14 +352,18 @@ class _BookingPageState extends State<BookingPage> {
                             const SizedBox(width: 6),
                             GestureDetector(
                               onTap: () {},
-                              child: Text(
-                                widget.locationAddress,
-                                // _Listdata[index]['lokasi'],
-                                style: GoogleFonts.montserrat(
-                                  textStyle: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500),
+                              child: Container(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 320),
+                                child: Text(
+                                  widget.locationAddress,
+                                  // _Listdata[index]['lokasi'],
+                                  style: GoogleFonts.montserrat(
+                                    textStyle: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500),
+                                  ),
                                 ),
                               ),
                             ),
@@ -505,13 +517,17 @@ class _BookingPageState extends State<BookingPage> {
                             const SizedBox(width: 2),
                             Padding(
                               padding: const EdgeInsets.only(left: 6.0),
-                              child: Text(
-                                widget.locationAddress,
-                                style: GoogleFonts.montserrat(
-                                  textStyle: const TextStyle(
-                                    color: Colors.black87,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
+                              child: Container(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 320),
+                                child: Text(
+                                  widget.locationAddress,
+                                  style: GoogleFonts.montserrat(
+                                    textStyle: const TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
                                 ),
                               ),

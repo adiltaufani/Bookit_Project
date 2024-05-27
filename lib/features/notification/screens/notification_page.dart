@@ -365,7 +365,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                         duration:
                                             const Duration(milliseconds: 200),
                                         height:
-                                            isConstScrolled[index] ? 216 : 106,
+                                            isConstScrolled[index] ? 228 : 106,
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),

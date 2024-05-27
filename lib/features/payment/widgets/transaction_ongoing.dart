@@ -205,15 +205,19 @@ class _TransactionOngoingState extends State<TransactionOngoing> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
-                                              _Listdata[index]
-                                                  ['nama_penginapan'],
-                                              style: GoogleFonts.montserrat(
-                                                textStyle: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                  letterSpacing: -0.6,
+                                            Container(
+                                              constraints: const BoxConstraints(
+                                                  maxWidth: 196),
+                                              child: Text(
+                                                _Listdata[index]
+                                                    ['nama_penginapan'],
+                                                style: GoogleFonts.montserrat(
+                                                  textStyle: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    letterSpacing: -0.6,
+                                                  ),
                                                 ),
                                               ),
                                             ),
