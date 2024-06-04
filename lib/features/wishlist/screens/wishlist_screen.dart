@@ -8,7 +8,7 @@ import 'package:flutter_project/features/wishlist/database/db_helper.dart';
 import 'package:flutter_project/features/wishlist/model/wishlist_model.dart';
 import 'package:flutter_project/features/notification/screens/notification_page.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
-import 'package:flutter_project/features/auth/widgets/side_menu.dart';
+import 'package:flutter_project/features/home/widgets/side_menu.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';

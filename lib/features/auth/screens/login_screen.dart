@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_project/common/widgets/custom_password_field.dart';
-import 'package:flutter_project/common/widgets/custom_texfield.dart';
+import 'package:flutter_project/features/auth/widgets/custom_password_field.dart';
+import 'package:flutter_project/features/auth/widgets/custom_texfield.dart';
 import 'package:flutter_project/features/auth/screens/auth_screen.dart';
 import 'package:flutter_project/features/auth/screens/forgot_password_screen.dart';
 import 'package:flutter_project/features/home/screens/home_screen.dart';

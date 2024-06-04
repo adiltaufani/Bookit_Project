@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/features/home/screens/home_screen.dart';
-import 'package:flutter_project/features/auth/widgets/sort_button.dart';
+import 'package:flutter_project/features/search/widgets/sort_button.dart';
 import 'package:flutter_project/features/search/widgets/search_house.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -345,15 +345,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                   tabs: [
                     Tab(
                       child: Text(
-                        'House',
-                        style: GoogleFonts.montserrat(
-                          textStyle: const TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
-                    Tab(
-                      child: Text(
                         'Apartement',
                         style: GoogleFonts.montserrat(
                           textStyle: const TextStyle(
@@ -373,15 +364,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                     Tab(
                       child: Text(
                         'Villa',
-                        style: GoogleFonts.montserrat(
-                          textStyle: const TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
-                    Tab(
-                      child: Text(
-                        'Resort',
                         style: GoogleFonts.montserrat(
                           textStyle: const TextStyle(
                               fontSize: 14, fontWeight: FontWeight.w700),

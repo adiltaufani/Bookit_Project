@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_project/common/widgets/custom_password_field.dart';
-import 'package:flutter_project/common/widgets/custom_texfield.dart';
+import 'package:flutter_project/features/auth/widgets/custom_password_field.dart';
+import 'package:flutter_project/features/auth/widgets/custom_texfield.dart';
 import 'package:flutter_project/features/auth/screens/login_screen.dart';
 import 'package:flutter_project/features/auth/services/auth/firebase_auth_service.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
@@ -222,8 +222,6 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          // Tambahkan logika yang ingin Anda jalankan ketika teks ditekan di sini
-                          // Misalnya, untuk menavigasi ke layar login, Anda dapat menggunakan Navigator
                           Navigator.pushNamed(context, LoginScreen.routeName);
                         },
                         child: const Text(

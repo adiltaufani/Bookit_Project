@@ -8,7 +8,7 @@ import 'package:flutter_project/features/auth/services/auth/google_auth_service.
 import 'package:flutter_project/features/notification/database/db_helper.dart';
 import 'package:flutter_project/features/notification/model/notification_model.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
-import 'package:flutter_project/features/auth/widgets/side_menu.dart';
+import 'package:flutter_project/features/home/widgets/side_menu.dart';
 import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';

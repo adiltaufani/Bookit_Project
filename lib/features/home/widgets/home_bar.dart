@@ -12,11 +12,11 @@ import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
 // ignore: must_be_immutable
-class HomeHouse extends StatefulWidget {
+class HomeBar extends StatefulWidget {
   String tipe;
   double user_latitude;
   double user_longitude;
-  HomeHouse({
+  HomeBar({
     super.key,
     required this.tipe,
     required this.user_latitude,
@@ -24,10 +24,10 @@ class HomeHouse extends StatefulWidget {
   });
 
   @override
-  State<HomeHouse> createState() => _HomeHouseState();
+  State<HomeBar> createState() => _HomeBarState();
 }
 
-class _HomeHouseState extends State<HomeHouse> {
+class _HomeBarState extends State<HomeBar> {
   // ignore: non_constant_identifier_names
   List _Listdata = [];
   List _ListdataNear = [];

@@ -8,8 +8,8 @@ import 'package:flutter_project/features/appbar_global.dart';
 import 'package:flutter_project/features/auth/services/auth/google_auth_service.dart';
 import 'package:flutter_project/features/notification/screens/notification_page.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
-import 'package:flutter_project/features/auth/widgets/side_menu.dart';
-import 'package:flutter_project/features/home/widgets/home_house.dart';
+import 'package:flutter_project/features/home/widgets/side_menu.dart';
+import 'package:flutter_project/features/home/widgets/home_bar.dart';
 import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -277,17 +277,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 child: TabBarView(
                   controller: _tabController,
                   children: [
-                    HomeHouse(
+                    HomeBar(
                       tipe: 'readapartement.php',
                       user_latitude: latitude,
                       user_longitude: longitude,
                     ),
-                    HomeHouse(
+                    HomeBar(
                       tipe: 'readhotel.php',
                       user_latitude: latitude,
                       user_longitude: longitude,
                     ),
-                    HomeHouse(
+                    HomeBar(
                       tipe: 'readvilla.php',
                       user_latitude: latitude,
                       user_longitude: longitude,

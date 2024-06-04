@@ -94,34 +94,6 @@ class _ReschedulePageState extends State<ReschedulePage> {
     enddateNew = DateFormat('dd MMMM yyyy').format(date2);
   }
 
-  // List _Listdata = [];
-
-  // Future _getdata() async {
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse(
-  //           'https://projekta.seculab.space/crudtaprojek/payment_rooms.php?uid=${widget.hotel_id}&id=${widget.id}'),
-  //     );
-  //     if (response.statusCode == 200) {
-  //       final data = jsonDecode(response.body);
-  //       fetchData();
-  //       setState(() {
-  //         _Listdata = data;
-  //         isLoading = false;
-  //         print(_Listdata);
-  //       });
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
-  // @override
-  // void initState() {
-  //   _getdata();
-  //   super.initState();
-  // }
-
   Future<void> fetchData() async {
     await fetchUserData();
     setState(() {});

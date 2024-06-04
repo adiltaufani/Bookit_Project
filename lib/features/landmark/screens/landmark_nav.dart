@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_project/features/appbar_global.dart';
-import 'package:flutter_project/features/auth/widgets/side_menu.dart';
+import 'package:flutter_project/features/home/widgets/side_menu.dart';
 import 'package:flutter_project/features/notification/screens/notification_page.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
 import 'package:flutter_project/features/search/widgets/search_page_widget.dart';

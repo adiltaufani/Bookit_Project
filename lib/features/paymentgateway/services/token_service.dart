@@ -2,17 +2,22 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_project/features/paymentgateway/common/failure.dart';
-import 'package:flutter_project/features/paymentgateway/model/product_model.dart';
 import 'package:flutter_project/features/paymentgateway/model/token_model.dart';
 import 'package:http/http.dart' as http;
 
 class TokenService {
-  Future<Either<Failure, TokenModel>> getToken(Product product) async {
+  Future<Either<Failure, TokenModel>> getToken() async {
     var apiUrl = dotenv.env['BASE_URL'] ?? '';
 
+    // Payload
     var payload = {
       "id": DateTime.now().millisecondsSinceEpoch, // Unique Id
-      ...product.toJson(), // Spread the product data into the payload
+      "productName": "Mentos Marbels",
+      "price": 2500,
+      "quantity": 2,
+      "customerName": "John Doe",
+      "customerPhone": "08123456789",
+      "customerAddress": "Jl. Merdeka No. 123"
     };
 
     var payloadJson = jsonEncode(payload);

@@ -7,7 +7,7 @@ import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:flutter_project/features/booking/widgets/futniture_widget.dart';
 import 'package:flutter_project/features/message/screens/message_chat_screen.dart';
 import 'package:flutter_project/features/payment/screens/payment_page.dart';
-import 'package:flutter_project/features/auth/widgets/variables.dart';
+import 'package:flutter_project/features/booking/widgets/variables.dart';
 import 'package:flutter_project/features/wishlist/database/db_helper.dart';
 import 'package:flutter_project/features/wishlist/model/wishlist_model.dart';
 import 'package:flutter_project/variables.dart';
@@ -868,7 +868,7 @@ class _BookingPageState extends State<BookingPage> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Container(
-                                                width: 162,
+                                                width: 142,
                                                 height: 102,
                                                 margin:
                                                     const EdgeInsets.fromLTRB(

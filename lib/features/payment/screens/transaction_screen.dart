@@ -5,7 +5,7 @@ import 'package:flutter_project/features/auth/services/auth/google_auth_service.
 import 'package:flutter_project/features/notification/screens/notification_page.dart';
 import 'package:flutter_project/features/payment/widgets/transaction_recent.dart';
 import 'package:flutter_project/features/profile/screens/setting_page.dart';
-import 'package:flutter_project/features/auth/widgets/side_menu.dart';
+import 'package:flutter_project/features/home/widgets/side_menu.dart';
 import 'package:flutter_project/features/payment/widgets/transaction_ongoing.dart';
 import 'package:flutter_project/features/search/widgets/search_page_widget.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';

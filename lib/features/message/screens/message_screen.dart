@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_project/features/appbar_global.dart';
 import 'package:flutter_project/features/auth/services/auth/firebase_auth_service.dart';
-import 'package:flutter_project/features/auth/widgets/side_menu.dart';
+import 'package:flutter_project/features/home/widgets/side_menu.dart';
 import 'package:flutter_project/features/message/screens/message_chat_screen.dart';
 import 'package:flutter_project/features/message/services/chat_service.dart';
 import 'package:flutter_project/features/message/services/user_tile.dart';

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/features/booking/screens/booking_page.dart';
+import 'package:flutter_project/variables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -93,7 +94,7 @@ class _SearchHouseState extends State<SearchHouse> {
     bool? resepsionis24Jam, // Properti baru untuk resepsionis 24 jam
   }) async {
     final url = Uri.parse(
-        'https://projekta.seculab.space/ta_projek/crudtaprojek/tes_filter_new.php?'); // Ganti dengan URL API Anda
+        '${ipaddr}/ta_projek/crudtaprojek/tes_filter_new.php?'); // Ganti dengan URL API Anda
 
     Map<String, dynamic> queryParams = {};
     if (table != null) queryParams['tipe'] = table.toString();
@@ -203,14 +204,17 @@ class _SearchHouseState extends State<SearchHouse> {
                       ),
                       child: Row(
                         children: [
-                          Container(
-                            width: 150,
-                            height: 150,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              image: DecorationImage(
-                                  image: NetworkImage(cleanedUrlFoto),
-                                  fit: BoxFit.cover),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              width: 150,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                image: DecorationImage(
+                                    image: NetworkImage(cleanedUrlFoto),
+                                    fit: BoxFit.cover),
+                              ),
                             ),
                           ),
                           SizedBox(
@@ -220,6 +224,9 @@ class _SearchHouseState extends State<SearchHouse> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                const SizedBox(
+                                  height: 10,
+                                ),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -238,11 +245,6 @@ class _SearchHouseState extends State<SearchHouse> {
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    Icon(
-                                      Icons.save,
-                                      size: 25,
-                                      color: Colors.grey,
                                     ),
                                     SizedBox(
                                       width: 0,

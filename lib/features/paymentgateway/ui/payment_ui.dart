@@ -114,19 +114,16 @@ class _PaymentUiState extends State<PaymentUi> {
       customerAddress: widget.customerAddress,
     );
 
-    final result = await TokenService().getToken(product);
+    final result = await TokenService().getToken();
 
     if (result.isRight()) {
       String? token = result.fold((l) => null, (r) => r.token);
 
-      if (token == null) {
-        _showSnackBar('Token cannot be null', true);
-        return;
+      if (token != null) {
+        _midtrans?.startPaymentUiFlow(
+          token: token,
+        );
       }
-
-      _midtrans?.startPaymentUiFlow(
-        token: token,
-      );
     } else {
       _showSnackBar('Transaction Failed', true);
     }

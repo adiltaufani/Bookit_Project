@@ -22,7 +22,7 @@ class CustomSearchOverlay extends StatelessWidget {
                 return ListTile(
                   title: Text(kota),
                   onTap: () {
-                    print('Anda memilih kotaaaa: $kota');
+                    print('Anda memilih kota: $kota');
                   },
                 );
               },

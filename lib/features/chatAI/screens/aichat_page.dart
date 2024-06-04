@@ -75,7 +75,7 @@ class _AIChatPageState extends State<AIChatPage> {
     try {
       // Kirim pesan pengguna Bian ke endpoint /chat di localhost:3000
       final response = await http.post(
-        Uri.parse('https://projekta.seculab.space/node/chat'),
+        Uri.parse('${ipaddr}/node/chat'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
